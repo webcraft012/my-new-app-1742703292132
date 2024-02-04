@@ -1,10 +1,5 @@
-import { Button } from "@ui/components/button";
+import { PageEditor } from "./editor";
 
 export default function Page() {
-  return (
-    <>
-      <h1>Web</h1>
-      <Button>Click me</Button>
-    </>
-  );
+  return <PageEditor />;
 }
