@@ -42,7 +42,7 @@ export const CardBottom: React.FC<CardBottomProps> = ({ children }) => {
   } = useNode();
   return (
     <div
-      className="w-full h-auto min-h-[20px]"
+      className="w-full h-auto min-h-[20px] flex gap-2"
       ref={(ref) => {
         if (ref) connect(ref);
       }}
