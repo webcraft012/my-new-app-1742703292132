@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -25,9 +27,14 @@
     "@nestjs/platform-express": "^10.0.0",
     "mongodb": "6.5.0",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@libsql/client": "0.14.0",
+    "@libsql/core": "0.14.0",
+    "drizzle-orm": "0.38.3",
+    "dotenv": "16.4.7"
   },
   "devDependencies": {
+    "drizzle-kit": "0.30.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

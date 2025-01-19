@@ -1,17 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IEditorRepository } from './types/editor.repository';
 import { Editor } from './types/editor';
+import { CreateEditorDto, UpdateEditorDto } from './dtos/editor.dto';
 
 @Injectable()
 export class EditorService {
-  constructor(private repository: IEditorRepository) {}
+  constructor(
+    @Inject('IEditorRepository') private repository: IEditorRepository,
+  ) {}
 
-  async create(editor: Editor) {
+  async create(editor: CreateEditorDto) {
     return this.repository.create(editor);
   }
 
-  async update(editor: Editor) {
-    return this.repository.update(editor);
+  async update(id: string, editor: UpdateEditorDto) {
+    return this.repository.update(id, editor);
   }
 
   async delete(id: string) {

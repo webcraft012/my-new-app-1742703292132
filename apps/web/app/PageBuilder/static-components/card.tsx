@@ -16,7 +16,9 @@ const CardComponent = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     <div
       className="flex flex-1"
       style={{
-        "--width": `${width || 100}%`,
+        "--width": `${
+          width < 100 ? `${width}%` : "calc(100% / var(--num-children))"
+        }`,
         // flexBasis: `${`${width || 100}%`} !important`,
         "--gap-total-width": "calc(8px * (var(--num-children) - 1))",
         flexBasis: "calc(var(--width) - var(--gap-total-width))",

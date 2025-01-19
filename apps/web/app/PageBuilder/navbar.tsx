@@ -1,14 +1,22 @@
 import { useEditor } from "@craftjs/core";
 import React from "react";
+import { useSaveEditor } from "./hooks/useSaveEditor";
 
 export const Navbar: React.FC = () => {
   const { store } = useEditor();
+  const { mutate: saveEditor } = useSaveEditor();
 
   const save = (): void => {
     console.log({
       nodes: store.query.getNodes(),
     });
-    localStorage.setItem("craftjs", JSON.stringify(store.query.serialize()));
+    saveEditor({
+      id: "af9a001974655fc48685d003525a3584",
+      editor: {
+        name: "Dev Editor",
+        state: store.query.serialize(),
+      },
+    });
   };
 
   return (

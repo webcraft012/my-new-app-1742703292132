@@ -7,3 +7,11 @@ export class EditorDto {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export class CreateEditorDto {
+  name: string;
+  description?: string;
+  state: string;
+}
+
+export class UpdateEditorDto extends CreateEditorDto {}

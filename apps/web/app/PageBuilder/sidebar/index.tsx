@@ -31,15 +31,15 @@ const SidebarNO: React.FC = () => {
       component: JSX.Element,
       additionalLogic?: (node: NodeTree) => void,
     ): React.RefCallback<HTMLButtonElement> =>
-    (ref) => {
-      if (ref) {
-        connectors.create(ref, component, {
-          onCreate: (node: NodeTree) => {
-            handleNodeCreation(node, component, additionalLogic);
-          },
-        });
-      }
-    };
+      (ref) => {
+        if (ref) {
+          connectors.create(ref, component, {
+            onCreate: (node: NodeTree) => {
+              handleNodeCreation(node, component, additionalLogic);
+            },
+          });
+        }
+      };
 
   const handleNodeCreation = (
     node: NodeTree,
@@ -50,12 +50,14 @@ const SidebarNO: React.FC = () => {
     const parentNode = parentNodeId ? query.node(parentNodeId).get() : null;
 
     if (parentNode && parentNode.data.parent === "ROOT") {
-      actions.delete(node.rootNodeId);
-      const newNodeTree = query
-        .parseReactElement(<Container firstChild={component} />)
-        .toNodeTree();
-      actions.addNodeTree(newNodeTree, parentNode.id);
+      // console.log("parent node is root");
+      // actions.delete(node.rootNodeId);
+      // const newNodeTree = query
+      //   .parseReactElement(<Container firstChild={component} />)
+      //   .toNodeTree();
+      // actions.addNodeTree(newNodeTree, parentNode.id);
     } else if (parentNode && parentNode.data.name === "ContainerRowHolder") {
+      console.log("parent node is container row holder");
       actions.delete(node.rootNodeId);
       const newNodeTree = query
         .parseReactElement(

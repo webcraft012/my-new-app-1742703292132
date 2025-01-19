@@ -13,28 +13,17 @@ import { Sidebar } from "./PageBuilder/sidebar";
 import { WorkplaceHolder, Workspace } from "./PageBuilder/workspace";
 import { ContainerHolder } from "./PageBuilder/components/container/container-holder";
 import { ContainerRowHolder } from "./PageBuilder/components/container/container-row-holder";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useGetEditor } from "./PageBuilder/hooks/useGetEditor";
 
 export const PageEditor: React.FC = () => {
-  const [json, setJson] = useState<string | undefined>();
-  const [key, setKey] = useState<string | undefined>();
-
-  // Load save state from server on page load
-  useEffect(() => {
-    // const state = localStorage.getItem("craftjs");
-    // if (state) {
-    //   setJson(state);
-    //   setKey("loaded-json");
-    //   console.log({
-    //     state,
-    //   });
-    // }
-  }, []);
+  const { data } = useGetEditor("af9a001974655fc48685d003525a3584");
 
   return (
     <Editor
       indicator={{
         error: "#e74c3c",
-        success: "#2ecc71",
+        success: "#74b9ff",
         thickness: 8,
         transition: "all 0.4s ease",
       }}
@@ -56,7 +45,10 @@ export const PageEditor: React.FC = () => {
       <div className="flex flex-col h-screen">
         <Navbar />
         <div className="page-container flex-1 flex flex-grow">
-          <Frame data={json ? JSON.parse(json) : undefined} key={key}>
+          <Frame
+            data={data?.state ? JSON.parse(data.state) : undefined}
+            key={data?.id}
+          >
             <Workspace />
           </Frame>
           <Sidebar />

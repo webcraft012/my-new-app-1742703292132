@@ -35,17 +35,17 @@ export const Container: UserComponent<ContainerProps> = observer(
 
     return (
       <div
-        className={`container mx-auto p-4 w-full flex flex-col h-fit ${
-          className || ""
-        } ${containerStyle || ""}`}
+        className={`w-full flex flex-col h-fit ${className || ""} ${
+          containerStyle || ""
+        }`}
         ref={(ref) => ref && connect(ref)}
         style={{
           backgroundColor,
           border: userComponentStore.onDragUserComponent
             ? "1px dashed #ccc"
             : "unset",
-          // padding: userComponentStore.onDragUserComponent ? "1.5rem" : "unset",
         }}
+        data-id="container"
       >
         <Element canvas id="row-container" is={ContainerRowHolder}>
           <Element

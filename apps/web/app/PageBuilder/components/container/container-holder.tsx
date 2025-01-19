@@ -3,6 +3,8 @@ import React, { isValidElement } from "react";
 import { observer } from "mobx-react";
 import Split from "react-split";
 import type { ContainerProps } from ".";
+import { userComponentStore } from "../../store";
+import { DropIndicator } from "../../helpers/DropIndicator";
 
 export const ContainerHolder: React.FC<ContainerProps> = observer(
   ({ children, className, shouldShowDropHelper }) => {
@@ -45,11 +47,29 @@ export const ContainerHolder: React.FC<ContainerProps> = observer(
 
     return (
       <div
-        className={`items-center flex flex-row ${className || ""}`}
+        className={`items-center flex flex-row relative ${className || ""}`}
+        style={{
+          paddingRight: true ? "2rem" : "unset",
+          paddingLeft: true ? "2rem" : "unset",
+        }}
         ref={(ref) => ref && connect(ref)}
+        data-id="container-holder"
       >
+        {userComponentStore.onDragUserComponent && (
+          // update opacity on drag over
+          <DropIndicator className="top-0 left-3 w-6" />
+        )}
         {!childElements.length && shouldShowDropHelper ? (
-          <div className="p-12 w-full flex items-start justify-center shadow">
+          <div
+            className="p-12 w-full flex items-start justify-center shadow"
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.currentTarget.style.backgroundColor = "rgba(0, 0, 255, 0.1)";
+            }}
+            onDragLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "unset";
+            }}
+          >
             Drop elements here
           </div>
         ) : (
@@ -81,6 +101,10 @@ export const ContainerHolder: React.FC<ContainerProps> = observer(
           >
             {children || <div className="p-12 w-full">Drop elements here</div>}
           </Split>
+        )}
+        {userComponentStore.onDragUserComponent && (
+          // update opacity on drag over
+          <DropIndicator className="top-0 right-3 w-6" />
         )}
       </div>
     );

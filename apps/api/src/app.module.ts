@@ -7,6 +7,6 @@ import { EditorModule } from './editor/editor.module';
 @Module({
   imports: [EditorModule],
   controllers: [AppController],
-  providers: [AppService, EditorService],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1736975358796,
+      "tag": "0000_yummy_eternity",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1736975735268,
+      "tag": "0001_soft_landau",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1736975878507,
+      "tag": "0002_big_johnny_blaze",
+      "breakpoints": true
+    }
+  ]
+}
