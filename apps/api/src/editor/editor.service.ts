@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IEditorRepository } from './types/editor.repository';
-import { Editor } from './types/editor';
-import { CreateEditorDto, UpdateEditorDto } from './dtos/editor.dto';
+import { CreateEditorDto, UpdateEditorDto, EditorDto } from '@webcraft/types';
 
 @Injectable()
 export class EditorService {

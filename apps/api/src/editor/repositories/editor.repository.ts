@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { editorTable } from '../../database/schema';
 import { IEditorRepository } from '../types/editor.repository';
-import { CreateEditorDto, UpdateEditorDto } from '../dtos/editor.dto';
-import { Editor } from '../types/editor';
+import { CreateEditorDto, UpdateEditorDto, EditorDto } from '@webcraft/types';
 
 @Injectable()
 export class EditorRepository implements IEditorRepository {
@@ -47,7 +46,7 @@ export class EditorRepository implements IEditorRepository {
     await this.client.delete(editorTable).where(eq(editorTable.id, id));
   }
 
-  async findOne(id: string): Promise<Editor | undefined> {
+  async findOne(id: string): Promise<EditorDto | undefined> {
     const result = await this.client
       .select()
       .from(editorTable)

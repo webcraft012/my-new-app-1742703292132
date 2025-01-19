@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { API_URL, Editor } from "./types";
-
+import { API_URL } from "./types";
+import { CreateEditorDto } from "@webcraft/types";
 /**
  * Hook to save the editor state using react-query mutation
  */
@@ -12,7 +12,7 @@ export const useSaveEditor = () => {
       editor,
     }: {
       id: string;
-      editor: Omit<Editor, "id">;
+      editor: CreateEditorDto;
     }) => {
       console.log(editor);
       await axios.patch(`${API_URL}/editors/${id}`, editor);

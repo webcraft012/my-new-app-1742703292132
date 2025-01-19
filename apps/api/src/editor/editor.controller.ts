@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { EditorService } from './editor.service';
-import { CreateEditorDto, EditorDto, UpdateEditorDto } from './dtos/editor.dto';
+import { CreateEditorDto, UpdateEditorDto } from '@webcraft/types';
 
 @Controller('editors')
 export class EditorController {
