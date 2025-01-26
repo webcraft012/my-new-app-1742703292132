@@ -1,25 +1,63 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { forwardRef } from "react";
+import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
+import { useBuildClassName } from "../hooks/useBuildClassName";
+import { AlignmentTypes, FormatTypes, TextTypes } from "../settings-components";
+import FlexContainerComponent from "./FlexContainer";
 
-interface TextComponentProps {
-  defaultClassName?: string;
+export interface TextComponentProps {
+  textAlign?: AlignmentTypes;
   className?: string;
-  children?: ReactNode;
   width?: number;
+  text: string;
+  color?: string;
+  backgroundColor?: string;
+  onChange?: (e: ContentEditableEvent) => void;
+  textType?: TextTypes;
+  textFormats?: FormatTypes[];
+  isEditable?: boolean;
 }
 
-const TextComponent = forwardRef<HTMLTextElement, TextComponentProps>(
+const defaultClassName = "w-full";
+
+const TextComponent = forwardRef<HTMLElement, TextComponentProps>(
   (props, ref) => {
-    const { children, className, defaultClassName } = props;
+    const {
+      text,
+      className,
+      color,
+      backgroundColor,
+      textAlign,
+      onChange,
+      textFormats,
+      textType,
+      isEditable,
+    } = props;
+
+    const computedClassName = useBuildClassName({
+      customClassName: `${defaultClassName} ${className}`,
+      textAlign,
+      color,
+      backgroundColor,
+      textFormats,
+      textType,
+    });
 
     return (
-      <div className="flex items-center">
-        <button className={`${defaultClassName} ${className}`} ref={ref}>
-          {children}
-        </button>
-      </div>
+      <FlexContainerComponent backgroundColor={backgroundColor}>
+        <ContentEditable
+          className={computedClassName}
+          html={text}
+          innerRef={ref as any}
+          onChange={!isEditable ? () => {} : onChange!}
+          style={{
+            color,
+          }}
+          tagName="p"
+          disabled={!isEditable}
+        />
+      </FlexContainerComponent>
     );
   },
 );

@@ -2,7 +2,6 @@ import { useNode } from "@craftjs/core";
 import type { ContainerProps } from ".";
 import { observer } from "mobx-react";
 import { userComponentStore } from "../../store";
-import { isValidElement } from "react";
 import { DropIndicator } from "../../helpers/DropIndicator";
 
 export const ContainerRowHolder: React.FC<ContainerProps> = observer(
@@ -12,11 +11,6 @@ export const ContainerRowHolder: React.FC<ContainerProps> = observer(
       store,
       id,
     } = useNode();
-
-    const childElements: React.ReactElement[] = isValidElement(children)
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        children.props.children
-      : [];
 
     // Check in the store, if this node has a child
     const hasChild = store.query

@@ -2,41 +2,50 @@
 
 import type { ReactNode } from "react";
 import { forwardRef } from "react";
+import { useBuildClassName } from "../hooks/useBuildClassName";
+import { JustifyTypes, WidthTypes } from "../settings-components";
+import FlexContainerComponent from "./FlexContainer";
+import TextComponent from "./text";
 
-interface ButtonComponentProps {
-  align?: string;
-  backgroundColor?: string;
-  defaultClassName?: string;
-  className?: string;
-  children?: ReactNode;
-  width?: number;
+export interface ButtonComponentProps {
+  justify?: JustifyTypes;
   textColor?: string;
+  backgroundColor?: string;
+  color?: string;
+  className?: string;
+  width?: WidthTypes;
+  text: string;
 }
+
+const defaultClassName =
+  "hover:bg-slate-100 text-white font-bold py-2 px-4 rounded h-12";
 
 const ButtonComponent = forwardRef<HTMLButtonElement, ButtonComponentProps>(
   (props, ref) => {
-    const {
-      align,
-      textColor,
+    const { justify, textColor, backgroundColor, text, className, width } =
+      props;
+
+    const computedClassName = useBuildClassName({
+      justify,
+      color: textColor,
       backgroundColor,
-      children,
-      className,
-      defaultClassName,
-    } = props;
+      customClassName: `${defaultClassName} ${className}`,
+      width,
+    });
 
     return (
-      <div className={`flex items-center w-full ${align}`}>
+      <FlexContainerComponent>
         <button
-          className={`${defaultClassName} ${className}`}
+          className={computedClassName}
           ref={ref}
           style={{
             backgroundColor,
             color: textColor,
           }}
         >
-          {children}
+          <TextComponent text={text} />
         </button>
-      </div>
+      </FlexContainerComponent>
     );
   },
 );

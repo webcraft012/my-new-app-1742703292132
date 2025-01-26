@@ -1,9 +1,11 @@
 "use client";
 
 import { Editor, Frame } from "@craftjs/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "./PageBuilder/components/button";
-import { Card, CardBottom, CardTop } from "./PageBuilder/components/card";
+import { Card } from "./PageBuilder/components/card";
+import { CardBottom } from "./PageBuilder/components/card/CardBottom";
+import { CardTop } from "./PageBuilder/components/card/CardTop";
 import { Container } from "./PageBuilder/components/container";
 import { Spacer } from "./PageBuilder/components/spacer";
 import { Text } from "./PageBuilder/components/text";
@@ -13,7 +15,6 @@ import { Sidebar } from "./PageBuilder/sidebar";
 import { WorkplaceHolder, Workspace } from "./PageBuilder/workspace";
 import { ContainerHolder } from "./PageBuilder/components/container/container-holder";
 import { ContainerRowHolder } from "./PageBuilder/components/container/container-row-holder";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useGetEditor } from "./PageBuilder/hooks/useGetEditor";
 
 export const PageEditor: React.FC = () => {

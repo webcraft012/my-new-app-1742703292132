@@ -2,19 +2,17 @@ import type { FC } from "react";
 import React from "react";
 import { useNode } from "@craftjs/core";
 import { Text } from "../text";
-import ButtonComponent from "../../static-components/button";
+import ButtonComponent, {
+  ButtonComponentProps,
+} from "../../static-components/button";
 import { ButtonSettings } from "./settings";
+import {
+  getColorByLabel,
+  JustifyTypes,
+  WidthTypes,
+} from "../../settings-components";
 
-export interface ButtonProps {
-  align?: string;
-  textColor?: string;
-  backgroundColor?: string;
-  color?: string;
-  text: string;
-  defaultClassName?: string;
-  className?: string;
-  width?: string;
-}
+export interface ButtonProps extends ButtonComponentProps {}
 
 // Define a type for the component with the 'craft' property
 interface CraftButton extends FC<ButtonProps> {
@@ -27,11 +25,10 @@ interface CraftButton extends FC<ButtonProps> {
 }
 
 export const Button: CraftButton = ({
-  align,
+  justify,
   textColor,
   backgroundColor,
   text,
-  defaultClassName,
   className,
   width,
 }) => {
@@ -41,29 +38,26 @@ export const Button: CraftButton = ({
 
   return (
     <ButtonComponent
-      align={align}
+      justify={justify}
       backgroundColor={backgroundColor}
-      className={`${className} ${width}`}
-      defaultClassName={defaultClassName}
+      width={width}
+      className={className}
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
       textColor={textColor}
-    >
-      <Text text={text} />
-    </ButtonComponent>
+      text={text}
+    ></ButtonComponent>
   );
 };
 
 Button.craft = {
   props: {
-    align: "justify-start",
-    backgroundColor: "#0984e3",
-    defaultClassName:
-      "hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-12",
+    justify: JustifyTypes.Start,
+    backgroundColor: getColorByLabel("Blue"),
     text: "My Button",
-    textColor: "#ffffff",
-    width: "w-auto",
+    textColor: getColorByLabel("White"),
+    width: WidthTypes.Auto,
   },
   related: {
     settings: ButtonSettings,

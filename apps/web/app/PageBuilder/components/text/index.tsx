@@ -1,28 +1,26 @@
 import type { UserComponent } from "@craftjs/core";
 import { useNode } from "@craftjs/core";
 import React from "react";
-import ContentEditable from "react-contenteditable";
 import { TextSettings } from "./settings";
+import TextComponent, {
+  TextComponentProps,
+} from "../../static-components/text";
+import {
+  AlignmentTypes,
+  getColorByLabel,
+  TextTypes,
+} from "../../settings-components";
 
-export interface TextProps {
-  align?: string;
-  backgroundColor?: string;
-  className?: string;
-  color?: string;
-  format?: string;
-  text: string;
-  transform?: string;
-  type?: string;
-}
+export interface TextProps extends TextComponentProps {}
 
 export const Text: UserComponent<TextProps> = ({
-  align,
+  textAlign,
   backgroundColor,
   color,
   text,
-  format,
+  textFormats,
+  textType,
   className,
-  type,
 }) => {
   const {
     connectors: { connect, drag },
@@ -30,40 +28,33 @@ export const Text: UserComponent<TextProps> = ({
   } = useNode();
 
   return (
-    <div
-      className="flex items-center"
-      style={{
-        backgroundColor,
+    <TextComponent
+      ref={(ref) => {
+        if (ref) connect(drag(ref));
       }}
-    >
-      <ContentEditable
-        className={`${format || ""} ${align || ""} ${className || ""} ${
-          type || ""
-        } w-full`}
-        html={text}
-        innerRef={(ref) => {
-          if (ref) connect(drag(ref));
-        }}
-        onChange={(e) => {
-          // Explicitly make the arrow function return void
-          setProp((props: { text: string }) => {
-            props.text = e.target.value.replace(/<\/?[^>]+(?:>|$)/g, "");
-          });
-        }}
-        style={{
-          color,
-        }}
-        tagName="p"
-      />
-    </div>
+      onChange={(e) => {
+        // Explicitly make the arrow function return void
+        setProp((props: { text: string }) => {
+          props.text = e.target.value.replace(/<\/?[^>]+(?:>|$)/g, "");
+        });
+      }}
+      text={text}
+      textAlign={textAlign}
+      textFormats={textFormats}
+      textType={textType}
+      isEditable={true}
+      className={className}
+      color={color}
+      backgroundColor={backgroundColor}
+    />
   );
 };
 
 Text.craft = {
   props: {
-    align: "text-left",
-    color: "#2d2c2c",
-    type: "text-base",
+    textAlign: AlignmentTypes.Left,
+    color: getColorByLabel("Black"),
+    textType: TextTypes.Parahraph,
   },
   related: {
     settings: TextSettings,

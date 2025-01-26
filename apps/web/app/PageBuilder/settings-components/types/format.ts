@@ -12,3 +12,12 @@ export interface FormatOptions {
   value: FormatTypes;
   icon: React.JSX.Element;
 }
+
+export const formatClasses: Record<FormatTypes, { class: string }> = {
+  [FormatTypes.Bold]: { class: "font-bold" },
+  [FormatTypes.Italic]: { class: "italic" },
+  [FormatTypes.Underline]: { class: "underline" },
+  [FormatTypes.Strikethrough]: { class: "line-through" },
+  [FormatTypes.Code]: { class: "font-mono" },
+  [FormatTypes.Subscript]: { class: "sub" },
+};

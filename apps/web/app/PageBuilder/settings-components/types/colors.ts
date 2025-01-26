@@ -80,3 +80,16 @@ export const getColorLabel = (color?: string): string => {
   const colorOption = colorsOptions.find((option) => option.color === color);
   return colorOption?.label ?? "Default";
 };
+
+export const getColorByLabel = (label: string): string => {
+  const colorOption = colorsOptions.find((option) => option.label === label);
+  return colorOption?.color ?? "unset";
+};
+
+export const makeColorClass = (color: string) => {
+  return `text-[${color}]`;
+};
+
+export const makeBackgroundColorClass = (color: string) => {
+  return `bg-[${color}]`;
+};

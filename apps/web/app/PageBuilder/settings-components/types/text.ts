@@ -75,3 +75,8 @@ export const textTypesOptions: TextTypeOption[] = [
     value: TextTypes.Quote,
   },
 ];
+
+export const textTypesClasses = textTypesOptions.reduce((acc, option) => {
+  acc[option.value] = option.class;
+  return acc;
+}, {});

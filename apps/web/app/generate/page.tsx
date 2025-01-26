@@ -1,14 +1,16 @@
 import type { SerializedNode, SerializedNodes } from "@craftjs/core";
 import React from "react";
-import Card from "../PageBuilder/static-components/card";
-import Button from "./button";
 import Container from "./container";
 import Holder from "./holder";
 import ContainerHolder from "./container-holder";
 import ContainerRowHolder from "./container-row-holder";
-import Text from "./text";
 import axios from "axios";
-import { API_URL, Editor } from "../PageBuilder/hooks/types";
+import { API_URL } from "../PageBuilder/hooks/types";
+import { EditorDto } from "@webcraft/types";
+import TextComponent from "../PageBuilder/static-components/text";
+import ButtonComponent from "../PageBuilder/static-components/button";
+import CardComponent from "../PageBuilder/static-components/Card";
+import FlexContainerComponent from "../PageBuilder/static-components/FlexContainer";
 
 const HomePage = async (): Promise<React.JSX.Element | null> => {
   const nodes = await getData();
@@ -22,7 +24,7 @@ const HomePage = async (): Promise<React.JSX.Element | null> => {
 };
 
 async function getData(): Promise<React.ReactNode> {
-  const { data } = await axios.get<Editor>(
+  const { data } = await axios.get<EditorDto>(
     `${API_URL}/editors/af9a001974655fc48685d003525a3584`,
   );
   return new Promise((resolve) => {
@@ -38,14 +40,15 @@ const componentMap = {
   Workspace: Container,
   WorkplaceHolder: Holder,
   ContainerRowHolder,
-  Card,
+  Card: CardComponent,
   CardBottom: Holder,
   CardTop: Holder,
-  Button,
-  Text,
+  Button: ButtonComponent,
+  Text: TextComponent,
   Container,
   ContainerHolder,
   Spacer: Container,
+  FlexContainer: FlexContainerComponent,
 };
 
 function createComponentFromNode(
