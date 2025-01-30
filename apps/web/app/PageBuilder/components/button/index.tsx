@@ -1,16 +1,14 @@
 import type { FC } from "react";
 import React from "react";
 import { useNode } from "@craftjs/core";
-import { Text } from "../text";
-import ButtonComponent, {
-  ButtonComponentProps,
-} from "../../static-components/button";
+import ButtonComponent from "../../static-components/button";
 import { ButtonSettings } from "./settings";
 import {
   getColorByLabel,
   JustifyTypes,
   WidthTypes,
 } from "../../settings-components";
+import { ButtonComponentProps } from "@webcraft/types";
 
 export interface ButtonProps extends ButtonComponentProps {}
 

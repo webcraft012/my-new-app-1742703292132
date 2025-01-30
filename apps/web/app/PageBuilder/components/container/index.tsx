@@ -3,8 +3,8 @@ import { Element, useNode } from "@craftjs/core";
 import "./styles.css";
 import { observer } from "mobx-react";
 import { userComponentStore } from "../../store";
-import { ContainerRowHolder } from "./container-row-holder";
-import { ContainerHolder } from "./container-holder";
+import { ContainerWorkplace } from "./container-workplace";
+import { ContainerRowWorkplace } from "./container-row-workplace";
 import { ContainerSettings } from "./settings";
 
 export interface ContainerProps {
@@ -47,11 +47,11 @@ export const Container: UserComponent<ContainerProps> = observer(
         }}
         data-id="container"
       >
-        <Element canvas id="row-container" is={ContainerRowHolder}>
+        <Element canvas id="row-container" is={ContainerWorkplace}>
           <Element
             canvas
             id="col-container"
-            is={ContainerHolder}
+            is={ContainerRowWorkplace}
             shouldShowDropHelper={shouldShowDropHelper}
           >
             {firstChild}

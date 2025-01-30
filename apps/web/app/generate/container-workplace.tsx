@@ -3,13 +3,15 @@
 import type { ReactNode } from "react";
 import React from "react";
 
-interface ContainerHolderProps {
+interface ContainerWorkplaceProps {
   children?: ReactNode;
   className?: string;
 }
 
-const ContainerRowHolder: React.FC<ContainerHolderProps> = ({ children }) => {
+const ContainerWorkplace: React.FC<ContainerWorkplaceProps> = ({
+  children,
+}) => {
   return <div className="flex flex-col gap-4 flex-wrap">{children}</div>;
 };
 
-export default ContainerRowHolder;
+export default ContainerWorkplace;

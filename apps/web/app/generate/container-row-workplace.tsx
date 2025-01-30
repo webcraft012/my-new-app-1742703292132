@@ -3,12 +3,12 @@
 import type { ReactNode } from "react";
 import React, { Children } from "react";
 
-interface ContainerHolderProps {
+interface ContainerRowWorkplaceProps {
   children?: ReactNode;
   className?: string;
 }
 
-const ContainerHolder: React.FC<ContainerHolderProps> = ({
+const ContainerRowWorkplace: React.FC<ContainerRowWorkplaceProps> = ({
   children,
   className,
 }) => {
@@ -19,7 +19,7 @@ const ContainerHolder: React.FC<ContainerHolderProps> = ({
       }`}
     >
       <div
-        className="flex w-full gap-[8px] flex-wrap"
+        className="flex w-full gap-[8px] flex-wrap justify-between"
         style={{
           "--num-children": Children.count(children),
         }}
@@ -30,4 +30,4 @@ const ContainerHolder: React.FC<ContainerHolderProps> = ({
   );
 };
 
-export default ContainerHolder;
+export default ContainerRowWorkplace;

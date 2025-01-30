@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { userComponentStore } from "../../store";
 import { DropIndicator } from "../../helpers/DropIndicator";
 
-export const ContainerRowHolder: React.FC<ContainerProps> = observer(
+export const ContainerWorkplace: React.FC<ContainerProps> = observer(
   ({ children }) => {
     const {
       connectors: { connect },

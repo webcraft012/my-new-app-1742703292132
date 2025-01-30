@@ -2,14 +2,13 @@ import type { UserComponent } from "@craftjs/core";
 import { useNode } from "@craftjs/core";
 import React from "react";
 import { TextSettings } from "./settings";
-import TextComponent, {
-  TextComponentProps,
-} from "../../static-components/text";
+import TextComponent from "../../static-components/text";
 import {
   AlignmentTypes,
   getColorByLabel,
   TextTypes,
 } from "../../settings-components";
+import { TextComponentProps } from "@webcraft/types";
 
 export interface TextProps extends TextComponentProps {}
 

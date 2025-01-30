@@ -13,8 +13,8 @@ import { Navbar } from "./PageBuilder/navbar";
 import { RenderNode } from "./PageBuilder/render-node";
 import { Sidebar } from "./PageBuilder/sidebar";
 import { WorkplaceHolder, Workspace } from "./PageBuilder/workspace";
-import { ContainerHolder } from "./PageBuilder/components/container/container-holder";
-import { ContainerRowHolder } from "./PageBuilder/components/container/container-row-holder";
+import { ContainerRowWorkplace } from "./PageBuilder/components/container/container-row-workplace";
+import { ContainerWorkplace } from "./PageBuilder/components/container/container-workplace";
 import { useGetEditor } from "./PageBuilder/hooks/useGetEditor";
 
 export const PageEditor: React.FC = () => {
@@ -32,14 +32,14 @@ export const PageEditor: React.FC = () => {
       resolver={{
         Workspace,
         WorkplaceHolder,
-        ContainerRowHolder,
         Card,
         CardBottom,
         CardTop,
         Button,
         Text,
         Container,
-        ContainerHolder,
+        ContainerRowWorkplace,
+        ContainerWorkplace,
         Spacer,
       }}
     >

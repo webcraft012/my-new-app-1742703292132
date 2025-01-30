@@ -6,7 +6,7 @@ import type { ContainerProps } from ".";
 import { userComponentStore } from "../../store";
 import { DropIndicator } from "../../helpers/DropIndicator";
 
-export const ContainerHolder: React.FC<ContainerProps> = observer(
+export const ContainerRowWorkplace: React.FC<ContainerProps> = observer(
   ({ children, className, shouldShowDropHelper }) => {
     const {
       connectors: { connect },

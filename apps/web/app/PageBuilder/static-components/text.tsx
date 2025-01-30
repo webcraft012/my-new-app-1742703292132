@@ -1,66 +1,58 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, PropsWithChildren } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { useBuildClassName } from "../hooks/useBuildClassName";
-import { AlignmentTypes, FormatTypes, TextTypes } from "../settings-components";
 import FlexContainerComponent from "./FlexContainer";
+import { TextComponentProps } from "@webcraft/types";
 
-export interface TextComponentProps {
-  textAlign?: AlignmentTypes;
-  className?: string;
-  width?: number;
-  text: string;
-  color?: string;
-  backgroundColor?: string;
+export interface TextComponentWithOnChangeProps extends TextComponentProps {
   onChange?: (e: ContentEditableEvent) => void;
-  textType?: TextTypes;
-  textFormats?: FormatTypes[];
-  isEditable?: boolean;
 }
 
 const defaultClassName = "w-full";
 
-const TextComponent = forwardRef<HTMLElement, TextComponentProps>(
-  (props, ref) => {
-    const {
-      text,
-      className,
-      color,
-      backgroundColor,
-      textAlign,
-      onChange,
-      textFormats,
-      textType,
-      isEditable,
-    } = props;
+const TextComponent = forwardRef<
+  HTMLElement,
+  PropsWithChildren<TextComponentWithOnChangeProps>
+>((props, ref) => {
+  const {
+    text,
+    className,
+    color,
+    backgroundColor,
+    textAlign,
+    onChange,
+    textFormats,
+    textType,
+    isEditable,
+  } = props;
 
-    const computedClassName = useBuildClassName({
-      customClassName: `${defaultClassName} ${className}`,
-      textAlign,
-      color,
-      backgroundColor,
-      textFormats,
-      textType,
-    });
+  const computedClassName = useBuildClassName({
+    customClassName: `${defaultClassName} ${className}`,
+    textAlign,
+    color,
+    backgroundColor,
+    textFormats,
+    textType,
+  });
 
-    return (
-      <FlexContainerComponent backgroundColor={backgroundColor}>
-        <ContentEditable
-          className={computedClassName}
-          html={text}
-          innerRef={ref as any}
-          onChange={!isEditable ? () => {} : onChange!}
-          style={{
-            color,
-          }}
-          tagName="p"
-          disabled={!isEditable}
-        />
-      </FlexContainerComponent>
-    );
-  },
-);
+  return (
+    <FlexContainerComponent backgroundColor={backgroundColor}>
+      <ContentEditable
+        className={computedClassName}
+        html={text}
+        innerRef={ref as any}
+        onChange={!isEditable ? () => {} : onChange!}
+        style={{
+          color,
+        }}
+        tagName="p"
+        disabled={!isEditable}
+      />
+    </FlexContainerComponent>
+  );
+});
 
 TextComponent.displayName = "Text";
 

@@ -2,8 +2,8 @@ import type { SerializedNode, SerializedNodes } from "@craftjs/core";
 import React from "react";
 import Container from "./container";
 import Holder from "./holder";
-import ContainerHolder from "./container-holder";
-import ContainerRowHolder from "./container-row-holder";
+import ContainerRowWorkplace from "./container-row-workplace";
+import ContainerWorkplace from "./container-workplace";
 import axios from "axios";
 import { API_URL } from "../PageBuilder/hooks/types";
 import { EditorDto } from "@webcraft/types";
@@ -39,14 +39,14 @@ async function getData(): Promise<React.ReactNode> {
 const componentMap = {
   Workspace: Container,
   WorkplaceHolder: Holder,
-  ContainerRowHolder,
+  ContainerWorkplace,
   Card: CardComponent,
   CardBottom: Holder,
   CardTop: Holder,
   Button: ButtonComponent,
   Text: TextComponent,
   Container,
-  ContainerHolder,
+  ContainerRowWorkplace,
   Spacer: Container,
   FlexContainer: FlexContainerComponent,
 };

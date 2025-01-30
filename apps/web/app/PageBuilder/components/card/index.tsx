@@ -2,18 +2,15 @@ import type { UserComponent } from "@craftjs/core";
 import { Element, useNode } from "@craftjs/core";
 import Image from "next/image";
 import React from "react";
-import CardComponent, {
-  CardComponentProps,
-} from "../../static-components/Card";
+import CardComponent from "../../static-components/Card";
 import { Text } from "../text";
 import { CardTop } from "./CardTop";
 import { CardBottom } from "./CardBottom";
 import { FormatTypes, TextTypes } from "../../settings-components";
-
+import { CardComponentProps } from "@webcraft/types";
 interface CardProps extends CardComponentProps {
   title: string;
   text: string;
-  imageUrl?: string;
 }
 
 export const Card: UserComponent<CardProps> = ({

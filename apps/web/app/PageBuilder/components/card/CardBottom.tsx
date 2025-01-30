@@ -1,11 +1,10 @@
 import type { UserComponent } from "@craftjs/core";
 import { useNode } from "@craftjs/core";
-import React from "react";
-import CardBottomComponent, {
-  CardBottomProps,
-} from "../../static-components/Card/CardBottom";
+import React, { PropsWithChildren } from "react";
+import CardBottomComponent from "../../static-components/Card/CardBottom";
+import { CardBottomProps } from "@webcraft/types";
 
-export const CardBottom: UserComponent<CardBottomProps> = ({
+export const CardBottom: UserComponent<PropsWithChildren<CardBottomProps>> = ({
   children,
   className,
 }) => {

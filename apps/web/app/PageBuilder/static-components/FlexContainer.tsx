@@ -1,20 +1,14 @@
 "use client";
 
-import type { ReactNode } from "react";
+import React, { PropsWithChildren } from "react";
 import { useBuildClassName } from "../hooks/useBuildClassName";
-import { JustifyTypes, WidthTypes } from "../settings-components";
-
-export interface FlexContainerProps {
-  className?: string;
-  children?: ReactNode;
-  width?: WidthTypes;
-  justify?: JustifyTypes;
-  backgroundColor?: string;
-}
+import { FlexContainerProps } from "@webcraft/types";
 
 const defaultClassName = "flex w-full";
 
-const FlexContainerComponent = (props) => {
+const FlexContainerComponent: React.FC<
+  PropsWithChildren<FlexContainerProps>
+> = (props) => {
   const { children, className, width, justify, backgroundColor } = props;
 
   const computedClassName = useBuildClassName({
@@ -30,7 +24,9 @@ const FlexContainerComponent = (props) => {
       style={
         {
           "--width": `${
-            width < 100 ? `${width}%` : "calc(100% / var(--num-children))"
+            typeof width === "number" && width < 100
+              ? `${width}%`
+              : "calc(100% / var(--num-children))"
           }`,
           // flexBasis: `${`${width || 100}%`} !important`,
           "--gap-total-width": "calc(8px * (var(--num-children) - 1))",

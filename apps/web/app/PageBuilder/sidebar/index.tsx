@@ -6,7 +6,7 @@ import { Button } from "../components/button";
 import { Card } from "../components/card";
 import { Container } from "../components/container";
 import { Text } from "../components/text";
-import { ContainerHolder } from "../components/container/container-holder";
+import { ContainerRowWorkplace } from "../components/container/container-row-workplace";
 import { DraggableButton } from "./draggable-button";
 
 const SidebarNO: React.FC = () => {
@@ -62,15 +62,15 @@ const SidebarNO: React.FC = () => {
         .parseReactElement(<Container firstChild={component} />)
         .toNodeTree();
       actions.addNodeTree(newNodeTree, parentNode.id);
-    } else if (parentNode && parentNode.data.name === "ContainerRowHolder") {
-      console.log("parent node is container row holder");
+    } else if (parentNode && parentNode.data.name === "ContainerWorkplace") {
+      console.log("parent node is container row workplace");
       actions.delete(node.rootNodeId);
       const newNodeTree = query
         .parseReactElement(
           <Element
             canvas
             id={`col-container-${node.rootNodeId}`}
-            is={ContainerHolder}
+            is={ContainerRowWorkplace}
           >
             {component}
           </Element>,
