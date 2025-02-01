@@ -3,3 +3,4 @@ export * from "./button";
 export * from "./props";
 export * from "./text";
 export * from "./flex-container";
+export * from "./container";

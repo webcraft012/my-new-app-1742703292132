@@ -7,7 +7,7 @@ import TextComponent from "./text";
 import { ButtonComponentProps } from "@webcraft/types";
 
 const defaultClassName =
-  "hover:bg-slate-100 text-white font-bold py-2 px-4 rounded h-12";
+  "hover:bg-blue-600 text-white font-bold py-2 px-4 rounded h-12 bg-blue-500";
 
 const ButtonComponent = forwardRef<
   HTMLButtonElement,
@@ -16,7 +16,6 @@ const ButtonComponent = forwardRef<
   const { justify, textColor, backgroundColor, text, className, width } = props;
 
   const computedClassName = useBuildClassName({
-    justify,
     color: textColor,
     backgroundColor,
     customClassName: `${defaultClassName} ${className}`,
@@ -24,15 +23,8 @@ const ButtonComponent = forwardRef<
   });
 
   return (
-    <FlexContainerComponent>
-      <button
-        className={computedClassName}
-        ref={ref}
-        style={{
-          backgroundColor,
-          color: textColor,
-        }}
-      >
+    <FlexContainerComponent justify={justify}>
+      <button className={computedClassName} ref={ref}>
         <TextComponent text={text} />
       </button>
     </FlexContainerComponent>

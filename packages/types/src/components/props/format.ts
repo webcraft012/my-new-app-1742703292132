@@ -10,7 +10,7 @@ export enum FormatTypes {
 export interface FormatOptions {
   label: string;
   value: FormatTypes;
-  icon: React.JSX.Element;
+  icon: any;
 }
 
 export const formatClasses: Record<FormatTypes, { class: string }> = {

@@ -14,7 +14,7 @@ const ContainerRowWorkplace: React.FC<ContainerRowWorkplaceProps> = ({
 }) => {
   return (
     <div
-      className={`items-center flex flex-row flex-wrap gap-4 ${
+      className={`items-center flex flex-row flex-wrap gap-4 pr-8 pl-8 ${
         className || ""
       }`}
     >

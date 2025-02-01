@@ -2,6 +2,7 @@ import { cn } from "@ui/lib/utils";
 import {
   alignmentClasses,
   AlignmentTypes,
+  containerStyleClasses,
   ContainerStyles,
   containerStylesOptions,
   formatClasses,
@@ -14,10 +15,9 @@ import {
   makeColorClass,
   TextTypes,
   textTypesClasses,
-  textTypesOptions,
   widthOptions,
   WidthTypes,
-} from "../../settings-components";
+} from "@webcraft/types";
 
 /**
  * Builds a className string based on the props passed in.
@@ -58,8 +58,8 @@ export const useBuildClassName = (props: BuildClassNameProps) => {
     });
   }
 
-  if (containerStyle && containerStylesOptions[containerStyle]) {
-    className.push(containerStylesOptions[containerStyle].class);
+  if (containerStyle && containerStyleClasses[containerStyle]) {
+    className.push(containerStyleClasses[containerStyle].class);
   }
 
   if (textType && textTypesClasses[textType]) {

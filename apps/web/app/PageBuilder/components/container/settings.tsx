@@ -3,12 +3,9 @@
 import { useNode } from "@craftjs/core";
 import React from "react";
 import { ContainerStyleSelector } from "../../settings-components/container-style-selector";
-import {
-  ContainerStyles,
-  containerStylesOptions,
-} from "../../settings-components/types";
+import { ContainerStyles } from "../../settings-components/types";
 import { ColorSelector } from "../../settings-components/color-selector";
-import type { ContainerProps } from ".";
+import { ContainerProps } from "@webcraft/types";
 
 export const ContainerSettings: React.FC = () => {
   const {
@@ -20,9 +17,7 @@ export const ContainerSettings: React.FC = () => {
 
   const onContainerStyleChange = (value: ContainerStyles): void => {
     setProp((currentProps: ContainerProps) => {
-      currentProps.containerStyle = containerStylesOptions.find(
-        (style) => style.value === value,
-      )?.class;
+      currentProps.containerStyle = value;
     });
   };
 
@@ -36,11 +31,7 @@ export const ContainerSettings: React.FC = () => {
     <div className="flex p-4 flex-col gap-4 min-w-[180px]">
       <div>
         <ContainerStyleSelector
-          defaultValue={
-            containerStylesOptions.find(
-              (style) => style.class === containerStyle,
-            )?.value ?? ContainerStyles.Plain
-          }
+          defaultValue={containerStyle}
           onChange={onContainerStyleChange}
         />
       </div>

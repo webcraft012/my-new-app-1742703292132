@@ -7,7 +7,7 @@ export enum JustifyTypes {
 export interface JustifyOptions {
   label: string;
   value: JustifyTypes;
-  icon: React.JSX.Element;
+  icon: any;
 }
 
 export const justifyClasses: Record<JustifyTypes, { class: string }> = {

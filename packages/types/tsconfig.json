@@ -4,9 +4,11 @@
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "build",
-    "moduleResolution": "node",
     "strict": true,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node"
   },
   "include": ["src"]
 }

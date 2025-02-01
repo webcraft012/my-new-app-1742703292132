@@ -21,3 +21,19 @@ export const containerStylesOptions: ContainerStyleOption[] = [
     value: ContainerStyles.Plain,
   },
 ];
+
+export const containerStyleClasses: Record<ContainerStyles, { class: string }> =
+  containerStylesOptions.reduce(
+    (acc, option) => ({ ...acc, [option.value]: { class: option.class } }),
+    {} as Record<ContainerStyles, { class: string }>,
+  );
+
+export const getContainerStyleClass = (
+  containerStyle?: ContainerStyles,
+): string => {
+  return (
+    containerStyle &&
+    containerStylesOptions.find((style) => style.value === containerStyle)
+      ?.class
+  );
+};

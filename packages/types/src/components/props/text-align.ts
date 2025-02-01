@@ -8,7 +8,7 @@ export enum AlignmentTypes {
 export interface AlignmentOptions {
   label: string;
   value: AlignmentTypes;
-  icon: React.JSX.Element;
+  icon: any;
 }
 
 export const alignmentClasses: Record<AlignmentTypes, { class: string }> = {

@@ -76,7 +76,12 @@ export const textTypesOptions: TextTypeOption[] = [
   },
 ];
 
-export const textTypesClasses = textTypesOptions.reduce((acc, option) => {
-  acc[option.value] = option.class;
-  return acc;
-}, {});
+export const textTypesClasses = textTypesOptions.reduce<
+  Record<TextTypes, string>
+>(
+  (acc, option) => {
+    acc[option.value] = option.class;
+    return acc;
+  },
+  {} as Record<TextTypes, string>,
+);

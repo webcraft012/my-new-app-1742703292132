@@ -11,6 +11,7 @@ import TextComponent from "../PageBuilder/static-components/text";
 import ButtonComponent from "../PageBuilder/static-components/button";
 import CardComponent from "../PageBuilder/static-components/Card";
 import FlexContainerComponent from "../PageBuilder/static-components/FlexContainer";
+import ContainerWorkplaceComponent from "../PageBuilder/static-components/container-workplace";
 
 const HomePage = async (): Promise<React.JSX.Element | null> => {
   const nodes = await getData();
@@ -39,7 +40,7 @@ async function getData(): Promise<React.ReactNode> {
 const componentMap = {
   Workspace: Container,
   WorkplaceHolder: Holder,
-  ContainerWorkplace,
+  ContainerWorkplace: ContainerWorkplaceComponent,
   Card: CardComponent,
   CardBottom: Holder,
   CardTop: Holder,

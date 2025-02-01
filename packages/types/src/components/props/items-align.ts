@@ -7,7 +7,7 @@ export enum ItemsAlignTypes {
 export interface ItemsAlignOptions {
   label: string;
   value: ItemsAlignTypes;
-  icon: React.JSX.Element;
+  icon: any;
 }
 
 export const itemsAlignClasses: Record<ItemsAlignTypes, { class: string }> = {
