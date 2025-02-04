@@ -1,8 +1,8 @@
 export enum AlignmentTypes {
-  Left = "left",
-  Center = "center",
-  Right = "right",
-  Justify = "justify",
+  Left = "text-left",
+  Center = "text-center",
+  Right = "text-right",
+  Justify = "text-justify",
 }
 
 export interface AlignmentOptions {

@@ -5,9 +5,9 @@ import { forwardRef } from "react";
 import { useBuildClassName } from "../hooks/useBuildClassName";
 import { ContainerProps } from "@webcraft/types";
 
-const defaultClassName = "flex flex-col gap-4 flex-wrap relative w-full h-full";
+const defaultClassName = "items-center flex flex-row relative max-w-full";
 
-const ContainerWorkplaceComponent = forwardRef<
+const ContainerRowWorkplaceComponent = forwardRef<
   HTMLDivElement,
   PropsWithChildren<ContainerProps>
 >((props, ref) => {
@@ -19,15 +19,10 @@ const ContainerWorkplaceComponent = forwardRef<
     paddingBottom,
     paddingLeft,
     paddingRight,
-    containerStyle,
     backgroundColor,
+    containerStyle,
     ...rest
   } = props;
-
-  console.log({
-    containerStyle,
-    backgroundColor,
-  });
 
   const computedClassName = useBuildClassName({
     customClassName: `${defaultClassName} ${className}`,
@@ -47,5 +42,5 @@ const ContainerWorkplaceComponent = forwardRef<
   );
 });
 
-ContainerWorkplaceComponent.displayName = "ContainerWorkplace";
-export default ContainerWorkplaceComponent;
+ContainerRowWorkplaceComponent.displayName = "ContainerRowWorkplaceComponent";
+export default ContainerRowWorkplaceComponent;

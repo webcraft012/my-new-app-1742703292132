@@ -14,15 +14,17 @@ const ContainerRowWorkplace: React.FC<ContainerRowWorkplaceProps> = ({
 }) => {
   return (
     <div
-      className={`items-center flex flex-row flex-wrap gap-4 pr-8 pl-8 ${
+      className={`items-center flex flex-row flex-wrap gap-4 ${
         className || ""
       }`}
     >
       <div
         className="flex w-full gap-[8px] flex-wrap justify-between"
-        style={{
-          "--num-children": Children.count(children),
-        }}
+        style={
+          {
+            "--num-children": Children.count(children),
+          } as React.CSSProperties
+        }
       >
         {children}
       </div>

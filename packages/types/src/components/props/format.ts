@@ -1,10 +1,10 @@
 export enum FormatTypes {
-  Bold = "bold",
+  Bold = "font-bold",
   Italic = "italic",
   Underline = "underline",
-  Strikethrough = "strikethrough",
-  Subscript = "subscript",
-  Code = "code",
+  Strikethrough = "line-through",
+  Subscript = "sub",
+  Code = "font-mono",
 }
 
 export interface FormatOptions {

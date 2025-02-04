@@ -36,6 +36,11 @@ export const useBuildClassName = (props: BuildClassNameProps) => {
     containerStyle,
     customClassName,
     width,
+    padding,
+    paddingTop,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
   } = props;
 
   const className: string[] = [];
@@ -75,7 +80,10 @@ export const useBuildClassName = (props: BuildClassNameProps) => {
   }
 
   if (customClassName) {
-    className.push(customClassName);
+    const filterUndefinedFromCustomClassName = customClassName
+      .replace(/\bundefined\b/g, "")
+      .trim();
+    className.push(filterUndefinedFromCustomClassName);
   }
 
   if (width && typeof width === "number") {
@@ -84,7 +92,25 @@ export const useBuildClassName = (props: BuildClassNameProps) => {
     className.push(widthOptions[width].class);
   }
 
-  console.log({ className });
+  if (padding) {
+    className.push(`p-${padding}`);
+  }
+
+  if (paddingTop) {
+    className.push(`pt-${paddingTop}`);
+  }
+
+  if (paddingBottom) {
+    className.push(`pb-${paddingBottom}`);
+  }
+
+  if (paddingLeft) {
+    className.push(`pl-${paddingLeft}`);
+  }
+
+  if (paddingRight) {
+    className.push(`pr-${paddingRight}`);
+  }
 
   return cn(className);
 };
@@ -99,5 +125,10 @@ export type BuildClassNameProps = {
   width?: WidthTypes | number;
   backgroundColor?: string;
   containerStyle?: ContainerStyles;
+  padding?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
   customClassName?: string;
 };

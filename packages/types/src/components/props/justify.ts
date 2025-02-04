@@ -1,7 +1,7 @@
 export enum JustifyTypes {
-  Start = "start",
-  Center = "center",
-  End = "end",
+  Start = "justify-start",
+  Center = "justify-center",
+  End = "justify-end",
 }
 
 export interface JustifyOptions {

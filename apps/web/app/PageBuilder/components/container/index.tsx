@@ -2,7 +2,6 @@ import type { UserComponent } from "@craftjs/core";
 import { Element, useNode } from "@craftjs/core";
 import "./styles.css";
 import { observer } from "mobx-react";
-import { userComponentStore } from "../../store";
 import { ContainerWorkplace } from "./container-workplace";
 import { ContainerRowWorkplace } from "./container-row-workplace";
 import { ContainerSettings } from "./settings";
@@ -13,11 +12,14 @@ export const Container: UserComponent<PropsWithChildren<ContainerProps>> =
   observer(
     ({
       children,
-      containerStyle,
-      backgroundColor,
-      className,
       firstChild,
       shouldShowDropHelper,
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      containerStyle,
+      ...rest
     }) => {
       const {
         connectors: { connect },
@@ -26,25 +28,23 @@ export const Container: UserComponent<PropsWithChildren<ContainerProps>> =
       }));
 
       return (
-        <div
-          className={`w-full flex flex-col h-fit ${className || ""} ${
-            containerStyle || ""
-          }`}
-          ref={(ref) => ref && connect(ref)}
-          style={{
-            backgroundColor,
-            border: userComponentStore.onDragUserComponent
-              ? "1px dashed #ccc"
-              : "unset",
-          }}
-          data-id="container"
-        >
-          <Element canvas id="row-container" is={ContainerWorkplace}>
+        <div ref={(ref) => ref && connect(ref)} data-id="container">
+          <Element
+            canvas
+            id="row-container"
+            is={ContainerWorkplace}
+            paddingTop={paddingTop}
+            paddingBottom={paddingBottom}
+            containerStyle={containerStyle}
+            {...rest}
+          >
             <Element
               canvas
               id="col-container"
               is={ContainerRowWorkplace}
               shouldShowDropHelper={shouldShowDropHelper}
+              paddingLeft={paddingLeft}
+              paddingRight={paddingRight}
             >
               {firstChild}
             </Element>

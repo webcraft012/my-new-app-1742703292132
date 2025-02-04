@@ -50,8 +50,14 @@ const SidebarNO: React.FC = () => {
     const parentNodeId = nodeData.data.parent;
     const parentNode = parentNodeId ? query.node(parentNodeId).get() : null;
 
+    if (!parentNode) return;
+
+    console.log({
+      nodeData,
+      parentNode,
+    });
+
     if (
-      parentNode &&
       parentNode.data.parent === "ROOT" &&
       nodeData.data.name !== "Container"
     ) {
@@ -62,8 +68,9 @@ const SidebarNO: React.FC = () => {
         .parseReactElement(<Container firstChild={component} />)
         .toNodeTree();
       actions.addNodeTree(newNodeTree, parentNode.id);
-    } else if (parentNode && parentNode.data.name === "ContainerWorkplace") {
+    } else if (parentNode.data.name === "ContainerWorkplace") {
       console.log("parent node is container row workplace");
+
       actions.delete(node.rootNodeId);
       const newNodeTree = query
         .parseReactElement(

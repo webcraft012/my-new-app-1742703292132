@@ -1,7 +1,7 @@
 export enum ItemsAlignTypes {
-  Start = "start",
-  Center = "center",
-  End = "end",
+  Start = "items-start",
+  Center = "items-center",
+  End = "items-end",
 }
 
 export interface ItemsAlignOptions {

@@ -8,7 +8,7 @@ export const WorkplaceHolder: React.FC<WorkspaceProps> = ({ children }) => {
 
   return (
     <main
-      className="flex h-full bg-white p-4 w-4/5 flex-col gap-8"
+      className="flex h-full bg-white p-8 w-4/5 flex-col gap-4"
       ref={(ref) => {
         if (ref) connect(ref);
       }}

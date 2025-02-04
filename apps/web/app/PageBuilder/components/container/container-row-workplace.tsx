@@ -1,13 +1,25 @@
 import { useEditor, useNode } from "@craftjs/core";
-import React, { isValidElement } from "react";
+import React, { isValidElement, PropsWithChildren } from "react";
 import { observer } from "mobx-react";
 import Split from "react-split";
-import type { ContainerProps } from ".";
 import { userComponentStore } from "../../store";
 import { DropIndicator } from "../../helpers/DropIndicator";
+import { ContainerProps } from "@webcraft/types";
+import ContainerRowWorkplaceComponent from "../../static-components/container-row-workplace";
+import { getContainerPadding } from "../../utils/padding";
 
-export const ContainerRowWorkplace: React.FC<ContainerProps> = observer(
-  ({ children, className, shouldShowDropHelper }) => {
+export const ContainerRowWorkplace: React.FC<
+  PropsWithChildren<ContainerProps>
+> = observer(
+  ({
+    children,
+    className,
+    shouldShowDropHelper,
+    paddingTop,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+  }) => {
     const {
       connectors: { connect },
     } = useNode();
@@ -45,15 +57,16 @@ export const ContainerRowWorkplace: React.FC<ContainerProps> = observer(
       return initialSizes as number[];
     };
 
+    const shouldAddPadding = userComponentStore.onDragUserComponent;
+
     return (
-      <div
-        className={`items-center flex flex-row relative ${className || ""}`}
-        style={{
-          paddingRight: true ? "2rem" : "unset",
-          paddingLeft: true ? "2rem" : "unset",
-        }}
+      <ContainerRowWorkplaceComponent
         ref={(ref) => ref && connect(ref)}
-        data-id="container-holder"
+        paddingTop={paddingTop}
+        paddingBottom={paddingBottom}
+        paddingLeft={getContainerPadding(shouldAddPadding, paddingLeft)}
+        paddingRight={getContainerPadding(shouldAddPadding, paddingRight)}
+        data-id="container-row-workplace"
       >
         {userComponentStore.onDragUserComponent && (
           // update opacity on drag over
@@ -106,7 +119,7 @@ export const ContainerRowWorkplace: React.FC<ContainerProps> = observer(
           // update opacity on drag over
           <DropIndicator className="top-0 right-3 w-6" />
         )}
-      </div>
+      </ContainerRowWorkplaceComponent>
     );
   },
 );

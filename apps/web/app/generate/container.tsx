@@ -9,15 +9,7 @@ interface ContainerProps {
 }
 
 const Container: React.FC<ContainerProps> = ({ children, className }) => {
-  return (
-    <div
-      className={`container mx-auto p-4 w-full flex flex-col h-fit ${
-        className || ""
-      }`}
-    >
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 };
 
 export default Container;

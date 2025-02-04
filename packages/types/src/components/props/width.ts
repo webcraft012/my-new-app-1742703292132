@@ -1,6 +1,6 @@
 export enum WidthTypes {
-  Auto = "auto",
-  Full = "full",
+  Auto = "w-auto",
+  Full = "w-full",
 }
 
 export interface WidthOptions {

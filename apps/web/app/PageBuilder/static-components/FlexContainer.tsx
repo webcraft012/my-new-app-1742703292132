@@ -1,15 +1,16 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React, { forwardRef, PropsWithChildren } from "react";
 import { useBuildClassName } from "../hooks/useBuildClassName";
 import { FlexContainerProps } from "@webcraft/types";
 
 const defaultClassName = "flex w-full";
 
-const FlexContainerComponent: React.FC<
+const FlexContainerComponent = forwardRef<
+  HTMLDivElement,
   PropsWithChildren<FlexContainerProps>
-> = (props) => {
-  const { children, className, width, justify, backgroundColor } = props;
+>((props, ref) => {
+  const { children, className, width, justify, backgroundColor, style } = props;
 
   const computedClassName = useBuildClassName({
     customClassName: `${defaultClassName} ${className ?? ""}`,
@@ -18,13 +19,17 @@ const FlexContainerComponent: React.FC<
     backgroundColor,
   });
 
+  console.log({
+    width,
+  });
+
   return (
     <div
       className={computedClassName}
       style={
         {
           "--width": `${
-            typeof width === "number" && width < 100
+            width && Number(width) < 100
               ? `${width}%`
               : "calc(100% / var(--num-children))"
           }`,
@@ -37,7 +42,7 @@ const FlexContainerComponent: React.FC<
       {children}
     </div>
   );
-};
+});
 
 FlexContainerComponent.displayName = "FlexContainer";
 

@@ -3,7 +3,6 @@ import React from "react";
 import Container from "./container";
 import Holder from "./holder";
 import ContainerRowWorkplace from "./container-row-workplace";
-import ContainerWorkplace from "./container-workplace";
 import axios from "axios";
 import { API_URL } from "../PageBuilder/hooks/types";
 import { EditorDto } from "@webcraft/types";
@@ -24,17 +23,20 @@ const HomePage = async (): Promise<React.JSX.Element | null> => {
   return renderComponents();
 };
 
-async function getData(): Promise<React.ReactNode> {
-  const { data } = await axios.get<EditorDto>(
-    `${API_URL}/editors/af9a001974655fc48685d003525a3584`,
-  );
-  return new Promise((resolve) => {
-    const state = data?.state ?? "";
+async function getData(): Promise<React.JSX.Element | null> {
+  try {
+    const { data } = await axios.get<EditorDto>(
+      `${API_URL}/editors/af9a001974655fc48685d003525a3584`,
+    );
 
+    const state = data?.state ?? "";
     const nodes: SerializedNodes = JSON.parse(state);
 
-    resolve(createComponentsFromJson(nodes));
-  });
+    return createComponentsFromJson(nodes);
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+    return null;
+  }
 }
 
 const componentMap = {
@@ -46,7 +48,7 @@ const componentMap = {
   CardTop: Holder,
   Button: ButtonComponent,
   Text: TextComponent,
-  Container,
+  Container: FlexContainerComponent,
   ContainerRowWorkplace,
   Spacer: Container,
   FlexContainer: FlexContainerComponent,
@@ -55,7 +57,7 @@ const componentMap = {
 function createComponentFromNode(
   node: SerializedNode,
   nodes: SerializedNodes,
-): React.ReactNode {
+): React.JSX.Element | null {
   const Component = componentMap[node.displayName];
   if (!Component) return null;
 
@@ -84,8 +86,12 @@ function createComponentFromNode(
   return <Component {...node.props}>{childNodes}</Component>;
 }
 
-function createComponentsFromJson(json: SerializedNodes): React.ReactNode {
-  return createComponentFromNode(json.ROOT, json);
+function createComponentsFromJson(
+  json: SerializedNodes,
+): React.JSX.Element | null {
+  if (!json?.ROOT) return null;
+
+  return createComponentFromNode(json.ROOT, json) as React.JSX.Element;
 }
 
 export default HomePage;

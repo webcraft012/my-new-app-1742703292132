@@ -17,11 +17,10 @@ const CardComponent = forwardRef<
 
   const computedClassName = useBuildClassName({
     customClassName: `${defaultClassName} ${className}`,
-    width,
   });
 
   return (
-    <FlexContainerComponent>
+    <FlexContainerComponent width={width}>
       <div className={computedClassName} ref={ref}>
         {children}
       </div>
