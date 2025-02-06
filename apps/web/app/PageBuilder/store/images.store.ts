@@ -5,6 +5,7 @@ interface PendingImage {
   previewUrl: string;
   uploaded: boolean;
   uploadedUrl?: string;
+  active?: boolean;
 }
 
 class ImageStore {

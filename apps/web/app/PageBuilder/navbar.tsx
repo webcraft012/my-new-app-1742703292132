@@ -3,16 +3,20 @@ import React from "react";
 import { useSaveEditor } from "./hooks/useSaveEditor";
 import { useSaveImages } from "./hooks/useSaveImages";
 import { imageStore } from "./store/images.store";
+import { useDeleteImages } from "./hooks/useDeleteImages";
 export const Navbar: React.FC = () => {
   const { store } = useEditor();
   const { mutate: saveEditor } = useSaveEditor();
   const { mutateAsync: saveImages } = useSaveImages();
-
+  const { mutateAsync: deleteImages } = useDeleteImages();
   const save = async (): Promise<void> => {
     try {
       // First, upload pending images if any
       if (imageStore.pendingImages.length > 0) {
+        await deleteImages(imageStore.pendingImages);
+        console.log(imageStore.pendingImages);
         const uploadedUrls = await saveImages(imageStore.pendingImages);
+        await deleteImages(imageStore.pendingImages);
         console.log("Uploaded image URLs:", uploadedUrls);
 
         // Update pendingImages with uploaded URLs

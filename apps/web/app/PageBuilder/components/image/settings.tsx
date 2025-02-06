@@ -2,7 +2,10 @@ import { useNode } from "@craftjs/core";
 import { ImageProps } from ".";
 import { JustifyTypes } from "../../settings-components";
 import { JustifySelector } from "../../settings-components/justify-selector";
-
+import { ImageSourceSelector } from "../../settings-components/imageSource-selector";
+import { ImageAltSelector } from "../../settings-components/imageAlt-selector";
+import { imageStore } from "../../store/images.store";
+import { useEffect } from "react";
 export const ImageSettings: React.FC = () => {
   const {
     actions: { setProp },
@@ -10,16 +13,15 @@ export const ImageSettings: React.FC = () => {
   } = useNode<{ props: ImageProps }>((node) => ({
     props: node.data.props as ImageProps,
   }));
-  const onWidthChange = (value: number): void => {
-    setProp((currentProps: ImageProps) => {
-      currentProps.width = value;
-    });
-  };
-  const onHeightChange = (value: number): void => {
-    setProp((currentProps: ImageProps) => {
-      currentProps.height = value;
-    });
-  };
+  useEffect(() => {
+    const currentImage = imageStore.pendingImages.find(
+      (img) => img.previewUrl === imageSrc || img.uploadedUrl === imageSrc,
+    );
+
+    if (currentImage?.uploadedUrl) {
+      setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
+    }
+  }, [imageStore.pendingImages, imageSrc, setProp]);
   const onJustifyChange = (value: JustifyTypes): void => {
     setProp((currentProps: ImageProps) => {
       currentProps.justify = value;
@@ -36,9 +38,21 @@ export const ImageSettings: React.FC = () => {
     });
   };
   return (
-    <div className="flex p-4 flex-col gap-4">
+    <div className="flex p-4 flex-col gap-12">
       <div>
         <JustifySelector defaultValue={justify} onChange={onJustifyChange} />
+      </div>
+      <div>
+        <ImageAltSelector
+          defaultValue={alt}
+          onChange={onAltChange}
+        ></ImageAltSelector>
+      </div>
+      <div>
+        <ImageSourceSelector
+          defaultValue={imageSrc}
+          onChange={onSrcChange}
+        ></ImageSourceSelector>
       </div>
     </div>
   );

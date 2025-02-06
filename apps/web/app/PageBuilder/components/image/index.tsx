@@ -43,7 +43,6 @@ export const Image: CraftImage = ({
       setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
     }
   }, [imageStore.pendingImages, imageSrc, setProp]);
-
   const onFileSelect = (file: File | null) => {
     if (!file || !(file instanceof File)) {
       console.error("Invalid file selected:", file);
@@ -57,6 +56,7 @@ export const Image: CraftImage = ({
       value: file,
       previewUrl,
       uploaded: false,
+      active: true,
     });
   };
 
@@ -85,6 +85,8 @@ export const Image: CraftImage = ({
         <AddPhotoPopover
           onFileSelect={onFileSelect}
           onUrlSelect={onUrlSelect}
+          addPhotoButton={1}
+          currentImageSrc={undefined}
         />
       )}
     </div>

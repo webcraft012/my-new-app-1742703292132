@@ -9,6 +9,7 @@ import { join } from 'path';
 import { FileController } from './file/file.controller';
 import { AiModule } from './ai/ai.module';
 
+import { FileService } from './file/file.service';
 @Module({
   imports: [
     AiModule,
@@ -21,6 +22,6 @@ import { AiModule } from './ai/ai.module';
     }),
   ],
   controllers: [AppController, FileController],
-  providers: [AppService],
+  providers: [AppService, FileService],
 })
 export class AppModule {}

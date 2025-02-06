@@ -9,7 +9,12 @@ import axios from "axios"; // Axios for making HTTP requests
 import { API_URL } from "../hooks/types";
 import FlexContainerComponent from "../static-components/FlexContainer";
 import { JustifyTypes } from "../settings-components";
-export default function AddPhotoPopover({ onFileSelect, onUrlSelect }) {
+export default function AddPhotoPopover({
+  onFileSelect,
+  onUrlSelect,
+  addPhotoButton,
+  currentImageSrc,
+}) {
   const [uploadMode, setUploadMode] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -52,118 +57,117 @@ export default function AddPhotoPopover({ onFileSelect, onUrlSelect }) {
   };
 
   const clearImage = () => {
-    setImageSrc("");
+    if (addPhotoButton) {
+      setImageSrc("");
+      setError("");
+      onFileSelect("");
+      onUrlSelect("");
+    }
     setUploadMode(null);
-    setError(""); // Clear error when reset
-    onFileSelect("");
-    onUrlSelect(""); // Clear image in parent
   };
 
   return (
     <FlexContainerComponent justify={JustifyTypes.Center}>
       <div className="inline-block relative  overflow-auto">
         <Popover>
-          <PopoverTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200 shadow-lg w-[400px] justify-center ">
-              <Camera size={18} />
-              <span>Add Image</span>
-            </button>
-          </PopoverTrigger>
-
-          <PopoverContent
-            avoidCollisions={false}
-            align="center"
-            side="bottom"
-            forceMount
-            className="w-72 p-4 bg-white border rounded-lg shadow-lg"
-          >
-            {!uploadMode ? (
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setUploadMode("upload")}
-                  className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200"
-                >
-                  <Upload size={24} className="text-blue-500" />
-                  <span className="text-sm font-medium text-gray-600">
-                    Upload
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setUploadMode("link")}
-                  className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200"
-                >
-                  <Link size={24} className="text-blue-500" />
-                  <span className="text-sm font-medium text-gray-600">
-                    Link
-                  </span>
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-medium text-gray-700">
-                    {uploadMode === "upload" ? "Upload Image" : "Image URL"}
-                  </h3>
+          {addPhotoButton ? (
+            <PopoverTrigger>
+              <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200 shadow-lg sm:w-[400px] w-[200px] justify-center ">
+                <Camera size={18} />
+                <span>Add Image</span>
+              </button>
+            </PopoverTrigger>
+          ) : (
+            <PopoverTrigger>
+              <button className="flex items-center gap-2 px-4 py-2 bg-white border  hover:bg-gray-100 text-base text-black rounded-md transition-colors duration-200 shadow-lg  justify-center ">
+                <Camera size={18} />
+                <span>Replace Image</span>
+              </button>
+            </PopoverTrigger>
+          )}
+          {currentImageSrc != "" && (
+            <PopoverContent
+              avoidCollisions={false}
+              align="center"
+              side="bottom"
+              forceMount
+              className="w-72 p-4 bg-white border rounded-lg shadow-lg"
+            >
+              {!uploadMode ? (
+                <div className="grid grid-cols-2 gap-4">
                   <button
-                    onClick={clearImage}
-                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    onClick={() => setUploadMode("upload")}
+                    className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200"
                   >
-                    <X size={16} className="text-gray-500" />
+                    <Upload size={24} className="text-blue-500" />
+                    <span className="text-sm font-medium text-gray-600">
+                      Upload
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setUploadMode("link")}
+                    className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200"
+                  >
+                    <Link size={24} className="text-blue-500" />
+                    <span className="text-sm font-medium text-gray-600">
+                      Link
+                    </span>
                   </button>
                 </div>
-
-                {uploadMode === "upload" && (
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                      onChange={handleFileChange}
-                    />
-                    {error && (
-                      <p className="mt-2 text-sm ml-7 text-red-500">{error}</p>
-                    )}
-                  </div>
-                )}
-
-                {uploadMode === "link" && (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="https://example.com/image.jpg"
-                      className="w-full p-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      onChange={handleLinkChange}
-                    />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      {uploadMode === "upload" ? "Upload Image" : "Image URL"}
+                    </h3>
                     <button
-                      className="w-full mt-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200"
-                      onClick={handleUseImage}
+                      onClick={clearImage}
+                      className="p-1 hover:bg-gray-100 rounded-full transition-colors"
                     >
-                      Use this image
+                      <X size={16} className="text-gray-500" />
                     </button>
-                    {error && (
-                      <p className="mt-2 text-sm text-red-500">{error}</p>
-                    )}
-                  </>
-                )}
-
-                {imageSrc && (
-                  <div className="relative mt-4 rounded-lg overflow-hidden">
-                    <img
-                      src={imageSrc}
-                      alt="Preview"
-                      className="w-full h-auto rounded-lg shadow-sm"
-                    />
-                    {isLoading && (
-                      <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-                        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                      </div>
-                    )}
                   </div>
-                )}
-              </div>
-            )}
-          </PopoverContent>
+
+                  {uploadMode === "upload" && (
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                        onChange={handleFileChange}
+                      />
+                      {error && (
+                        <p className="mt-2 text-sm ml-7 text-red-500">
+                          {error}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {uploadMode === "link" && (
+                    <>
+                      <input
+                        type="text"
+                        placeholder="https://example.com/image.jpg"
+                        className="w-full p-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        onChange={handleLinkChange}
+                      />
+                      <button
+                        className="w-full mt-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200"
+                        onClick={handleUseImage}
+                      >
+                        Use this image
+                      </button>
+                      {error && (
+                        <p className="mt-2 text-sm text-red-500">{error}</p>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </PopoverContent>
+          )}
         </Popover>
       </div>
     </FlexContainerComponent>

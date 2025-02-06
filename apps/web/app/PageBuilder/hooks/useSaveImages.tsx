@@ -8,6 +8,7 @@ interface PendingImage {
   previewUrl: string;
   uploaded: boolean;
   uploadedUrl?: string;
+  active?: boolean;
 }
 
 export const useSaveImages = () => {
