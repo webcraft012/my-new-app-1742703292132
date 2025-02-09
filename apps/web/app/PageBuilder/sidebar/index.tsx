@@ -9,6 +9,7 @@ import { Text } from "../components/text";
 import { ContainerRowWorkplace } from "../components/container/container-row-workplace";
 import { DraggableButton } from "./draggable-button";
 import { Column } from "../components/container/column";
+import Image from "../components/image";
 
 const SidebarNO: React.FC = () => {
   const { connectors, query, actions } = useEditor();
@@ -138,6 +139,12 @@ const SidebarNO: React.FC = () => {
                 title="Lorem text"
               />,
             )}
+          />
+        </div>
+        <div className="flex flex-col">
+          <DraggableButton
+            label="Image"
+            ref={handleDragComponent(<Image></Image>)}
           />
         </div>
         {selected.settings ? React.createElement(selected.settings) : null}

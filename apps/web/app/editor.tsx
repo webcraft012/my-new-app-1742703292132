@@ -19,6 +19,7 @@ import { WorkplaceHolder, Workspace } from "./PageBuilder/workspace";
 import { Column } from "./PageBuilder/components/container/column";
 import { ColumnHolder } from "./PageBuilder/components/container/column-holder";
 
+import Image from "./PageBuilder/components/image";
 export const PageEditor: React.FC = () => {
   const { data } = useGetEditor("af9a001974655fc48685d003525a3584");
 
@@ -45,6 +46,7 @@ export const PageEditor: React.FC = () => {
         ContainerWorkplace,
         Spacer,
         ColumnHolder,
+        Image,
       }}
     >
       <div className="flex flex-col h-screen">
