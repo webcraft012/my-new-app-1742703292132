@@ -15,6 +15,7 @@ export const availableUIElement = [
   "row",
   "button",
   "text",
+  "image",
 ];
 
 /**
@@ -36,6 +37,7 @@ export const uiElementMapWithComponentName = {
   },
   button: { name: "Button", isCanvas: false, hasLinkedNodes: false },
   text: { name: "Text", isCanvas: false, hasLinkedNodes: false },
+  image: { name: "Image", isCanvas: false, hasLinkedNodes: false },
   workplace: {
     name: "WorkplaceHolder",
     isCanvas: true,

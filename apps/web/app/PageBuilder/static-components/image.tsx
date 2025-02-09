@@ -1,33 +1,22 @@
 import { forwardRef } from "react";
 
 import { useBuildClassName } from "../hooks/useBuildClassName";
+import { getTailwindClassName } from "../hooks/useTailwindClassName";
+import { ImageComponentProps } from "@webcraft/types";
 
-export interface ImageComponentProps {
-  imageSrc?: string;
-  alt?: string;
-  width?: number;
-  height?: number;
-  className?: string;
-}
-
-const defaultClassName = "";
+export const ImageComponentDefaultProps: Partial<ImageComponentProps> = {
+  w: "w-52",
+};
 
 const ImageComponent = forwardRef<HTMLImageElement, ImageComponentProps>(
   (props, ref) => {
-    const { imageSrc, alt, width, height, className } = props;
-    const computedClassName = useBuildClassName({
-      customClassName: `${defaultClassName} ${className}`,
-    });
+    const mergedProps = { ...ImageComponentDefaultProps, ...props };
+    const { src, alt, ...rest } = mergedProps;
+
+    const computedClassName = getTailwindClassName(rest);
+
     return (
-      <div>
-        <img
-          width={width}
-          height={height}
-          src={imageSrc}
-          alt={alt}
-          ref={ref}
-        ></img>
-      </div>
+      <img src={src} alt={alt} ref={ref} className={computedClassName}></img>
     );
   },
 );

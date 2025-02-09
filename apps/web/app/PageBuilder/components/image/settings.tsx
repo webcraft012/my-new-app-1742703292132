@@ -9,19 +9,19 @@ import { useEffect } from "react";
 export const ImageSettings: React.FC = () => {
   const {
     actions: { setProp },
-    props: { justify, height, width, imageSrc, alt },
+    props: { justify, height, width, src, alt },
   } = useNode<{ props: ImageProps }>((node) => ({
     props: node.data.props as ImageProps,
   }));
   useEffect(() => {
     const currentImage = imageStore.images.find(
-      (img) => img.previewUrl === imageSrc || img.uploadedUrl === imageSrc,
+      (img) => img.previewUrl === src || img.uploadedUrl === src,
     );
 
     if (currentImage?.uploadedUrl) {
-      setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
+      setProp((props) => (props.src = currentImage.uploadedUrl), 500);
     }
-  }, [imageStore.images, imageSrc, setProp]);
+  }, [imageStore.images, src, setProp]);
   const onJustifyChange = (value: JustifyTypes): void => {
     setProp((currentProps: ImageProps) => {
       currentProps.justify = value;
@@ -29,7 +29,7 @@ export const ImageSettings: React.FC = () => {
   };
   const onSrcChange = (value: string): void => {
     setProp((currentProps: ImageProps) => {
-      currentProps.imageSrc = value;
+      currentProps.src = value;
     });
   };
   const onAltChange = (value: string): void => {
@@ -50,7 +50,7 @@ export const ImageSettings: React.FC = () => {
       </div>
       <div>
         <ImageSourceSelector
-          defaultValue={imageSrc}
+          defaultValue={src}
           onChange={onSrcChange}
         ></ImageSourceSelector>
       </div>

@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
         await deleteImages(imageStore.images);
         console.log("Uploaded image URLs:", uploadedUrls);
 
-        // Update pendingImages with uploaded URLs
+        // Update images with uploaded URLs
         imageStore.images.map((img) => {
           const uploadedUrl = uploadedUrls.find((url) => url === img.value);
           console.log(uploadedUrl);
@@ -28,16 +28,16 @@ export const Navbar: React.FC = () => {
 
         // 🔹 Update the Craft.js editor to replace preview URLs with uploaded ones
         Object.entries(store.query.getNodes()).forEach(([nodeId, node]) => {
-          if (!node.data.props || !node.data.props.imageSrc) return;
+          if (!node.data.props || !node.data.props.src) return;
 
-          const nodeImageSrc = node.data.props.imageSrc;
+          const nodesrc = node.data.props.src;
           const uploadedImage = imageStore.images.find(
-            (img) => img.previewUrl === nodeImageSrc,
+            (img) => img.previewUrl === nodesrc,
           );
 
           if (uploadedImage?.uploadedUrl) {
             store.actions.setProp(nodeId, (props) => {
-              props.imageSrc = uploadedImage.uploadedUrl;
+              props.src = uploadedImage.uploadedUrl;
             });
           }
         });

@@ -27,7 +27,7 @@ export class AiClient implements AiClientInterface {
         
         ### 1. Component Structure:
         - **Hierarchy:** \`container > row > column > elements\`
-        - **Valid Types:** \`container\`, \`row\`, \`column\`, \`button\`, \`text\`, \`workplace\`,
+        - **Valid Types:** \`container\`, \`row\`, \`column\`, \`button\`, \`text\`, \`workplace\`, \`image\`
         - **Parent-Child Rules:**
           - You must always start with \`workplace\` as the root element
           - \`container\` → **only** contains \`row\`
@@ -146,6 +146,7 @@ export class AiClient implements AiClientInterface {
         - **Ensure accessibility** where applicable (e.g., \`"focus": { "outline": "outline-none", "ring": "ring-2" }"\`).
         - **Include responsive variants first** (e.g., \`"md:w-1/2"\` before \`"w-1/2"\`).
         - You can not use flexDirection: "flex-col" for \`row\` elements
+        - use unsplash images for images, example: https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 
         ### 7. Default props:
         Here are the default props for some elements:

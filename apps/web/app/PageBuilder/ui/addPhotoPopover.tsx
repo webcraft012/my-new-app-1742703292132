@@ -11,10 +11,10 @@ export default function AddPhotoPopover({
   onFileSelect,
   onUrlSelect,
   addPhotoButton,
-  currentImageSrc,
+  currentsrc,
 }) {
   const [uploadMode, setUploadMode] = useState(null);
-  const [imageSrc, setImageSrc] = useState("");
+  const [src, setsrc] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -41,13 +41,13 @@ export default function AddPhotoPopover({
   };
 
   const handleLinkChange = (e) => {
-    setImageSrc(e.target.value);
+    setsrc(e.target.value);
     setError(""); // Clear any previous error when the user starts typing
   };
 
   const handleUseImage = () => {
-    if (isValidUrl(imageSrc)) {
-      onUrlSelect(imageSrc); // Send to parent
+    if (isValidUrl(src)) {
+      onUrlSelect(src); // Send to parent
       setError(""); // Clear error if valid
     } else {
       setError("Please provide a valid URL."); // Set error message if invalid
@@ -56,7 +56,7 @@ export default function AddPhotoPopover({
 
   const clearImage = () => {
     if (addPhotoButton) {
-      setImageSrc("");
+      setsrc("");
       setError("");
       onFileSelect("");
       onUrlSelect("");
@@ -82,7 +82,7 @@ export default function AddPhotoPopover({
             </button>
           </PopoverTrigger>
         )}
-        {currentImageSrc != "" && (
+        {currentsrc != "" && (
           <PopoverContent
             avoidCollisions={false}
             align="center"

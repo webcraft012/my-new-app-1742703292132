@@ -14,7 +14,7 @@ export const ImageSourceSelector: React.FC<ImageSourceSelectorProps> = ({
       return;
     }
     console.log("defaultvalue :", defaultValue);
-    imageStore.pendingImages.map((image) => {
+    imageStore.images.map((image) => {
       if (image.uploadedUrl == defaultValue) {
         image.active = false;
       }
@@ -34,7 +34,7 @@ export const ImageSourceSelector: React.FC<ImageSourceSelectorProps> = ({
   };
 
   const onUrlSelect = (url: string) => {
-    imageStore.pendingImages.map((image) => {
+    imageStore.images.map((image) => {
       if (image.uploadedUrl == defaultValue) {
         image.active = false;
       }
@@ -58,7 +58,7 @@ export const ImageSourceSelector: React.FC<ImageSourceSelectorProps> = ({
         onFileSelect={onFileSelect}
         onUrlSelect={onUrlSelect}
         addPhotoButton={0}
-        currentImageSrc={defaultValue}
+        currentsrc={defaultValue}
       ></AddPhotoPopover>
     </>
   );

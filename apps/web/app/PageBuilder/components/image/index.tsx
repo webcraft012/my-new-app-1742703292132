@@ -1,48 +1,41 @@
 import { useNode, UserComponent } from "@craftjs/core";
 import ImageComponent, {
-  ImageComponentProps,
+  ImageComponentDefaultProps,
 } from "../../static-components/image";
 import { FC, useEffect } from "react";
 import AddPhotoPopover from "../../ui/addPhotoPopover";
 import { imageStore } from "../../store/images.store";
 import { ImageSettings } from "./settings";
+import { ImageComponentProps } from "@webcraft/types";
 export interface ImageProps extends ImageComponentProps {}
 
-interface CraftImage extends FC<ImageProps> {
-  craft: {
-    props: ImageProps;
-    related: {
-      settings: React.ComponentType<React.FC>;
-    };
-  };
-}
-
-export const Image: CraftImage = ({ alt, width, height, className }) => {
+export const Image: UserComponent<ImageComponentProps> = (props) => {
   const {
     connectors: { connect, drag },
     actions: { setProp },
-    imageSrc,
+    src,
   } = useNode((node) => ({
-    imageSrc: node.data.props.imageSrc,
+    src: node.data.props.src,
   }));
 
-  // Sync pendingImages with Craft.js state
+  // Sync images with Craft.js state
   useEffect(() => {
     const currentImage = imageStore.images.find(
-      (img) => img.previewUrl === imageSrc || img.uploadedUrl === imageSrc,
+      (img) => img.previewUrl === src || img.uploadedUrl === src,
     );
 
     if (currentImage?.uploadedUrl) {
-      setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
+      setProp((props) => (props.src = currentImage.uploadedUrl), 500);
     }
-  }, [imageStore.images, imageSrc, setProp]);
+  }, [imageStore.images, src, setProp]);
+
   const onFileSelect = (file: File | null) => {
     if (!file || !(file instanceof File)) {
       console.error("Invalid file selected:", file);
       return;
     }
     const previewUrl = URL.createObjectURL(file);
-    setProp((props) => (props.imageSrc = previewUrl)); // Update Craft.js state
+    setProp((props) => (props.src = previewUrl)); // Update Craft.js state
 
     imageStore.addImage({
       type: "file",
@@ -54,7 +47,7 @@ export const Image: CraftImage = ({ alt, width, height, className }) => {
   };
 
   const onUrlSelect = (url: string) => {
-    setProp((props) => (props.imageSrc = url)); // Update Craft.js state
+    setProp((props) => (props.src = url)); // Update Craft.js state
     imageStore.addImage({
       type: "url",
       value: url,
@@ -65,20 +58,14 @@ export const Image: CraftImage = ({ alt, width, height, className }) => {
 
   return (
     <div ref={(ref) => ref && connect(drag(ref))}>
-      {imageSrc ? (
-        <ImageComponent
-          imageSrc={imageSrc}
-          alt={alt}
-          width={width}
-          height={height}
-          className={className}
-        />
+      {src ? (
+        <ImageComponent src={src} {...props} />
       ) : (
         <AddPhotoPopover
           onFileSelect={onFileSelect}
           onUrlSelect={onUrlSelect}
           addPhotoButton={1}
-          currentImageSrc={undefined}
+          currentsrc={undefined}
         />
       )}
     </div>
@@ -87,7 +74,7 @@ export const Image: CraftImage = ({ alt, width, height, className }) => {
 
 Image.craft = {
   props: {
-    imageSrc: "",
+    ...ImageComponentDefaultProps,
   },
   related: {
     settings: ImageSettings,
