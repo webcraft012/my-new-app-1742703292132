@@ -1,13 +1,6 @@
-import { AlignmentTypes, FormatTypes, TextTypes } from "./props";
+import { BaseComponentProps } from "./props";
 
-export interface TextComponentProps {
-  textAlign?: AlignmentTypes;
-  className?: string;
-  width?: number;
+export interface TextComponentProps extends BaseComponentProps {
   text: string;
-  color?: string;
-  backgroundColor?: string;
-  textType?: TextTypes;
-  textFormats?: FormatTypes[];
   isEditable?: boolean;
 }

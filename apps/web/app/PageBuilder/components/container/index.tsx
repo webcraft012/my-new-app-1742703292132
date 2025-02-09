@@ -1,71 +1,64 @@
 import type { UserComponent } from "@craftjs/core";
 import { Element, useNode } from "@craftjs/core";
 import "./styles.css";
-import { observer } from "mobx-react";
 import { ContainerWorkplace } from "./container-workplace";
 import { ContainerRowWorkplace } from "./container-row-workplace";
 import { ContainerSettings } from "./settings";
 import { ContainerProps } from "@webcraft/types";
 import { PropsWithChildren } from "react";
+import ContainerComponent from "../../static-components/container-component";
+import { Column } from "./column";
 
-export const Container: UserComponent<PropsWithChildren<ContainerProps>> =
-  observer(
-    ({
-      children,
-      firstChild,
-      shouldShowDropHelper,
-      paddingTop,
-      paddingBottom,
-      paddingLeft,
-      paddingRight,
-      containerStyle,
-      ...rest
-    }) => {
-      const {
-        connectors: { connect },
-      } = useNode((_n) => ({
-        node: _n,
-      }));
+export const Container: UserComponent<PropsWithChildren<ContainerProps>> = ({
+  children,
+  firstChild,
+  shouldShowDropHelper,
+  pt,
+  pb,
+  pl,
+  pr,
+  containerStyle,
+  ...rest
+}) => {
+  const {
+    connectors: { connect },
+  } = useNode((_n) => ({
+    node: _n,
+  }));
 
-      return (
-        <div ref={(ref) => ref && connect(ref)} data-id="container">
-          <Element
-            canvas
-            id="row-container"
-            is={ContainerWorkplace}
-            paddingTop={paddingTop}
-            paddingBottom={paddingBottom}
-            containerStyle={containerStyle}
-            {...rest}
-          >
-            <Element
-              canvas
-              id="col-container"
-              is={ContainerRowWorkplace}
-              shouldShowDropHelper={shouldShowDropHelper}
-              paddingLeft={paddingLeft}
-              paddingRight={paddingRight}
-            >
+  return (
+    <ContainerComponent ref={(ref) => ref && connect(ref)} data-id="container">
+      <Element
+        canvas
+        id="row-container"
+        is={ContainerWorkplace}
+        pt={pt}
+        pb={pb}
+        containerStyle={containerStyle}
+        {...rest}
+      >
+        <Element
+          canvas
+          id="col-container"
+          is={ContainerRowWorkplace}
+          shouldShowDropHelper={shouldShowDropHelper}
+          pl={pl}
+          pr={pr}
+        >
+          {firstChild && (
+            <Element canvas id={`column`} is={Column}>
               {firstChild}
             </Element>
-            {children}
-          </Element>
-        </div>
-      );
-    },
+          )}
+        </Element>
+        {children}
+      </Element>
+    </ContainerComponent>
   );
+};
 
 Container.craft = {
   related: {
     settings: ContainerSettings,
   },
 };
-
-// Container.craft = {
-//   isCanvas: false,
-//   rules: {
-//     canMoveIn: () => false,
-//     canDrop: () => false,
-//     canDrag: () => false,
-//   },
-// };

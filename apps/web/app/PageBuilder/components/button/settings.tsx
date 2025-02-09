@@ -3,7 +3,6 @@
 import { useNode } from "@craftjs/core";
 import React from "react";
 import { ColorSelector } from "../../settings-components/color-selector";
-import { JustifyTypes, WidthTypes } from "../../settings-components/types";
 import { WidthSelector } from "../../settings-components/width-selector";
 import type { ButtonProps } from ".";
 import { JustifySelector } from "../../settings-components/justify-selector";
@@ -11,20 +10,20 @@ import { JustifySelector } from "../../settings-components/justify-selector";
 export const ButtonSettings: React.FC = () => {
   const {
     actions: { setProp },
-    props: { justify, backgroundColor, width, textColor },
+    props: { justifyContent, bg, w, textColor },
   } = useNode<{ props: ButtonProps }>((node) => ({
     props: node.data.props as ButtonProps,
   }));
 
-  const onWidthChange = (value: WidthTypes): void => {
+  const onWidthChange = (value: string): void => {
     setProp((currentProps: ButtonProps) => {
-      currentProps.width = value;
+      currentProps.w = value;
     });
   };
 
   const onBackgroundColorChange = (value: string): void => {
     setProp((currentProps: ButtonProps) => {
-      currentProps.backgroundColor = value;
+      currentProps.bg = value;
     });
   };
 
@@ -34,25 +33,29 @@ export const ButtonSettings: React.FC = () => {
     });
   };
 
-  const onJustifyChange = (value: JustifyTypes): void => {
+  const onJustifyChange = (value: string): void => {
     setProp((currentProps: ButtonProps) => {
-      currentProps.justify = value;
+      currentProps.justifyContent = value;
     });
   };
 
   return (
     <div className="flex p-4 flex-col gap-4">
       <div>
-        <JustifySelector defaultValue={justify} onChange={onJustifyChange} />
+        <JustifySelector
+          defaultValue={justifyContent}
+          onChange={onJustifyChange}
+        />
       </div>
       <div>
-        <WidthSelector defaultValue={width} onChange={onWidthChange} />
+        <WidthSelector defaultValue={w} onChange={onWidthChange} />
       </div>
       <div>
         <ColorSelector
-          defaultValue={backgroundColor}
+          defaultValue={bg}
           label="Background Color"
           onChange={onBackgroundColorChange}
+          type="bg"
         />
       </div>
       <div>
@@ -60,6 +63,7 @@ export const ButtonSettings: React.FC = () => {
           defaultValue={textColor}
           label="Text Color"
           onChange={onTextColorChange}
+          type="text"
         />
       </div>
     </div>

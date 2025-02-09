@@ -7,8 +7,7 @@ import {
 } from "@ui/components/select";
 import /* Icons for small, medium, large */ "lucide-react";
 import React from "react";
-import type { ContainerStyles } from "./types";
-import { containerStylesOptions } from "./types";
+import { ContainerStyles, containerStylesOptions } from "@webcraft/types";
 
 export const ContainerStyleSelector: React.FC<ContainerStyleSelectorProps> = ({
   defaultValue,

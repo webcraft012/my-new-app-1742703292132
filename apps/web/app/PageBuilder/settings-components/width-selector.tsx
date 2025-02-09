@@ -7,17 +7,27 @@ import {
 } from "@ui/components/select";
 import /* Icons for small, medium, large */ "lucide-react";
 import React from "react";
-import type { WidthOptions } from "./types";
-import { WidthTypes } from "./types";
 
-const widthOptions: WidthOptions[] = [
+const widthOptions = [
   {
     label: "Auto",
-    value: WidthTypes.Auto,
+    value: "w-auto",
   },
   {
     label: "Full",
-    value: WidthTypes.Full,
+    value: "w-full",
+  },
+  {
+    label: "Min",
+    value: "w-min",
+  },
+  {
+    label: "Max",
+    value: "w-max",
+  },
+  {
+    label: "Fit",
+    value: "w-fit",
   },
 ];
 
@@ -28,7 +38,7 @@ export const WidthSelector: React.FC<WidthSelectorProps> = ({
   return (
     <div>
       <p className="text-gray-400 font-bold text-xs mb-2">Width</p>
-      <Select defaultValue={defaultValue} onValueChange={onChange}>
+      <Select defaultValue={`${defaultValue}`} onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue placeholder="Width" />
         </SelectTrigger>
@@ -45,6 +55,6 @@ export const WidthSelector: React.FC<WidthSelectorProps> = ({
 };
 
 interface WidthSelectorProps {
-  defaultValue?: WidthTypes;
-  onChange?: (value: WidthTypes) => void;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }

@@ -16,6 +16,8 @@ import { Navbar } from "./PageBuilder/navbar";
 import { RenderNode } from "./PageBuilder/render-node";
 import { Sidebar } from "./PageBuilder/sidebar";
 import { WorkplaceHolder, Workspace } from "./PageBuilder/workspace";
+import { Column } from "./PageBuilder/components/container/column";
+import { ColumnHolder } from "./PageBuilder/components/container/column-holder";
 
 export const PageEditor: React.FC = () => {
   const { data } = useGetEditor("af9a0019s74655fc48685d003525a3584");
@@ -31,6 +33,7 @@ export const PageEditor: React.FC = () => {
       onRender={RenderNode}
       resolver={{
         Workspace,
+        Column,
         WorkplaceHolder,
         Card,
         CardBottom,
@@ -41,6 +44,7 @@ export const PageEditor: React.FC = () => {
         ContainerRowWorkplace,
         ContainerWorkplace,
         Spacer,
+        ColumnHolder,
       }}
     >
       <div className="flex flex-col h-screen">

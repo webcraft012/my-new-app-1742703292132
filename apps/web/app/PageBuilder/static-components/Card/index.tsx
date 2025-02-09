@@ -1,30 +1,43 @@
 "use client";
 
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import { forwardRef } from "react";
-import { useBuildClassName } from "../../hooks/useBuildClassName";
-import FlexContainerComponent from "../FlexContainer";
+import FlexContainerComponent from "../container-component";
 import { CardComponentProps } from "@webcraft/types";
+import { getTailwindClassName } from "../../hooks/useTailwindClassName";
 
-const defaultClassName =
-  "px-6 py-4 flex flex-col flex-1 rounded overflow-hidden shadow-md hover:shadow-lg hover:cursor-pointer";
+export const CardDefaultProps: Partial<CardComponentProps> = {
+  rounded: "rounded",
+  shadow: "shadow",
+  hover: {
+    cursor: "cursor-pointer",
+    shadow: "shadow-lg",
+  },
+  px: "px-6",
+  py: "py-4",
+  display: "flex",
+  flexDirection: "flex-col",
+  flexWrap: "flex-wrap",
+  flex: "flex-1",
+  overflow: "overflow-hidden",
+};
 
 const CardComponent = forwardRef<
   HTMLDivElement,
   PropsWithChildren<CardComponentProps>
 >((props, ref) => {
-  const { children, className, width } = props;
+  const mergedProps = { ...CardDefaultProps, ...props };
+  const { children, ...rest } = mergedProps;
 
-  const computedClassName = useBuildClassName({
-    customClassName: `${defaultClassName} ${className}`,
-  });
+  const computedClassName = useMemo(
+    () => getTailwindClassName(rest),
+    [rest], // List all relevant props
+  );
 
   return (
-    <FlexContainerComponent width={width}>
-      <div className={computedClassName} ref={ref}>
-        {children}
-      </div>
-    </FlexContainerComponent>
+    <div className={computedClassName} ref={ref}>
+      {children}
+    </div>
   );
 });
 

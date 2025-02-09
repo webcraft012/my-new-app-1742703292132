@@ -9,10 +9,14 @@ import { DRAG_AND_DROP_PADDING } from "@webcraft/types";
  */
 export const getContainerPadding = (
   isDragging: boolean,
-  selectedPadding?: number,
+  selectedPadding?: number | string,
 ): number | undefined => {
+  const numberToUse =
+    typeof selectedPadding === "string"
+      ? parseInt(selectedPadding)
+      : selectedPadding;
   // Compute the padding to add, the minimum should be DRAG_AND_DROP_PADDING, so add 8 if the selected padding is less than 8
-  const paddingToAdd = Math.max(DRAG_AND_DROP_PADDING, selectedPadding ?? 0);
+  const paddingToAdd = Math.max(DRAG_AND_DROP_PADDING, numberToUse ?? 0);
 
-  return isDragging ? paddingToAdd : selectedPadding;
+  return isDragging ? paddingToAdd : numberToUse;
 };

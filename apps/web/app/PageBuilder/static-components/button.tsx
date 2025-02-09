@@ -1,33 +1,37 @@
 "use client";
 
 import { forwardRef, PropsWithChildren } from "react";
-import { useBuildClassName } from "../hooks/useBuildClassName";
-import FlexContainerComponent from "./FlexContainer";
+import FlexContainerComponent from "./container-component";
 import TextComponent from "./text";
 import { ButtonComponentProps } from "@webcraft/types";
+import { getTailwindClassName } from "../hooks/useTailwindClassName";
 
-const defaultClassName =
-  "hover:bg-blue-600 text-white font-bold py-2 px-4 rounded h-12 bg-blue-500";
+export const ButtonDefaultProps: Partial<ButtonComponentProps> = {
+  rounded: "rounded",
+  h: "h-12",
+  w: "w-auto",
+  bg: "bg-blue-500",
+  textColor: "text-white",
+  fontWeight: "font-bold",
+  py: "py-2",
+  px: "px-4",
+  hover: {
+    bg: "bg-blue-600",
+  },
+};
 
 const ButtonComponent = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ButtonComponentProps>
 >((props, ref) => {
-  const { justify, textColor, backgroundColor, text, className, width } = props;
+  const { text, ...rest } = props;
 
-  const computedClassName = useBuildClassName({
-    color: textColor,
-    backgroundColor,
-    customClassName: `${defaultClassName} ${className}`,
-    width,
-  });
+  const computedClassName = getTailwindClassName(rest);
 
   return (
-    <FlexContainerComponent justify={justify}>
-      <button className={computedClassName} ref={ref}>
-        <TextComponent text={text} />
-      </button>
-    </FlexContainerComponent>
+    <button className={computedClassName} ref={ref}>
+      <TextComponent text={text} />
+    </button>
   );
 });
 

@@ -5,33 +5,31 @@ import {
   AlignJustify,
 } from "lucide-react";
 import React from "react";
-import type { AlignmentOptions } from "./types";
-import { AlignmentTypes } from "./types";
 
-const alignmentOptions: AlignmentOptions[] = [
+const alignmentOptions = [
   {
     label: "Left",
     icon: <AlignHorizontalJustifyStart className="h-4 w-4" />,
-    value: AlignmentTypes.Left,
+    value: "text-left",
   },
   {
     label: "Center",
     icon: <AlignHorizontalJustifyCenter className="h-4 w-4" />,
-    value: AlignmentTypes.Center,
+    value: "text-center",
   },
   {
     label: "Right",
     icon: <AlignHorizontalJustifyCenter className="h-4 w-4" />,
-    value: AlignmentTypes.Right,
+    value: "text-right",
   },
   {
     label: "Justify",
     icon: <AlignJustify className="h-4 w-4" />,
-    value: AlignmentTypes.Justify,
+    value: "text-justify",
   },
 ];
 
-export const AlignmentSelector: React.FC<AlignmentSelectorProps> = ({
+export const TextAlignmentSelector: React.FC<TextAlignmentSelectorProps> = ({
   onChange,
   defaultValue,
 }) => {
@@ -58,7 +56,7 @@ export const AlignmentSelector: React.FC<AlignmentSelectorProps> = ({
   );
 };
 
-interface AlignmentSelectorProps {
-  defaultValue?: AlignmentTypes;
-  onChange?: (value: AlignmentTypes) => void;
+interface TextAlignmentSelectorProps {
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }

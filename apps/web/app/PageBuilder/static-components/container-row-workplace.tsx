@@ -2,41 +2,35 @@
 
 import { PropsWithChildren } from "react";
 import { forwardRef } from "react";
-import { useBuildClassName } from "../hooks/useBuildClassName";
 import { ContainerProps } from "@webcraft/types";
+import { getTailwindClassName } from "../hooks/useTailwindClassName";
+// const defaultClassName = "items-center flex flex-row relative max-w-full";
 
-const defaultClassName = "items-center flex flex-row relative max-w-full";
+export const ContainerRowWorkplaceDefaultProps: Partial<ContainerProps> = {
+  display: "flex",
+  flexDirection: "flex-row",
+  w: "w-full",
+  gap: "gap-4",
+  position: "relative",
+  // flexWrap: "flex-wrap",
+};
 
 const ContainerRowWorkplaceComponent = forwardRef<
   HTMLDivElement,
   PropsWithChildren<ContainerProps>
 >((props, ref) => {
-  const {
-    children,
-    className,
-    style,
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    backgroundColor,
-    containerStyle,
-    ...rest
-  } = props;
+  const mergedProps = { ...ContainerRowWorkplaceDefaultProps, ...props };
+  const { children, style, ...rest } = mergedProps;
 
-  const computedClassName = useBuildClassName({
-    customClassName: `${defaultClassName} ${className}`,
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    containerStyle,
-    backgroundColor,
-    ...rest,
-  });
+  const computedClassName = getTailwindClassName(rest);
 
   return (
-    <div className={computedClassName} ref={ref} style={style} {...rest}>
+    <div
+      key={computedClassName}
+      className={computedClassName}
+      ref={ref}
+      style={style}
+    >
       {children}
     </div>
   );

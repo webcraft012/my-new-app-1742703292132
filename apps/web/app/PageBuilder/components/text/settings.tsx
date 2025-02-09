@@ -2,29 +2,26 @@
 
 import { useNode } from "@craftjs/core";
 import React from "react";
-import { AlignmentSelector } from "../../settings-components/align-selector";
+import { TextAlignmentSelector } from "../../settings-components/text-align-selector";
 import { ColorSelector } from "../../settings-components/color-selector";
-import { FormatSelector } from "../../settings-components/format-selector";
-import type { TextTypes } from "../../settings-components/types";
-import { AlignmentTypes, FormatTypes } from "../../settings-components/types";
-import { TextTypeSelector } from "../../settings-components/text-type-selector";
+import { TextSizeSelector } from "../../settings-components/text-size-selector";
 import type { TextProps } from ".";
 
 export const TextSettings: React.FC = () => {
   const {
     actions: { setProp },
-    props: { textAlign, textFormats, color, backgroundColor, textType },
+    props: { textAlign, textColor, bg, fontSize },
   } = useNode<{ props: TextProps }>((node) => ({
     props: node.data.props as TextProps,
   }));
 
-  const onFormatChange = (values: FormatTypes[]): void => {
-    setProp((currentProps: TextProps) => {
-      currentProps.textFormats = values;
-    });
-  };
+  // const onFormatChange = (values: FormatTypes[]): void => {
+  //   setProp((currentProps: TextProps) => {
+  //     currentProps.textFormats = values;
+  //   });
+  // };
 
-  const onAlignmentChange = (value: AlignmentTypes): void => {
+  const onAlignmentChange = (value: string): void => {
     setProp((currentProps: TextProps) => {
       currentProps.textAlign = value;
     });
@@ -32,44 +29,49 @@ export const TextSettings: React.FC = () => {
 
   const onColorChange = (value: string): void => {
     setProp((currentProps: TextProps) => {
-      currentProps.color = value;
+      currentProps.textColor = value;
     });
   };
 
-  const onTypeChange = (value: TextTypes): void => {
+  const onTextSizeChange = (value: string): void => {
     setProp((currentProps: TextProps) => {
-      currentProps.textType = value;
+      currentProps.fontSize = value;
     });
   };
 
   const onBackgroundColorChange = (value: string): void => {
     setProp((currentProps: TextProps) => {
-      currentProps.backgroundColor = value;
+      currentProps.bg = value;
     });
   };
 
   return (
     <div className="flex p-4 flex-col gap-4">
       <div>
-        <TextTypeSelector defaultValue={textType} onChange={onTypeChange} />
+        <TextSizeSelector defaultValue={fontSize} onChange={onTextSizeChange} />
       </div>
-      <div>
+      {/* <div>
         <FormatSelector defaultValues={textFormats} onChange={onFormatChange} />
-      </div>
+      </div> */}
       <div>
-        <AlignmentSelector
+        <TextAlignmentSelector
           defaultValue={textAlign}
           onChange={onAlignmentChange}
         />
       </div>
       <div>
-        <ColorSelector defaultValue={color} onChange={onColorChange} />
+        <ColorSelector
+          defaultValue={textColor}
+          onChange={onColorChange}
+          type="text"
+        />
       </div>
       <div>
         <ColorSelector
-          defaultValue={backgroundColor}
+          defaultValue={bg}
           label="Background color"
           onChange={onBackgroundColorChange}
+          type="bg"
         />
       </div>
     </div>

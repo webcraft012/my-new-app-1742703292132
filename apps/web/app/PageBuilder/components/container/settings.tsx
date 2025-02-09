@@ -3,14 +3,13 @@
 import { useEditor, useNode } from "@craftjs/core";
 import React from "react";
 import { ContainerStyleSelector } from "../../settings-components/container-style-selector";
-import { ContainerStyles } from "../../settings-components/types";
 import { ColorSelector } from "../../settings-components/color-selector";
-import { ContainerProps } from "@webcraft/types";
+import { ContainerProps, ContainerStyles } from "@webcraft/types";
 
 export const ContainerSettings: React.FC = () => {
   const {
     actions: { setProp },
-    props: { backgroundColor, containerStyle },
+    props: { bg, containerStyle },
     children,
   } = useNode<{ props: ContainerProps; children: string[] }>((node) => ({
     props: node.data.props as ContainerProps,
@@ -39,7 +38,7 @@ export const ContainerSettings: React.FC = () => {
 
   const onBackgroundColorChange = (value: string): void => {
     setProp((currentProps: ContainerProps) => {
-      currentProps.backgroundColor = value;
+      currentProps.bg = value;
     });
   };
 
@@ -53,9 +52,10 @@ export const ContainerSettings: React.FC = () => {
       </div>
       <div>
         <ColorSelector
-          defaultValue={backgroundColor}
+          defaultValue={bg}
           label="Background Color"
           onChange={onBackgroundColorChange}
+          type="bg"
         />
       </div>
     </div>

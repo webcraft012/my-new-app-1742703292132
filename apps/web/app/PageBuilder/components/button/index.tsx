@@ -1,13 +1,10 @@
 import type { FC } from "react";
 import React from "react";
 import { useNode } from "@craftjs/core";
-import ButtonComponent from "../../static-components/button";
+import ButtonComponent, {
+  ButtonDefaultProps,
+} from "../../static-components/button";
 import { ButtonSettings } from "./settings";
-import {
-  getColorByLabel,
-  JustifyTypes,
-  WidthTypes,
-} from "../../settings-components";
 import { ButtonComponentProps } from "@webcraft/types";
 
 export interface ButtonProps extends ButtonComponentProps {}
@@ -22,40 +19,25 @@ interface CraftButton extends FC<ButtonProps> {
   };
 }
 
-export const Button: CraftButton = ({
-  justify,
-  textColor,
-  backgroundColor,
-  text,
-  className,
-  width,
-}) => {
+export const Button: CraftButton = (props) => {
   const {
     connectors: { connect, drag },
   } = useNode();
 
   return (
     <ButtonComponent
-      justify={justify}
-      backgroundColor={backgroundColor}
-      width={width}
-      className={className}
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
-      textColor={textColor}
-      text={text}
+      {...props}
     ></ButtonComponent>
   );
 };
 
 Button.craft = {
   props: {
-    justify: JustifyTypes.Start,
-    backgroundColor: getColorByLabel("Blue"),
-    text: "My Button",
-    textColor: getColorByLabel("White"),
-    width: WidthTypes.Auto,
+    ...ButtonDefaultProps,
+    text: "Click me",
   },
   related: {
     settings: ButtonSettings,

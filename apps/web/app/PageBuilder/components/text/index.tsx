@@ -3,24 +3,12 @@ import { useNode } from "@craftjs/core";
 import React from "react";
 import { TextSettings } from "./settings";
 import TextComponent from "../../static-components/text";
-import {
-  AlignmentTypes,
-  getColorByLabel,
-  TextTypes,
-} from "../../settings-components";
+
 import { TextComponentProps } from "@webcraft/types";
 
 export interface TextProps extends TextComponentProps {}
 
-export const Text: UserComponent<TextProps> = ({
-  textAlign,
-  backgroundColor,
-  color,
-  text,
-  textFormats,
-  textType,
-  className,
-}) => {
+export const Text: UserComponent<TextProps> = ({ text, ...props }) => {
   const {
     connectors: { connect, drag },
     actions: { setProp },
@@ -38,22 +26,17 @@ export const Text: UserComponent<TextProps> = ({
         });
       }}
       text={text}
-      textAlign={textAlign}
-      textFormats={textFormats}
-      textType={textType}
       isEditable={true}
-      className={className}
-      color={color}
-      backgroundColor={backgroundColor}
+      {...props}
     />
   );
 };
 
 Text.craft = {
   props: {
-    textAlign: AlignmentTypes.Left,
-    color: getColorByLabel("Black"),
-    textType: TextTypes.Parahraph,
+    textAlign: "text-left",
+    textColor: "text-black",
+    fontSize: "text-base",
   },
   related: {
     settings: TextSettings,

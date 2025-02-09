@@ -1,16 +1,18 @@
 import type { SerializedNode, SerializedNodes } from "@craftjs/core";
 import React from "react";
-import Container from "./container";
-import Holder from "./holder";
-import ContainerRowWorkplace from "./container-row-workplace";
 import axios from "axios";
 import { API_URL } from "../PageBuilder/hooks/types";
 import { EditorDto } from "@webcraft/types";
 import TextComponent from "../PageBuilder/static-components/text";
 import ButtonComponent from "../PageBuilder/static-components/button";
 import CardComponent from "../PageBuilder/static-components/Card";
-import FlexContainerComponent from "../PageBuilder/static-components/FlexContainer";
 import ContainerWorkplaceComponent from "../PageBuilder/static-components/container-workplace";
+import ContainerRowWorkplaceComponent from "../PageBuilder/static-components/container-row-workplace";
+import CardBottomComponent from "../PageBuilder/static-components/Card/CardBottom";
+import CardTopComponent from "../PageBuilder/static-components/Card/CardTop";
+import WorkplaceHolderComponent from "../PageBuilder/static-components/workplace-holder-component";
+import ContainerContainerComponent from "../PageBuilder/static-components/container-component";
+import ColumnComponent from "../PageBuilder/static-components/column-container";
 
 const HomePage = async (): Promise<React.JSX.Element | null> => {
   const nodes = await getData();
@@ -40,18 +42,18 @@ async function getData(): Promise<React.JSX.Element | null> {
 }
 
 const componentMap = {
-  Workspace: Container,
-  WorkplaceHolder: Holder,
-  ContainerWorkplace: ContainerWorkplaceComponent,
+  Workspace: ContainerContainerComponent,
+  WorkplaceHolder: WorkplaceHolderComponent,
+  ContainerRowWorkplace: ContainerRowWorkplaceComponent,
+  Column: ColumnComponent,
   Card: CardComponent,
-  CardBottom: Holder,
-  CardTop: Holder,
+  CardBottom: CardBottomComponent,
+  CardTop: CardTopComponent,
   Button: ButtonComponent,
   Text: TextComponent,
-  Container: FlexContainerComponent,
-  ContainerRowWorkplace,
-  Spacer: Container,
-  FlexContainer: FlexContainerComponent,
+  Container: ContainerContainerComponent,
+  ContainerWorkplace: ContainerWorkplaceComponent,
+  Spacer: CardBottomComponent,
 };
 
 function createComponentFromNode(

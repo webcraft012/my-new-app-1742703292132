@@ -8,6 +8,7 @@ import { Container } from "../components/container";
 import { Text } from "../components/text";
 import { ContainerRowWorkplace } from "../components/container/container-row-workplace";
 import { DraggableButton } from "./draggable-button";
+import { Column } from "../components/container/column";
 
 const SidebarNO: React.FC = () => {
   const { connectors, query, actions } = useEditor();
@@ -61,7 +62,6 @@ const SidebarNO: React.FC = () => {
       parentNode.data.parent === "ROOT" &&
       nodeData.data.name !== "Container"
     ) {
-      console.log({ node: query.node(node.rootNodeId).get() });
       console.log("parent node is root");
       actions.delete(node.rootNodeId);
       const newNodeTree = query
@@ -69,7 +69,7 @@ const SidebarNO: React.FC = () => {
         .toNodeTree();
       actions.addNodeTree(newNodeTree, parentNode.id);
     } else if (parentNode.data.name === "ContainerWorkplace") {
-      console.log("parent node is container row workplace");
+      console.log("parent node is ContainerWorkplace");
 
       actions.delete(node.rootNodeId);
       const newNodeTree = query
@@ -79,6 +79,20 @@ const SidebarNO: React.FC = () => {
             id={`col-container-${node.rootNodeId}`}
             is={ContainerRowWorkplace}
           >
+            <Element canvas id={`column-${node.rootNodeId}`} is={Column}>
+              {component}
+            </Element>
+          </Element>,
+        )
+        .toNodeTree();
+      actions.addNodeTree(newNodeTree, parentNode.id);
+    } else if (parentNode.data.name === "ContainerRowWorkplace") {
+      console.log("parent node is ContainerRowWorkplace");
+
+      actions.delete(node.rootNodeId);
+      const newNodeTree = query
+        .parseReactElement(
+          <Element canvas id={`column-${node.rootNodeId}`} is={Column}>
             {component}
           </Element>,
         )
@@ -90,7 +104,7 @@ const SidebarNO: React.FC = () => {
   };
 
   return (
-    <div className="border-l border-l-gray-100 px-2 py-2 w-1/5">
+    <div className="border-l border-l-gray-100 px-2 py-2 w-2/5">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="pb-2">
           <p>Drag to add</p>
@@ -132,4 +146,4 @@ const SidebarNO: React.FC = () => {
   );
 };
 
-export const Sidebar = observer(SidebarNO);
+export const Sidebar = SidebarNO;

@@ -2,20 +2,25 @@
 
 import { PropsWithChildren } from "react";
 import { forwardRef } from "react";
-import { useBuildClassName } from "../../hooks/useBuildClassName";
 import { CardBottomProps } from "@webcraft/types";
+import { getTailwindClassName } from "../../hooks/useTailwindClassName";
 
-const defaultClassName = "w-full h-auto min-h-[20px] flex gap-2";
+export const defaultCardBottomProps: Partial<CardBottomProps> = {
+  w: "w-full",
+  h: "h-auto",
+  minH: "min-h-[20px]",
+  display: "flex",
+  gap: "gap-2",
+};
 
 const CardBottomComponent = forwardRef<
   HTMLDivElement,
   PropsWithChildren<CardBottomProps>
 >((props, ref) => {
-  const { children, className } = props;
+  const mergedProps = { ...defaultCardBottomProps, ...props };
+  const { children, ...rest } = mergedProps;
 
-  const computedClassName = useBuildClassName({
-    customClassName: `${defaultClassName} ${className}`,
-  });
+  const computedClassName = getTailwindClassName(rest);
 
   return (
     <div className={computedClassName} ref={ref}>

@@ -14,12 +14,17 @@ const DraggableButtonComponent = forwardRef<
 
   return (
     <button
+      draggable
       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      onMouseDown={() => {
-        userComponentStore.onDrag();
+      onDragStart={() => {
+        if (!userComponentStore.onDragUserComponent) {
+          userComponentStore.onDrag();
+        }
       }}
-      onMouseLeave={() => {
-        userComponentStore.onDrop();
+      onDragEnd={() => {
+        if (userComponentStore.onDragUserComponent) {
+          userComponentStore.onDrop();
+        }
       }}
       ref={ref}
     >

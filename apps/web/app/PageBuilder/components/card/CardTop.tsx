@@ -6,14 +6,13 @@ import { CardTopProps } from "@webcraft/types";
 
 export const CardTop: UserComponent<PropsWithChildren<CardTopProps>> = ({
   children,
-  className,
 }) => {
   const {
     connectors: { connect },
   } = useNode();
 
   return (
-    <CardTopComponent className={className} ref={(ref) => ref && connect(ref)}>
+    <CardTopComponent ref={(ref) => ref && connect(ref)}>
       {children}
     </CardTopComponent>
   );

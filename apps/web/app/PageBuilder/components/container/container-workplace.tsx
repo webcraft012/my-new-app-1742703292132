@@ -10,66 +10,54 @@ import { getContainerPadding } from "../../utils/padding";
 
 export const ContainerWorkplace: UserComponent<
   PropsWithChildren<ContainerProps>
-> = observer(
-  ({
-    children,
-    containerStyle,
-    backgroundColor,
-    className,
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-  }) => {
-    const {
-      connectors: { connect },
-      store,
-      id,
-    } = useNode();
+> = observer(({ children, containerStyle, bg, pt, pb, pl, pr }) => {
+  const {
+    connectors: { connect },
+    store,
+    id,
+  } = useNode();
 
-    // Check in the store, if this node has a child
-    const hasChild = store.query
-      .node(id)
-      .get()
-      .data.nodes.some(
-        (node) => store.query.node(node).get().data.nodes.length > 0,
-      );
-
-    const shouldAddPadding = userComponentStore.onDragUserComponent && hasChild;
-
-    console.log({
-      shouldAddPadding,
-      containerStyle,
-    });
-    return (
-      <ContainerWorkplaceComponent
-        ref={(ref) => ref && connect(ref)}
-        containerStyle={containerStyle}
-        backgroundColor={backgroundColor}
-        paddingTop={getContainerPadding(shouldAddPadding, paddingTop)}
-        paddingBottom={getContainerPadding(shouldAddPadding, paddingBottom)}
-        paddingLeft={paddingLeft}
-        paddingRight={paddingRight}
-        className={className}
-        data-id="container-workplace"
-        style={{
-          border: userComponentStore.onDragUserComponent
-            ? "1px dashed #ccc"
-            : "unset",
-        }}
-      >
-        {/* Update opacity on drag over */}
-        {shouldAddPadding && (
-          <DropIndicator type="row" className="top-4 left-0" />
-        )}
-        {children}
-        {shouldAddPadding && (
-          <DropIndicator type="row" className="bottom-0 left-0" />
-        )}
-      </ContainerWorkplaceComponent>
+  // Check in the store, if this node has a child
+  const hasChild = store.query
+    .node(id)
+    .get()
+    .data.nodes.some(
+      (node) => store.query.node(node).get().data.nodes.length > 0,
     );
-  },
-);
+
+  const shouldAddPadding = userComponentStore.onDragUserComponent && hasChild;
+
+  console.log({
+    shouldAddPadding,
+    containerStyle,
+  });
+  return (
+    <ContainerWorkplaceComponent
+      ref={(ref) => ref && connect(ref)}
+      containerStyle={containerStyle}
+      bg={bg}
+      pt={`pt-${getContainerPadding(shouldAddPadding, pt)}`}
+      pb={`pb-${getContainerPadding(shouldAddPadding, pb)}`}
+      pl={pl}
+      pr={pr}
+      data-id="container-workplace"
+      style={{
+        border: userComponentStore.onDragUserComponent
+          ? "1px dashed #ccc"
+          : "unset",
+      }}
+    >
+      {/* Update opacity on drag over */}
+      {shouldAddPadding && (
+        <DropIndicator type="row" className="top-4 left-0" />
+      )}
+      {children}
+      {shouldAddPadding && (
+        <DropIndicator type="row" className="bottom-0 left-0" />
+      )}
+    </ContainerWorkplaceComponent>
+  );
+});
 
 ContainerWorkplace.craft = {
   related: {

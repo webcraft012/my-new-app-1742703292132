@@ -1,7 +1,7 @@
 import { Bold, Code, Italic, Strikethrough, Underline } from "lucide-react";
 import React from "react";
 import { ToggleGroup, ToggleGroupItem } from "@ui/components/ui/toggle-group";
-import { FormatTypes, type FormatOptions } from "./types";
+import { FormatOptions, FormatTypes } from "@webcraft/types";
 
 const formatOptions: FormatOptions[] = [
   {

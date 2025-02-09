@@ -1,21 +1,30 @@
-import { Element, useEditor, useNode } from "@craftjs/core";
-import React, { useEffect } from "react";
+import { Element, useEditor, useNode, UserComponent } from "@craftjs/core";
+import React, { PropsWithChildren, useEffect } from "react";
+import WorkplaceHolderComponent, {
+  defaultWorkplaceHolderProps,
+} from "./static-components/workplace-holder-component";
+import { BaseComponentProps } from "@webcraft/types";
 
-export const WorkplaceHolder: React.FC<WorkspaceProps> = ({ children }) => {
+export const WorkplaceHolder: UserComponent<
+  PropsWithChildren<BaseComponentProps>
+> = ({ children }) => {
   const {
     connectors: { connect },
   } = useNode();
 
   return (
-    <main
-      className="flex h-full bg-white p-8 w-4/5 flex-col gap-4"
+    <WorkplaceHolderComponent
       ref={(ref) => {
         if (ref) connect(ref);
       }}
     >
       {children}
-    </main>
+    </WorkplaceHolderComponent>
   );
+};
+
+WorkplaceHolder.craft = {
+  props: { ...defaultWorkplaceHolderProps },
 };
 
 export const Workspace: React.FC<WorkspaceProps> = ({ children }) => {

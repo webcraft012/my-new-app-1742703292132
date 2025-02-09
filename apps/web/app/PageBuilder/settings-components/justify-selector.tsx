@@ -2,26 +2,43 @@ import { ToggleGroup, ToggleGroupItem } from "@ui/components/ui/toggle-group";
 import {
   AlignHorizontalJustifyCenter,
   AlignHorizontalJustifyStart,
+  AlignJustify,
+  AlignHorizontalJustifyEnd,
+  AlignHorizontalSpaceAround,
+  AlignHorizontalSpaceBetween,
 } from "lucide-react";
 import React from "react";
-import type { JustifyOptions } from "./types";
-import { JustifyTypes } from "./types";
 
-const justifyOptions: JustifyOptions[] = [
+const justifyOptions = [
   {
     label: "Start",
     icon: <AlignHorizontalJustifyStart className="h-4 w-4" />,
-    value: JustifyTypes.Start,
+    value: "justify-start",
   },
   {
     label: "Center",
     icon: <AlignHorizontalJustifyCenter className="h-4 w-4" />,
-    value: JustifyTypes.Center,
+    value: "justify-center",
   },
   {
     label: "End",
-    icon: <AlignHorizontalJustifyCenter className="h-4 w-4" />,
-    value: JustifyTypes.End,
+    icon: <AlignHorizontalJustifyEnd className="h-4 w-4" />,
+    value: "justify-end",
+  },
+  {
+    label: "Between",
+    icon: <AlignHorizontalSpaceBetween className="h-4 w-4" />,
+    value: "justify-between",
+  },
+  {
+    label: "Around",
+    icon: <AlignHorizontalSpaceAround className="h-4 w-4" />,
+    value: "justify-around",
+  },
+  {
+    label: "Evenly",
+    icon: <AlignJustify className="h-4 w-4" />,
+    value: "justify-evenly",
   },
 ];
 
@@ -53,6 +70,6 @@ export const JustifySelector: React.FC<JustifySelectorProps> = ({
 };
 
 interface JustifySelectorProps {
-  defaultValue?: JustifyTypes;
-  onChange?: (value: JustifyTypes) => void;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }

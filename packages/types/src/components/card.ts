@@ -1,15 +1,9 @@
-import { WidthTypes } from "./props";
+import { BaseComponentProps } from "./props";
 
-export interface CardBottomProps {
-  className?: string;
-}
+export interface CardBottomProps extends BaseComponentProps {}
 
-export interface CardTopProps {
-  className?: string;
-}
+export interface CardTopProps extends BaseComponentProps {}
 
-export interface CardComponentProps {
-  className?: string;
-  width?: WidthTypes;
+export interface CardComponentProps extends BaseComponentProps {
   imageUrl?: string;
 }
