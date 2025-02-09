@@ -1,7 +1,6 @@
 import { forwardRef } from "react";
-import { JustifyTypes } from "../settings-components";
+
 import { useBuildClassName } from "../hooks/useBuildClassName";
-import FlexContainerComponent from "./FlexContainer";
 
 export interface ImageComponentProps {
   imageSrc?: string;
@@ -9,20 +8,18 @@ export interface ImageComponentProps {
   width?: number;
   height?: number;
   className?: string;
-  justify?: JustifyTypes;
 }
 
 const defaultClassName = "";
 
 const ImageComponent = forwardRef<HTMLImageElement, ImageComponentProps>(
   (props, ref) => {
-    const { imageSrc, alt, width, height, className, justify } = props;
+    const { imageSrc, alt, width, height, className } = props;
     const computedClassName = useBuildClassName({
       customClassName: `${defaultClassName} ${className}`,
-      justify,
     });
     return (
-      <FlexContainerComponent justify={justify}>
+      <div>
         <img
           width={width}
           height={height}
@@ -30,7 +27,7 @@ const ImageComponent = forwardRef<HTMLImageElement, ImageComponentProps>(
           alt={alt}
           ref={ref}
         ></img>
-      </FlexContainerComponent>
+      </div>
     );
   },
 );

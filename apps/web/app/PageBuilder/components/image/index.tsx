@@ -3,7 +3,6 @@ import ImageComponent, {
   ImageComponentProps,
 } from "../../static-components/image";
 import { FC, useEffect } from "react";
-import { JustifyTypes } from "../../settings-components";
 import AddPhotoPopover from "../../ui/addPhotoPopover";
 import { imageStore } from "../../store/images.store";
 import { ImageSettings } from "./settings";
@@ -18,13 +17,7 @@ interface CraftImage extends FC<ImageProps> {
   };
 }
 
-export const Image: CraftImage = ({
-  alt,
-  width,
-  height,
-  justify,
-  className,
-}) => {
+export const Image: CraftImage = ({ alt, width, height, className }) => {
   const {
     connectors: { connect, drag },
     actions: { setProp },
@@ -78,7 +71,6 @@ export const Image: CraftImage = ({
           alt={alt}
           width={width}
           height={height}
-          justify={justify}
           className={className}
         />
       ) : (
@@ -95,7 +87,6 @@ export const Image: CraftImage = ({
 
 Image.craft = {
   props: {
-    justify: JustifyTypes.Center,
     imageSrc: "",
   },
   related: {
