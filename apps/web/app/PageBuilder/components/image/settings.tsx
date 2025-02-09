@@ -14,14 +14,14 @@ export const ImageSettings: React.FC = () => {
     props: node.data.props as ImageProps,
   }));
   useEffect(() => {
-    const currentImage = imageStore.pendingImages.find(
+    const currentImage = imageStore.images.find(
       (img) => img.previewUrl === imageSrc || img.uploadedUrl === imageSrc,
     );
 
     if (currentImage?.uploadedUrl) {
       setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
     }
-  }, [imageStore.pendingImages, imageSrc, setProp]);
+  }, [imageStore.images, imageSrc, setProp]);
   const onJustifyChange = (value: JustifyTypes): void => {
     setProp((currentProps: ImageProps) => {
       currentProps.justify = value;

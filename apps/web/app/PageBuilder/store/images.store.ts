@@ -1,22 +1,15 @@
 import { makeAutoObservable } from "mobx";
-interface PendingImage {
-  type: "file" | "url";
-  value: File | string;
-  previewUrl: string;
-  uploaded: boolean;
-  uploadedUrl?: string;
-  active?: boolean;
-}
+import { SelectedImage } from "./types/image";
 
 class ImageStore {
-  pendingImages: PendingImage[] = [];
+  images: SelectedImage[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  addImage(image: PendingImage) {
-    this.pendingImages.push(image);
+  addImage(image: SelectedImage) {
+    this.images.push(image);
   }
 }
 

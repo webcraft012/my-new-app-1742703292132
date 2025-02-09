@@ -35,14 +35,14 @@ export const Image: CraftImage = ({
 
   // Sync pendingImages with Craft.js state
   useEffect(() => {
-    const currentImage = imageStore.pendingImages.find(
+    const currentImage = imageStore.images.find(
       (img) => img.previewUrl === imageSrc || img.uploadedUrl === imageSrc,
     );
 
     if (currentImage?.uploadedUrl) {
       setProp((props) => (props.imageSrc = currentImage.uploadedUrl), 500);
     }
-  }, [imageStore.pendingImages, imageSrc, setProp]);
+  }, [imageStore.images, imageSrc, setProp]);
   const onFileSelect = (file: File | null) => {
     if (!file || !(file instanceof File)) {
       console.error("Invalid file selected:", file);

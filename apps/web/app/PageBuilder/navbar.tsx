@@ -12,15 +12,15 @@ export const Navbar: React.FC = () => {
   const save = async (): Promise<void> => {
     try {
       // First, upload pending images if any
-      if (imageStore.pendingImages.length > 0) {
-        await deleteImages(imageStore.pendingImages);
-        console.log(imageStore.pendingImages);
-        const uploadedUrls = await saveImages(imageStore.pendingImages);
-        await deleteImages(imageStore.pendingImages);
+      if (imageStore.images.length > 0) {
+        await deleteImages(imageStore.images);
+        console.log(imageStore.images);
+        const uploadedUrls = await saveImages(imageStore.images);
+        await deleteImages(imageStore.images);
         console.log("Uploaded image URLs:", uploadedUrls);
 
         // Update pendingImages with uploaded URLs
-        imageStore.pendingImages.map((img) => {
+        imageStore.images.map((img) => {
           const uploadedUrl = uploadedUrls.find((url) => url === img.value);
           console.log(uploadedUrl);
           return uploadedUrl ? { ...img, uploaded: true, uploadedUrl } : img;
@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
           if (!node.data.props || !node.data.props.imageSrc) return;
 
           const nodeImageSrc = node.data.props.imageSrc;
-          const uploadedImage = imageStore.pendingImages.find(
+          const uploadedImage = imageStore.images.find(
             (img) => img.previewUrl === nodeImageSrc,
           );
 
@@ -61,7 +61,7 @@ export const Navbar: React.FC = () => {
   };
 
   // Get count of unuploaded images
-  const unuploadedCount = imageStore.pendingImages.filter(
+  const unuploadedCount = imageStore.images.filter(
     (img) => !img.uploaded,
   ).length;
 

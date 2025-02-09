@@ -2,18 +2,11 @@ import axios from "axios";
 import { API_URL } from "./types";
 import { useMutation } from "@tanstack/react-query";
 
-interface PendingImage {
-  type: "file" | "url";
-  value: File | string;
-  previewUrl: string;
-  uploaded: boolean;
-  uploadedUrl?: string;
-  active?: boolean;
-}
+import { SelectedImage } from "../store/types/image";
 
 export const useSaveImages = () => {
   return useMutation({
-    mutationFn: async (images: PendingImage[]) => {
+    mutationFn: async (images: SelectedImage[]) => {
       // Filter out already uploaded images
       const unuploadedImages = images.filter((img) => !img.uploaded);
 

@@ -2,19 +2,11 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { imageStore } from "../store/images.store";
 import { API_URL } from "./types";
-
-interface PendingImage {
-  type: "file" | "url";
-  value: File | string;
-  previewUrl: string;
-  uploaded: boolean;
-  uploadedUrl?: string;
-  active?: boolean;
-}
+import { SelectedImage } from "../store/types/image";
 
 export const useDeleteImages = () => {
   return useMutation({
-    mutationFn: async (images: PendingImage[]) => {
+    mutationFn: async (images: SelectedImage[]) => {
       const unactiveImages = images.filter((img) => !img.active);
 
       if (unactiveImages.length === 0) return;
@@ -30,7 +22,7 @@ export const useDeleteImages = () => {
             } catch (err) {
               console.error("Error deleting file:", err);
             }
-            imageStore.pendingImages = imageStore.pendingImages.filter(
+            imageStore.images = imageStore.images.filter(
               (im) => im.active === true || im.uploaded === true,
             );
           }
