@@ -38,4 +38,10 @@ export class EditorController {
   async delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
+
+  @Get('build/editor')
+  async buildEditor() {
+    console.log('buildEditor');
+    return this.service.buildEditor();
+  }
 }

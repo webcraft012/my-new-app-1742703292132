@@ -31,9 +31,13 @@ export const Card: UserComponent<CardProps> = ({
         <Text
           // textFormats={[FormatTypes.Bold]}
           fontSize="text-2xl"
-          text={title}
+          textContent={title}
         />
-        <Text fontSize={"text-base"} textColor={"text-gray-500"} text={text} />
+        <Text
+          fontSize={"text-base"}
+          textColor={"text-gray-500"}
+          textContent={text}
+        />
       </Element>
       <Element canvas id="buttons" is={CardBottom} />
     </CardComponent>

@@ -82,5 +82,6 @@ export const UIElementSchema = z.lazy(() =>
     type: z.enum(['container', 'row', 'column', 'button', 'text']),
     children: z.array(UIElementSchema).optional(),
     props: z.record(z.any()), // Allows any key-value pairs
+    text: z.string().optional(),
   }),
 );

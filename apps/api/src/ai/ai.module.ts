@@ -16,5 +16,6 @@ dotenv.config();
       useFactory: () => new AiClient(process.env.OPEN_AI_API_KEY!),
     },
   ],
+  exports: [AiService],
 })
 export class AiModule {}

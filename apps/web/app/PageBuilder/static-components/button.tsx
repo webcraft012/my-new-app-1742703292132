@@ -24,13 +24,13 @@ const ButtonComponent = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ButtonComponentProps>
 >((props, ref) => {
-  const { text, ...rest } = props;
+  const { textContent, ...rest } = props;
 
   const computedClassName = getTailwindClassName(rest);
 
   return (
     <button className={computedClassName} ref={ref}>
-      <TextComponent text={text} />
+      <TextComponent textContent={textContent} />
     </button>
   );
 });

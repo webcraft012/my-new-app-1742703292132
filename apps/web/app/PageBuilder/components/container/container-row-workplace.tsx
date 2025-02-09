@@ -14,7 +14,7 @@ import { ColumnHolder } from "./column-holder";
 
 export const ContainerRowWorkplace: UserComponent<
   PropsWithChildren<ContainerProps>
-> = observer(({ children, shouldShowDropHelper, pt, pb, pl, pr, gap }) => {
+> = observer(({ children, shouldShowDropHelper, pt, pb, pl, pr, ...props }) => {
   const { query } = useEditor();
 
   const {
@@ -46,6 +46,7 @@ export const ContainerRowWorkplace: UserComponent<
       pl={`pl-${getContainerPadding(shouldAddPadding, pl)}`}
       pr={`pr-${getContainerPadding(shouldAddPadding, pr)}`}
       data-id="container-row-workplace"
+      {...props}
     >
       {userComponentStore.onDragUserComponent && (
         // update opacity on drag over

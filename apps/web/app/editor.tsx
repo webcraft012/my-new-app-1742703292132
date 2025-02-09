@@ -20,7 +20,7 @@ import { Column } from "./PageBuilder/components/container/column";
 import { ColumnHolder } from "./PageBuilder/components/container/column-holder";
 
 export const PageEditor: React.FC = () => {
-  const { data } = useGetEditor("af9a0019s74655fc48685d003525a3584");
+  const { data } = useGetEditor("af9a001974655fc48685d003525a3584");
 
   return (
     <Editor

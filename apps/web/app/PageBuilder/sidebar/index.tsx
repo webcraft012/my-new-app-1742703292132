@@ -112,14 +112,14 @@ const SidebarNO: React.FC = () => {
         <div className="flex flex-col">
           <DraggableButton
             label="Button"
-            ref={handleDragComponent(<Button text="Click me" />)}
+            ref={handleDragComponent(<Button textContent="Click me" />)}
           />
         </div>
         <div className="flex flex-col">
           <DraggableButton
             label="Text"
             ref={handleDragComponent(
-              <Text text="Lorem text is lorem text here for not here lorem air lorem" />,
+              <Text textContent="This is a text element, you can edit it" />,
             )}
           />
         </div>

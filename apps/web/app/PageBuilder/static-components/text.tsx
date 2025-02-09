@@ -13,14 +13,14 @@ const TextComponent = forwardRef<
   HTMLElement,
   PropsWithChildren<TextComponentWithOnChangeProps>
 >((props, ref) => {
-  const { text, onChange, isEditable, ...rest } = props;
+  const { textContent, onChange, isEditable, ...rest } = props;
 
   const computedClassName = getTailwindClassName(rest);
 
   return (
     <ContentEditable
       className={computedClassName}
-      html={text}
+      html={textContent}
       innerRef={ref as any}
       onChange={!isEditable ? () => {} : onChange!}
       tagName="p"

@@ -37,7 +37,7 @@ export const Button: CraftButton = (props) => {
 Button.craft = {
   props: {
     ...ButtonDefaultProps,
-    text: "Click me",
+    textContent: "Click me",
   },
   related: {
     settings: ButtonSettings,

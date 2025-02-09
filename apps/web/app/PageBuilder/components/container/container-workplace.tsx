@@ -10,7 +10,7 @@ import { getContainerPadding } from "../../utils/padding";
 
 export const ContainerWorkplace: UserComponent<
   PropsWithChildren<ContainerProps>
-> = observer(({ children, containerStyle, bg, pt, pb, pl, pr }) => {
+> = observer(({ children, containerStyle, bg, pt, pb, pl, pr, ...props }) => {
   const {
     connectors: { connect },
     store,
@@ -46,6 +46,7 @@ export const ContainerWorkplace: UserComponent<
           ? "1px dashed #ccc"
           : "unset",
       }}
+      {...props}
     >
       {/* Update opacity on drag over */}
       {shouldAddPadding && (

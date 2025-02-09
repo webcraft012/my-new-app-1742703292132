@@ -8,7 +8,7 @@ import { TextComponentProps } from "@webcraft/types";
 
 export interface TextProps extends TextComponentProps {}
 
-export const Text: UserComponent<TextProps> = ({ text, ...props }) => {
+export const Text: UserComponent<TextProps> = ({ textContent, ...props }) => {
   const {
     connectors: { connect, drag },
     actions: { setProp },
@@ -21,11 +21,11 @@ export const Text: UserComponent<TextProps> = ({ text, ...props }) => {
       }}
       onChange={(e) => {
         // Explicitly make the arrow function return void
-        setProp((props: { text: string }) => {
-          props.text = e.target.value.replace(/<\/?[^>]+(?:>|$)/g, "");
+        setProp((props: { textContent: string }) => {
+          props.textContent = e.target.value.replace(/<\/?[^>]+(?:>|$)/g, "");
         });
       }}
-      text={text}
+      textContent={textContent}
       isEditable={true}
       {...props}
     />
