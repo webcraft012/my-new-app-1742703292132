@@ -13,7 +13,7 @@ export default function AddPhotoPopover({
   addPhotoButton,
   currentsrc,
 }) {
-  const [uploadMode, setUploadMode] = useState(null);
+  const [uploadMode, setUploadMode] = useState<"upload" | "link" | null>(null);
   const [src, setsrc] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");

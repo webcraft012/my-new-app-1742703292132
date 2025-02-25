@@ -14,6 +14,11 @@ module.exports = {
     "transform",
     "transition",
 
+    {
+      pattern: /^bg-\\\[url\([^)]+\)\\\]$/, // Properly escaped regex
+      variants: ["hover", "focus", "active"],
+    },
+
     // ────────────────────────────────
     // Spacing (m, mt, mr, mb, ml, mx, my, p, pt, pr, pb, pl, px, py)
     // Allow numbers 0–20 or arbitrary values in brackets.

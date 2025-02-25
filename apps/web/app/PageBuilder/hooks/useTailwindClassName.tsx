@@ -1,5 +1,13 @@
 import { BaseComponentProps } from "@webcraft/types";
 import { cn } from "@ui/lib/utils";
+const escapeUrlForTailwind = (url: string) => {
+  return url
+    .replace(/([()])/g, "\\$1") // Escape parentheses
+    .replace(/:/g, "\\:") // Escape colons
+    .replace(/\//g, "\\/") // Escape slashes
+    .replace(/'/g, "") // Remove single quotes
+    .replace(/"/g, ""); // Remove double quotes
+};
 
 export const getTailwindClassName = (
   props: BaseComponentProps,
@@ -8,8 +16,18 @@ export const getTailwindClassName = (
   const propsClasses = Object.entries(props).map(([key, value]) => {
     if (value === undefined) return;
 
+    // Handle URL values specially
+    if (typeof value === "string" && value.startsWith("bg-[url")) {
+      const escapedValue = escapeUrlForTailwind(value);
+      return state ? `${state}:${escapedValue}` : escapedValue;
+    }
+
+    // Rest of your existing logic
     if (["hover", "focus", "active"].includes(key)) {
-      return getTailwindClassName(value, key as "hover" | "focus" | "active");
+      if (typeof value === "string") {
+        return `${key}:${value}`;
+      }
+      return getTailwindClassName(value, key as typeof state);
     }
 
     return state ? `${state}:${value}` : value;

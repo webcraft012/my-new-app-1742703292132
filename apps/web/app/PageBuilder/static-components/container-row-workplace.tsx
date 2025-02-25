@@ -10,7 +10,7 @@ export const ContainerRowWorkplaceDefaultProps: Partial<ContainerProps> = {
   display: "flex",
   flexDirection: "flex-row",
   w: "w-full",
-  gap: "gap-4",
+  gap: "gap-8",
   position: "relative",
   // flexWrap: "flex-wrap",
 };

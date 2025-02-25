@@ -14,6 +14,7 @@ import WorkplaceHolderComponent from "../PageBuilder/static-components/workplace
 import ContainerContainerComponent from "../PageBuilder/static-components/container-component";
 import ColumnComponent from "../PageBuilder/static-components/column-container";
 import ImageComponent from "../PageBuilder/static-components/image";
+import { EmptyContainer } from "./empty-container";
 
 const HomePage = async (): Promise<React.JSX.Element | null> => {
   const nodes = await getData();
@@ -52,7 +53,7 @@ const componentMap = {
   CardTop: CardTopComponent,
   Button: ButtonComponent,
   Text: TextComponent,
-  Container: ContainerContainerComponent,
+  Container: EmptyContainer,
   ContainerWorkplace: ContainerWorkplaceComponent,
   Spacer: CardBottomComponent,
   Image: ImageComponent,

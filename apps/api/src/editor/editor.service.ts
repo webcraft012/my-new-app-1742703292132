@@ -40,6 +40,7 @@ export class EditorService {
 
   async buildEditor() {
     const generatedUIElements = await this.aiService.generateContent();
+    return generatedUIElements;
     console.log(typeof generatedUIElements);
     const editorBuilder = new EditorBuilder();
     const editorState = editorBuilder.buildEditor(
