@@ -5,6 +5,7 @@ module.exports = {
   content: [
     "./app/**/*.{ts,tsx}",
     "../../packages/ui/components/**/*.{ts,tsx}",
+    "./stories/**/*.{js,ts,jsx,tsx}",
   ],
   safelist: [
     // Static, non-dynamic classes that are added as literalss
