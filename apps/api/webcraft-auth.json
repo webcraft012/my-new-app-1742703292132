@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "webcraft-453101",
+  "private_key_id": "a53d4ee6e908678483d734257606a9bca6745b3c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDEX5qmF/sEVL5T\nUIS0Y6D2Scu9M4AcMVW+y7LyeVa0umkIahnxkGB7WzdTClNUZELlw+2cUdb5X2Ue\nE5N3+MiyZH0IBSrCMYzpwOWhLikM1QPRJ2HtpRIPuewlHIbM3F0RrF4t68aZVxoG\nbMcHpD6Qcf6VDxjn+mbMJ7jaTLqQdw8g6LQodzQbraJm0nXEIuq0Hb9EyYzOwdUx\nscpSQHIzdXPAl0xvrqIcLbRZ/AIHa/ceV3PBZVk1+h5x5yqaJ2D0Lz7UhFgh5Awc\n6R6EgxSJ9DU1Zptk7j+7DeRN16wgcJ5IRprng5OQOT9GVQsazFSe4iVDw3ewmD9a\nTzgTr9sHAgMBAAECggEAX5KIGb4iFQGJf9L4QzMZ68QOvI6MEyyPpsRM22XipSL0\na3v4FHFIA8FpM6ka1T/WryykQCg0kDm1ZOXyJ7mVM/1kPLsHDGxBQKL5H3Dv2aby\nrKCWMKreF3lNTOKNWLcHNMrHK2JMzeRubiIS2808BeD1HmayoHRmA4ZxmQ0u34+2\n5SpKOyqjwotZ/9fP81D4BFqqQXBP9lpcxF4Bp5nbdbZxoiG+M0LxuK0svmZeRXK2\nidb2O4QM3MdPz2mT0SgLzjAJquiLB0q02rwkUeGcLgkvbyMadYDuvxsDppqico9/\nCfYmNjWokvJlCI923sI88mpqhmyA0dV3t8LIJIVVQQKBgQD6OX6ZbVR3JTTKJXSC\nqNRSzFsyEaHFFcFUVJxbkqimMzduYuiCAwlQiEIOP8rU9hCwOSn0KENLJxAB5+Nu\nYInYVUv8lE+FCobiJSBEB4oVWHvFqJVXdzvhuMjCmn+SHGOD3jIfa6osdH5ykiT4\nWSIFgTu8lkEr8YkvYRMTWReV0wKBgQDI5+srMFd2SqghTJbGpi7Y+F5VPbqtqiau\nuANXdbmLy7RMcLnEio7OPfQ1lHwR8OxbRuxj54N02YYJm5i82F9XAGPORCtnB4XG\nVinQ79vMJnKc8Wl9xpECQR2/5dNwJGWR5SBcDP51//e724L4o0khrtS6WC71hwS2\nXEny+QahfQKBgQDquSZF/GYAghlcCviZXJAXv3VIqXuLqlW5qsklqZSkm2TDGusq\nkniZX8g/H55AWTbcaDMvwtklVVZRw1n3/30vPwxRujpB/db7qoHy7vOcBG3Ow86b\nxtCYdEN3MYC76f98AuIX0WJH41t+VBN0GACvE0SbKoOmGiRrGm/PdYKHWwKBgELt\nP2I70GcPp8KwCOpUIfcVhhdPYQjJTemWU0anaRAw4/cy9i+LGNeLu/a9aDdx0sr1\nbXo6fYhHjmdU9iSyz8/jyVvFSdAgqWfQ/E0mGkp/5F5z7XiA1X2yw35RyYXqGgvo\nEEeZ7IrSomxqS88YVhxqaWNKTRptyBwX0mqmmpbhAoGBANfBcYORvBuULboRJ8m4\nlNDVgy1VflvygBTgu0TtTfUYNi1YBynTeASLpcHQugMptFg/ipQx9lN/t3Z9/vBT\nUp65bx3D35xPpRGbU28QsB85opr9FwZ2q/GU9Yo8DB4FFhUA0nm94905ozHrK9FW\n3m//3thNlOYbrwDATeB4SLaA\n-----END PRIVATE KEY-----\n",
+  "client_email": "webcraft-api@webcraft-453101.iam.gserviceaccount.com",
+  "client_id": "114348144023783203905",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/webcraft-api%40webcraft-453101.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
