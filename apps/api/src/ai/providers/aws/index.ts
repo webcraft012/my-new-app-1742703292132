@@ -25,3 +25,13 @@ export async function listContainerFiles(
   console.log(`Listing files in container at path: ${path}`);
   return executeCommand(taskArn, container, `ls -la ${path}`);
 }
+
+// Command to modify the page under /app/pages/index.tsx
+// it will replace the word "started by "CHANAGES"
+export async function modifyPage(
+  taskArn: string,
+  container: string,
+  path: string = '/app/app/page.tsx',
+): Promise<string> {
+  return executeCommand(taskArn, container, `pnpm dev`);
+}

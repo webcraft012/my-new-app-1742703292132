@@ -26,7 +26,7 @@ import {
 import { Client } from 'ssh2';
 import { runFargateTaskAndGetIp } from '../providers/aws/service/service';
 import * as dotenv from 'dotenv';
-import { listContainerFiles } from '../providers/aws/index';
+import { listContainerFiles, modifyPage } from '../providers/aws/index';
 
 // Load environment variables
 dotenv.config();
@@ -241,13 +241,15 @@ async function deployToAWS() {
 
       // List files in the container to verify deployment
       try {
-        console.log('\nListing files in the app directory:');
-        const appFiles = await listContainerFiles(taskArn, container, '/app');
-        console.log(appFiles);
+        await new Promise((resolve) => setTimeout(resolve, 30000));
+        console.log('Modifying the page...');
+        await modifyPage(taskArn, container);
       } catch (error: any) {
         console.log('Could not list files in container:', error.message);
         console.log('Container might still be initializing. Try again later.');
       }
+
+      // Modify the page
 
       return {
         taskArn,
