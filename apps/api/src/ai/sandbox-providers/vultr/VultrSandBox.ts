@@ -230,6 +230,11 @@ runcmd:
     return `http://${this.instance!.main_ip}:3000`;
   }
 
+  async gitCommitAndPush(): Promise<void> {
+    this.ensureInstanceInitialized();
+    throw new Error('Not implemented');
+  }
+
   /**
    * Copies a file from one location to another
    */

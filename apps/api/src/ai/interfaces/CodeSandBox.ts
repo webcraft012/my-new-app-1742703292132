@@ -23,17 +23,18 @@ export interface ICodeSandBox<T> {
   gitAdd(): Promise<any>;
   gitCommit(message: string): Promise<any>;
   gitPush(): Promise<void>;
+  gitCommitAndPush(message: string): Promise<void>;
   setGitRemote(remote: string): Promise<any>;
 }
 
 export enum Command {
-  dev = 'npm run dev',
-  build = 'npm run build',
-  start = 'npm run start',
-  test = 'npm run test',
-  lint = 'npm run lint',
-  format = 'npm run format',
-  install = 'npm run install',
+  dev = 'pnpm dev',
+  build = 'pnpm build',
+  start = 'pnpm start',
+  test = 'pnpm test',
+  lint = 'pnpm lint',
+  format = 'pnpm format',
+  install = 'pnpm install',
 }
 
 export type ReaddirEntry = any; // This will be replaced with the actual type if available

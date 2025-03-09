@@ -70,6 +70,9 @@ export async function executeEcsCommand(
 
       // Connect to the WebSocket
       const ws = new WebSocket(streamUrl);
+
+      let output = '';
+
       ws.on('open', () => {
         // Initialize the session (this negotiates the connection using the token)
         ssm.init(ws, {
@@ -80,20 +83,24 @@ export async function executeEcsCommand(
 
       ws.on('message', (data) => {
         const agentMessage = ssm.decode(data);
+
         ssm.sendACK(ws, agentMessage);
         if (agentMessage.payloadType === 1) {
-          console.log(textDecoder.decode(agentMessage.payload));
+          output += textDecoder.decode(agentMessage.payload);
         } else if (agentMessage.payloadType === 17) {
+          console.log('Sending init message');
           ssm.sendInitMessage(ws, { rows: 24, cols: 80 });
         }
       });
 
       ws.on('error', (err) => {
         console.error('WebSocket error:', err);
+        reject(err);
       });
 
       ws.on('close', () => {
         console.log('WebSocket connection closed');
+        resolve(output);
       });
     } catch (error) {
       console.error('Error executing command:', error);

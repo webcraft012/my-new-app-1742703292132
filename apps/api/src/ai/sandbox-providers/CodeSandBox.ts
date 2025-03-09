@@ -193,6 +193,12 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     return shell;
   }
 
+  async gitCommitAndPush(message: string) {
+    this.ensureSandboxInitialized();
+    await this.gitCommit(message);
+    await this.gitPush();
+  }
+
   async gitCommit(message: string) {
     this.ensureSandboxInitialized();
     await this.gitAdd();

@@ -23,43 +23,51 @@ import {
 } from '@aws-sdk/client-ec2';
 import * as dotenv from 'dotenv';
 import { getPublicIpFromNetworkInterface } from './network-interface';
+import { executeCommand } from './simple-exec';
 
 // Load environment variables
 dotenv.config();
-
-// AWS credentials from environment variables
-const awsConfig = {
-  region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  },
-};
-
-// Initialize AWS clients
-const ecsClient = new ECSClient(awsConfig);
-const cloudWatchLogsClient = new CloudWatchLogsClient(awsConfig);
-const ec2Client = new EC2Client(awsConfig);
-
-// Docker image to use
-const dockerImage = 'clad012/nextjs-dev-boilerplate:latest';
-
-// Service name prefix
-const serviceNamePrefix = 'nextjs-dev-';
-
-// Pre-existing IAM role ARN
-const ecsRoleArn = 'arn:aws:iam::495599761489:role/ecs-service';
 
 /**
  * AWS Fargate Service class for managing containerized applications
  */
 export class AwsFargateService {
   private clusterName: string;
+  // AWS credentials from environment variables
+  private awsConfig = {
+    region: process.env.AWS_REGION || 'us-east-1',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    },
+  };
+
+  // Initialize AWS clients
+  private ecsClient = new ECSClient(this.awsConfig);
+  private cloudWatchLogsClient = new CloudWatchLogsClient(this.awsConfig);
+  private ec2Client = new EC2Client(this.awsConfig);
+
+  // Docker image to use
+  private dockerImage = 'clad012/nextjs-dev-boilerplate:latest';
+
+  // Service name prefix
+  private serviceNamePrefix = 'nextjs-dev-';
+
+  // Pre-existing IAM role ARN
+  private ecsRoleArn = 'arn:aws:iam::495599761489:role/ecs-service';
+
+  private taskArn: string;
+  private publicIp: string | null;
+  private container: string;
+  private taskId: string;
 
   /**
    * Creates a new AwsFargateService instance
    */
-  constructor() {
+  constructor(
+    private readonly appName: string,
+    private readonly gitRepoUrl: string,
+  ) {
     this.clusterName = '';
   }
 
@@ -77,12 +85,28 @@ export class AwsFargateService {
     this.clusterName = name;
   }
 
+  getTaskArn(): string {
+    return this.taskArn;
+  }
+
+  getPublicIp(): string | null {
+    return this.publicIp;
+  }
+
+  getContainer(): string {
+    return this.container;
+  }
+
+  getTaskId(): string {
+    return this.taskId;
+  }
+
   async getContainerName(taskArn: string): Promise<string> {
     const task = await this.getTaskStatus(taskArn);
     return task.containers[0].name;
   }
 
-  async getTaskId(taskArn: string): Promise<string> {
+  async retrieveTaskId(taskArn: string): Promise<string> {
     const task = await this.getTaskStatus(taskArn);
     return task.taskArn.split('/').pop() as string;
   }
@@ -109,13 +133,23 @@ export class AwsFargateService {
     try {
       const clusterName = 'nextjs-dev-cluster';
 
-      // Create the cluster
-      await ecsClient.send(
+      // Create the cluster with both FARGATE and FARGATE_SPOT capacity providers
+      await this.ecsClient.send(
         new CreateClusterCommand({
           clusterName,
+          capacityProviders: ['FARGATE', 'FARGATE_SPOT'],
+          defaultCapacityProviderStrategy: [
+            {
+              capacityProvider: 'FARGATE_SPOT',
+              weight: 1,
+            },
+          ],
         }),
       );
 
+      console.log(
+        `Created ECS cluster '${clusterName}' with FARGATE_SPOT capacity provider`,
+      );
       return clusterName;
     } catch (error) {
       console.error('Error creating ECS cluster:', error);
@@ -131,12 +165,12 @@ export class AwsFargateService {
     gitRepoUrl: string,
   ): Promise<string> {
     try {
-      const family = `${serviceNamePrefix}${appName}`;
+      const family = `${this.serviceNamePrefix}${appName}`;
       const logGroupName = `/ecs/${family}`;
 
       // Create CloudWatch log group
       try {
-        await cloudWatchLogsClient.send(
+        await this.cloudWatchLogsClient.send(
           new CreateLogGroupCommand({
             logGroupName,
           }),
@@ -149,11 +183,11 @@ export class AwsFargateService {
 
       // Register the task definition with execute command enabled
       console.log('Registering task definition for execute command...');
-      const response = await ecsClient.send(
+      const response = await this.ecsClient.send(
         new RegisterTaskDefinitionCommand({
           family,
-          executionRoleArn: ecsRoleArn,
-          taskRoleArn: ecsRoleArn,
+          executionRoleArn: this.ecsRoleArn,
+          taskRoleArn: this.ecsRoleArn,
           networkMode: 'awsvpc',
           requiresCompatibilities: ['FARGATE'],
           cpu: '1024', // 1 vCPU
@@ -161,7 +195,7 @@ export class AwsFargateService {
           containerDefinitions: [
             {
               name: family,
-              image: dockerImage,
+              image: this.dockerImage,
               essential: true,
               portMappings: [
                 {
@@ -184,7 +218,7 @@ export class AwsFargateService {
                 logDriver: 'awslogs',
                 options: {
                   'awslogs-group': logGroupName,
-                  'awslogs-region': awsConfig.region,
+                  'awslogs-region': this.awsConfig.region,
                   'awslogs-stream-prefix': 'ecs',
                 },
               },
@@ -210,7 +244,7 @@ export class AwsFargateService {
         SubnetIds: [subnetId],
       };
 
-      const response = await ec2Client.send(
+      const response = await this.ec2Client.send(
         new DescribeSubnetsCommand(describeSubnetsCommand),
       );
 
@@ -238,7 +272,7 @@ export class AwsFargateService {
     try {
       // Check if a security group with the same name already exists
       const sgName = 'nextjs-dev-sg';
-      const describeResponse = await ec2Client.send(
+      const describeResponse = await this.ec2Client.send(
         new DescribeSecurityGroupsCommand({
           Filters: [
             {
@@ -271,7 +305,7 @@ export class AwsFargateService {
 
       // Create a new security group
       console.log(`Creating new security group in VPC: ${vpcId}`);
-      const createResponse = await ec2Client.send(
+      const createResponse = await this.ec2Client.send(
         new CreateSecurityGroupCommand({
           GroupName: sgName,
           Description: 'Security group for NextJS development containers',
@@ -284,7 +318,7 @@ export class AwsFargateService {
 
       // Add inbound rules
       console.log('Adding inbound rules to security group');
-      await ec2Client.send(
+      await this.ec2Client.send(
         new AuthorizeSecurityGroupIngressCommand({
           GroupId: securityGroupId,
           IpPermissions: [
@@ -371,13 +405,18 @@ export class AwsFargateService {
       console.log(`Using security group: ${securityGroupId} for task`);
 
       // Run the task with execute command enabled
-      console.log('Running task with execute command enabled...');
-      const response = await ecsClient.send(
+      console.log('Running task with FARGATE_SPOT capacity provider...');
+      const response = await this.ecsClient.send(
         new RunTaskCommand({
           cluster: this.clusterName,
           taskDefinition: taskDefinitionArn,
           count: 1,
-          launchType: 'FARGATE',
+          capacityProviderStrategy: [
+            {
+              capacityProvider: 'FARGATE_SPOT',
+              weight: 1,
+            },
+          ],
           networkConfiguration: {
             awsvpcConfiguration: {
               subnets: subnetIds,
@@ -390,7 +429,7 @@ export class AwsFargateService {
       );
 
       const taskArn = response.tasks?.[0].taskArn as string;
-      console.log(`Task ${taskArn} started successfully`);
+      console.log(`Task ${taskArn} started successfully on FARGATE_SPOT`);
 
       return taskArn;
     } catch (error: any) {
@@ -431,7 +470,7 @@ export class AwsFargateService {
    */
   async getTaskStatus(taskArn: string): Promise<any> {
     try {
-      const response = await ecsClient.send(
+      const response = await this.ecsClient.send(
         new DescribeTasksCommand({
           cluster: this.clusterName,
           tasks: [taskArn],
@@ -456,6 +495,7 @@ export class AwsFargateService {
     try {
       console.log(
         `Getting public IP for task ${taskArn} using network interface lookup...`,
+        taskArn,
       );
 
       // Get the task details
@@ -503,7 +543,7 @@ export class AwsFargateService {
       console.log(`Found private IP: ${privateIp}`);
 
       // Query EC2 API to get the public IP associated with the network interface
-      const response = await ec2Client.send(
+      const response = await this.ec2Client.send(
         new DescribeNetworkInterfacesCommand({
           NetworkInterfaceIds: [eniId],
         }),
@@ -579,7 +619,7 @@ export class AwsFargateService {
    */
   async listTasks(): Promise<string[]> {
     try {
-      const response = await ecsClient.send(
+      const response = await this.ecsClient.send(
         new ListTasksCommand({
           cluster: this.clusterName,
         }),
@@ -624,7 +664,7 @@ export class AwsFargateService {
       console.log(`Looking for logs in group: ${logGroupName}`);
 
       // Get log streams for the task
-      const streamsResponse = await cloudWatchLogsClient.send(
+      const streamsResponse = await this.cloudWatchLogsClient.send(
         new DescribeLogStreamsCommand({
           logGroupName,
           logStreamNamePrefix: `ecs/${family}/${taskId}`,
@@ -649,7 +689,7 @@ export class AwsFargateService {
 
         console.log(`Getting logs from stream: ${stream.logStreamName}`);
 
-        const eventsResponse = await cloudWatchLogsClient.send(
+        const eventsResponse = await this.cloudWatchLogsClient.send(
           new GetLogEventsCommand({
             logGroupName,
             logStreamName: stream.logStreamName,
@@ -703,55 +743,35 @@ export class AwsFargateService {
       console.error('Error printing task logs:', error);
     }
   }
-}
 
-/**
- * Run a Fargate task for a Next.js application
- * @param appName - The name of the application
- * @param gitRepoUrl - The URL of the Git repository to clone
- * @returns The task ARN
- */
-export async function runFargateTask(
-  appName: string,
-  gitRepoUrl: string,
-): Promise<string> {
-  const service = new AwsFargateService();
-  return await service.runTask(appName, gitRepoUrl);
-}
+  /**
+   * Run a Fargate task for a Next.js application and get its public IP
+   * @param appName - The name of the application
+   * @param gitRepoUrl - The URL of the Git repository to clone
+   * @returns The task ARN and public IP address
+   */
+  async initializeNewTask(): Promise<void> {
+    this.taskArn = await this.runTask(this.appName, this.gitRepoUrl);
 
-/**
- * Run a Fargate task for a Next.js application and get its public IP
- * @param appName - The name of the application
- * @param gitRepoUrl - The URL of the Git repository to clone
- * @returns The task ARN and public IP address
- */
-export async function runFargateTaskAndGetIp(
-  appName: string,
-  gitRepoUrl: string,
-): Promise<{
-  taskArn: string;
-  publicIp: string | null;
-  container: string;
-  taskId: string;
-}> {
-  const service = new AwsFargateService();
-  const taskArn = await service.runTask(appName, gitRepoUrl);
+    // Wait a bit for the task to start
+    console.log('Waiting for task to start...');
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
-  // Wait a bit for the task to start
-  console.log('Waiting for task to start...');
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+    // Try using the network interface lookup method
+    console.log('Getting public IP using network interface lookup...');
+    this.publicIp = await this.getTaskPublicIpFromNetworkInterface(
+      this.taskArn,
+    );
 
-  // Try using the network interface lookup method
-  console.log('Getting public IP using network interface lookup...');
-  const publicIp = await getPublicIpFromNetworkInterface(
-    taskArn,
-    service.getClusterName(),
-  );
+    this.container = await this.getContainerName(this.taskArn);
+    this.taskId = await this.retrieveTaskId(this.taskArn);
+  }
 
-  return {
-    taskArn,
-    publicIp,
-    container: await service.getContainerName(taskArn),
-    taskId: await service.getTaskId(taskArn),
-  };
+  async runCommand(command: string): Promise<string> {
+    return executeCommand(
+      this.taskArn,
+      this.container,
+      `cd /app && ${command}`,
+    );
+  }
 }

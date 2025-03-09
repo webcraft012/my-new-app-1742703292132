@@ -4,6 +4,7 @@
 set -e
 echo "Starting container setup at $(date)"
 
+
 # Get the repository URL from the environment variable
 REPO_URL="$GIT_REPO_URL"
 
