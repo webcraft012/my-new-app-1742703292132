@@ -5,6 +5,7 @@ import {
   RunTaskCommand,
   DescribeTasksCommand,
   ListTasksCommand,
+  ExecuteCommandCommand,
 } from '@aws-sdk/client-ecs';
 import {
   CloudWatchLogsClient,
@@ -70,6 +71,23 @@ export class AwsFargateService {
   }
 
   /**
+   * Set the cluster name
+   */
+  setClusterName(name: string): void {
+    this.clusterName = name;
+  }
+
+  async getContainerName(taskArn: string): Promise<string> {
+    const task = await this.getTaskStatus(taskArn);
+    return task.containers[0].name;
+  }
+
+  async getTaskId(taskArn: string): Promise<string> {
+    const task = await this.getTaskStatus(taskArn);
+    return task.taskArn.split('/').pop() as string;
+  }
+
+  /**
    * Initialize the AWS Fargate service
    */
   async initialize(): Promise<void> {
@@ -129,7 +147,8 @@ export class AwsFargateService {
         console.log('Log group may already exist, continuing...');
       }
 
-      // Register the task definition
+      // Register the task definition with execute command enabled
+      console.log('Registering task definition for execute command...');
       const response = await ecsClient.send(
         new RegisterTaskDefinitionCommand({
           family,
@@ -351,7 +370,8 @@ export class AwsFargateService {
       const securityGroupId = await this.createSecurityGroup();
       console.log(`Using security group: ${securityGroupId} for task`);
 
-      // Run the task
+      // Run the task with execute command enabled
+      console.log('Running task with execute command enabled...');
       const response = await ecsClient.send(
         new RunTaskCommand({
           cluster: this.clusterName,
@@ -360,11 +380,12 @@ export class AwsFargateService {
           launchType: 'FARGATE',
           networkConfiguration: {
             awsvpcConfiguration: {
-              subnets: subnetIds, // Use the first subnet for the task
+              subnets: subnetIds,
               securityGroups: [securityGroupId],
               assignPublicIp: 'ENABLED',
             },
           },
+          enableExecuteCommand: true,
         }),
       );
 
@@ -707,7 +728,12 @@ export async function runFargateTask(
 export async function runFargateTaskAndGetIp(
   appName: string,
   gitRepoUrl: string,
-): Promise<{ taskArn: string; publicIp: string | null }> {
+): Promise<{
+  taskArn: string;
+  publicIp: string | null;
+  container: string;
+  taskId: string;
+}> {
   const service = new AwsFargateService();
   const taskArn = await service.runTask(appName, gitRepoUrl);
 
@@ -722,47 +748,10 @@ export async function runFargateTaskAndGetIp(
     service.getClusterName(),
   );
 
-  return { taskArn, publicIp };
-}
-
-/**
- * Run a Fargate task for a Next.js application, get its public IP, and check logs if it fails
- * @param appName - The name of the application
- * @param gitRepoUrl - The URL of the Git repository to clone
- * @returns The task ARN, public IP address, and logs if the task fails
- */
-export async function runFargateTaskWithLogs(
-  appName: string,
-  gitRepoUrl: string,
-): Promise<{ taskArn: string; publicIp: string | null; logs?: any[] }> {
-  const service = new AwsFargateService();
-  const taskArn = await service.runTask(appName, gitRepoUrl);
-
-  // Wait for the task to get a public IP
-  const publicIp =
-    await service.waitForTaskPublicIpFromNetworkInterface(taskArn);
-
-  // If we couldn't get a public IP, the task might have failed
-  if (!publicIp) {
-    console.log(
-      'Could not get public IP. The task might have failed. Checking logs...',
-    );
-
-    // Wait a bit to ensure logs are available
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    // Get task status
-    const taskStatus = await service.getTaskStatus(taskArn);
-    console.log('Task status:', JSON.stringify(taskStatus, null, 2));
-
-    // Print logs
-    await service.printTaskLogs(taskArn);
-
-    // Get logs to return
-    const logs = await service.getTaskLogs(taskArn);
-
-    return { taskArn, publicIp, logs };
-  }
-
-  return { taskArn, publicIp };
+  return {
+    taskArn,
+    publicIp,
+    container: await service.getContainerName(taskArn),
+    taskId: await service.getTaskId(taskArn),
+  };
 }

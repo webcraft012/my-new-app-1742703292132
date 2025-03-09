@@ -24,8 +24,9 @@ import {
   deleteService,
 } from '../providers/google-compute/service';
 import { Client } from 'ssh2';
-import { runFargateTaskAndGetIp } from '../providers/aws/service/task-ip';
+import { runFargateTaskAndGetIp } from '../providers/aws/service/service';
 import * as dotenv from 'dotenv';
+import { listContainerFiles } from '../providers/aws/index';
 
 // Load environment variables
 dotenv.config();
@@ -225,16 +226,28 @@ async function deployToAWS() {
 
     // Try the simpler approach first - just run a Fargate task and get its public IP
     console.log('Running Fargate task...');
-    const { taskArn, publicIp } = await runFargateTaskAndGetIp(
-      appName,
-      gitRepoUrl,
-    );
+    const { taskArn, publicIp, container, taskId } =
+      await runFargateTaskAndGetIp(appName, gitRepoUrl);
 
     console.log(`Fargate task started: ${taskArn}`);
 
     if (publicIp) {
       console.log(`Application public IP: ${publicIp}`);
       console.log(`You can access the application at: http://${publicIp}:3000`);
+
+      // Wait for the container to be fully initialized
+      console.log('Waiting for container to initialize...');
+      await new Promise((resolve) => setTimeout(resolve, 30000)); // 30 seconds
+
+      // List files in the container to verify deployment
+      try {
+        console.log('\nListing files in the app directory:');
+        const appFiles = await listContainerFiles(taskArn, container, '/app');
+        console.log(appFiles);
+      } catch (error: any) {
+        console.log('Could not list files in container:', error.message);
+        console.log('Container might still be initializing. Try again later.');
+      }
 
       return {
         taskArn,
@@ -269,18 +282,12 @@ async function deployToAWS() {
       console.error(
         'You can find your subnet IDs in the AWS Console under VPC > Subnets',
       );
-    } else if (error.message && error.message.includes('credentials')) {
-      console.error('\nAWS CREDENTIALS ERROR:');
-      console.error(
-        'Your AWS credentials are invalid or do not have the necessary permissions.',
-      );
-      console.error(
-        'Please check your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.',
-      );
     }
 
     throw error;
   }
+
+  throw new Error('Failed to deploy to AWS Fargate');
 }
 
 // Rename main to deployToGCP for clarity

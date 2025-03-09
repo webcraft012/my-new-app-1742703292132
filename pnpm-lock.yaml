@@ -113,7 +113,7 @@ importers:
         version: 5.0.0-beta.2
       openai:
         specifier: 4.82.0
-        version: 4.82.0(zod@3.24.1)
+        version: 4.82.0(ws@8.18.1)(zod@3.24.1)
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.1
@@ -123,12 +123,18 @@ importers:
       ssh2:
         specifier: 1.16.0
         version: 1.16.0
+      ssm-session:
+        specifier: 1.0.6
+        version: 1.0.6
       ts-swarm:
         specifier: 1.2.6
         version: 1.2.6(openai@4.82.0)(react@18.2.0)(svelte@5.19.10)(vue@3.5.13)
       uuid:
         specifier: 9.0.0
         version: 9.0.0
+      ws:
+        specifier: ^8.18.1
+        version: 8.18.1
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -4032,7 +4038,7 @@ packages:
     resolution: {integrity: sha512-DtLWIH29onUYR00i0GlQ3UdcTRC6EP4u9w/h9LxpUZJWRMARk6dQwZ6Jkd+QdwVpuAOrdxt18v0K2uIYR3fwFg==}
     dependencies:
       '@types/ws': 8.5.13
-      ws: 8.18.0
+      ws: 8.18.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -6959,7 +6965,7 @@ packages:
       recast: 0.23.9
       semver: 7.7.1
       util: 0.12.5
-      ws: 8.18.0
+      ws: 8.18.1
     transitivePeerDependencies:
       - bufferutil
       - storybook
@@ -8849,7 +8855,7 @@ packages:
       eventsource-parser: 1.1.2
       json-schema: 0.4.0
       jsondiffpatch: 0.6.0
-      openai: 4.82.0(zod@3.24.1)
+      openai: 4.82.0(ws@8.18.1)(zod@3.24.1)
       react: 18.2.0
       secure-json-parse: 2.7.0
       svelte: 5.19.10
@@ -14918,7 +14924,7 @@ packages:
       is-wsl: 2.2.0
     dev: false
 
-  /openai@4.82.0(zod@3.24.1):
+  /openai@4.82.0(ws@8.18.1)(zod@3.24.1):
     resolution: {integrity: sha512-1bTxOVGZuVGsKKUWbh3BEwX1QxIXUftJv+9COhhGGVDTFwiaOd4gWsMynF2ewj1mg6by3/O+U8+EEHpWRdPaJg==}
     hasBin: true
     peerDependencies:
@@ -14937,6 +14943,7 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
+      ws: 8.18.1
       zod: 3.24.1
     transitivePeerDependencies:
       - encoding
@@ -16637,6 +16644,10 @@ packages:
       nan: 2.22.2
     dev: false
 
+  /ssm-session@1.0.6:
+    resolution: {integrity: sha512-1qUuh1Pw5dR6l6ldZWeNsafHSDoqU8UltyQfJUGDrl7xCsWMlVW+HcygJ1MCMYprxw1vjmhph16QXdxRi56Dig==}
+    dev: false
+
   /sswr@2.1.0(svelte@5.19.10):
     resolution: {integrity: sha512-Cqc355SYlTAaUt8iDPaC/4DPPXK925PePLMxyBKuWd5kKc5mwsG3nT9+Mq2tyguL5s7b4Jg+IRMpTRsNTAfpSQ==}
     peerDependencies:
@@ -18187,8 +18198,8 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
-  /ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
+  /ws@8.18.1:
+    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
