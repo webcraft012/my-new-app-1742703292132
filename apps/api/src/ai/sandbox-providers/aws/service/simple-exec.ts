@@ -83,6 +83,7 @@ export async function executeEcsCommand(
 
       ws.on('message', (data) => {
         const agentMessage = ssm.decode(data);
+        console.log('Agent message:', textDecoder.decode(agentMessage.payload));
 
         ssm.sendACK(ws, agentMessage);
         if (agentMessage.payloadType === 1) {
@@ -140,47 +141,6 @@ export async function executeCommand(
     // Extract the cluster name from the task ARN
     const cluster = getClusterFromTaskArn(taskArn);
     console.log(`Using cluster: ${cluster}`);
-
-    // If container name is not provided, try to get it from the task ARN
-    if (!container) {
-      // Extract the task ID from the ARN
-      const taskId = taskArn.split('/').pop() || '';
-
-      // Get the task family name from the task ARN
-      // Format is usually: nextjs-dev-{appName}-{timestamp}
-      const parts = taskArn.split('/');
-      if (parts.length >= 2) {
-        const taskPart = parts[1]; // This is the task ID part
-
-        // Try to extract the container name using a common pattern
-        // For tasks created with our service, the container name is usually "nextjs-dev-{appName}"
-        if (taskPart.startsWith('nextjs-dev-')) {
-          // Extract just the app name part
-          const appNameMatch = taskPart.match(/nextjs-dev-([^-]+)/);
-          if (appNameMatch && appNameMatch[1]) {
-            container = `nextjs-dev-${appNameMatch[1]}`;
-            console.log(
-              `Using container name from task ARN pattern: ${container}`,
-            );
-          }
-        }
-      }
-
-      // If we still don't have a container name, use a hardcoded pattern
-      if (!container) {
-        // For tasks created with our service, try this pattern
-        container = taskArn.includes('nextjs-app')
-          ? 'nextjs-dev-nextjs-app'
-          : 'nextjs-dev-container';
-        console.log(`Using fallback container name: ${container}`);
-      }
-    }
-
-    if (!container) {
-      throw new Error(
-        'Container name is required and could not be determined automatically',
-      );
-    }
 
     // Execute the command
     return await executeEcsCommand(cluster, taskArn, container, command);

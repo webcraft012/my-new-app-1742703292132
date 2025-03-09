@@ -105,7 +105,7 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
     return await this.sandbox.runCommand(`cat ${filePath}`);
   }
 
-  async runCommand(command: Command): Promise<{
+  async runCommand(command: string): Promise<{
     output: string;
     exitCode?: number;
   }> {
@@ -113,7 +113,7 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
 
     try {
       // Execute the command
-      const output = await this.sandbox.runCommand(command.toString());
+      const output = await this.sandbox.runCommand(command);
 
       return {
         output,

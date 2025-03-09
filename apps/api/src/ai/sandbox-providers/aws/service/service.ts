@@ -771,7 +771,7 @@ export class AwsFargateService {
     return executeCommand(
       this.taskArn,
       this.container,
-      `cd /app && ${command}`,
+      `sh -c 'cd /app && ${command}'`,
     );
   }
 }

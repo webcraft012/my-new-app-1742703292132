@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import path from 'path';
 import { z } from 'zod';
 import { AiClient as AiClientInterface } from '../interfaces/AiClient';
-import { AwsSandbox } from '../providers/aws/sandbox';
+import { AwsSandbox } from '../sandbox-providers/aws/sandbox';
 import { UIElementSchema } from '../ui-config';
 
 // Load environment variables
@@ -96,6 +96,15 @@ export class AiClient implements AiClientInterface {
 
       console.log('AWS sandbox created');
       console.log('Preview URL: ', awsSandbox.getPreviewUrl());
+
+      // wait 30 seconds
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+
+      console.log('AWS sandbox created');
+      const result = await awsSandbox.runCommand('pnpm lint');
+      console.log('Result: ', result);
+
+      return 'Deployment initiated. See logs for details.';
     }
     return 'Deployment initiated. See logs for details.';
   }
