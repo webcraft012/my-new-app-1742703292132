@@ -2,7 +2,7 @@ import {
   Command,
   ICodeSandBox,
   ReaddirEntry,
-} from '../../interfaces/CodeSandBox';
+} from '../../ai/interfaces/CodeSandBox';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

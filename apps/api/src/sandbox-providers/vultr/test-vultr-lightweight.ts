@@ -1,19 +1,19 @@
 import { VultrSandBox } from './VultrSandBox';
-import { Command } from '../../interfaces/CodeSandBox';
+import { Command } from '../../ai/interfaces/CodeSandBox';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
 /**
- * Test creating a Vultr instance from a snapshot
+ * Test creating a Vultr instance with lightweight OS
  */
-async function testVultrSnapshot() {
+async function testVultrLightweight() {
   try {
     console.log('Creating VultrSandBox instance...');
     const vultrSandBox = new VultrSandBox();
 
-    console.log('Creating sandbox from snapshot...');
+    console.log('Creating sandbox with lightweight OS...');
     const instance = await vultrSandBox.createSandbox();
     console.log('Sandbox created:', instance);
 
@@ -38,7 +38,24 @@ async function testVultrSnapshot() {
       console.error('Failed to get OS information:', error);
     }
 
-    console.log('2. Checking Node.js installation...');
+    console.log('2. Checking system resources...');
+    try {
+      // Create a script to get system resources
+      await vultrSandBox.writeTextFile(
+        '/root/check-resources.sh',
+        '#!/bin/sh\nfree -m > /root/mem-info.txt 2>/dev/null || echo "free command not available" > /root/mem-info.txt\ndf -h > /root/disk-info.txt',
+      );
+      await vultrSandBox.runCommand(Command.install);
+      const memInfo = await vultrSandBox.readTextFile('/root/mem-info.txt');
+      console.log('Memory Information:', memInfo);
+
+      const diskInfo = await vultrSandBox.readTextFile('/root/disk-info.txt');
+      console.log('Disk Information:', diskInfo);
+    } catch (error) {
+      console.error('Failed to get system resources:', error);
+    }
+
+    console.log('3. Checking Node.js installation...');
     try {
       // Create a script to check Node.js installation
       await vultrSandBox.writeTextFile(
@@ -61,16 +78,38 @@ async function testVultrSnapshot() {
         '/root/pnpm-version.txt',
       );
       console.log('PNPM Version:', pnpmVersion);
+
+      // If Node.js is not found, try to install it
+      if (nodeVersion.includes('not found')) {
+        console.log('Node.js not found. Attempting to install...');
+        await vultrSandBox.writeTextFile(
+          '/root/install-node.sh',
+          '#!/bin/sh\napk update && apk add --no-cache nodejs npm git curl bash && npm install -g pnpm',
+        );
+        await vultrSandBox.runCommand(Command.install);
+        console.log('Node.js installation attempted. Checking again...');
+
+        // Check again
+        await vultrSandBox.writeTextFile(
+          '/root/check-node-again.sh',
+          '#!/bin/sh\nnode -v > /root/node-version-new.txt 2>/dev/null || echo "node still not found" > /root/node-version-new.txt',
+        );
+        await vultrSandBox.runCommand(Command.install);
+        const newNodeVersion = await vultrSandBox.readTextFile(
+          '/root/node-version-new.txt',
+        );
+        console.log('New Node.js Version:', newNodeVersion);
+      }
     } catch (error) {
       console.error('Failed to check Node.js installation:', error);
     }
 
-    console.log('3. Testing file operations...');
+    console.log('4. Testing file operations...');
     try {
       // Create a test file
       await vultrSandBox.writeTextFile(
         '/root/app/test.txt',
-        'Hello from snapshot!',
+        'Hello from lightweight OS!',
       );
       console.log('Test file created');
 
@@ -91,11 +130,11 @@ async function testVultrSnapshot() {
 
     console.log('All tests completed!');
   } catch (error) {
-    console.error('Error testing Vultr snapshot:', error);
+    console.error('Error testing Vultr lightweight OS:', error);
   }
 }
 
 // Run the test if this file is executed directly
 if (require.main === module) {
-  testVultrSnapshot();
+  testVultrLightweight();
 }

@@ -5,7 +5,7 @@ import { ssm } from 'ssm-session';
 import util from 'util';
 
 const textDecoder = new util.TextDecoder();
-const textEncoder = new util.TextEncoder();
+
 // Load environment variables
 dotenv.config();
 
@@ -21,6 +21,11 @@ const awsConfig = {
 // Initialize AWS client
 const ecsClient = new ECSClient(awsConfig);
 
+// Maximum number of reconnection attempts
+const MAX_RECONNECT_ATTEMPTS = 5;
+// Delay between reconnection attempts (in ms)
+const RECONNECT_DELAY = 2000;
+
 /**
  * Execute a command in an ECS task and return the output
  * @param cluster - The cluster name
@@ -34,6 +39,7 @@ export async function executeEcsCommand(
   taskId: string,
   container: string,
   command: string,
+  waitForExit: boolean = true,
 ): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -60,6 +66,11 @@ export async function executeEcsCommand(
         throw new Error('Missing session details in the response');
       }
 
+      if (!waitForExit) {
+        resolve('Query successfully executed');
+        return;
+      }
+
       const { streamUrl, tokenValue } = response.session;
       console.log(
         `Session established, connecting to WebSocket: ${streamUrl.substring(
@@ -68,41 +79,80 @@ export async function executeEcsCommand(
         )}...`,
       );
 
-      // Connect to the WebSocket
-      const ws = new WebSocket(streamUrl);
-
       let output = '';
+      let reconnectAttempts = 0;
 
-      ws.on('open', () => {
-        // Initialize the session (this negotiates the connection using the token)
-        ssm.init(ws, {
-          token: tokenValue,
-          termOptions: { rows: 24, cols: 80 },
+      // Function to create and setup WebSocket connection
+      const setupWebSocket = () => {
+        const ws = new WebSocket(streamUrl);
+
+        ws.on('open', () => {
+          console.log('WebSocket connection established');
+          // Initialize the session (this negotiates the connection using the token)
+          ssm.init(ws, {
+            token: tokenValue,
+            termOptions: { rows: 24, cols: 80 },
+          });
         });
-      });
 
-      ws.on('message', (data) => {
-        const agentMessage = ssm.decode(data);
-        console.log('Agent message:', textDecoder.decode(agentMessage.payload));
+        ws.on('message', (data) => {
+          const agentMessage = ssm.decode(data);
+          console.log(
+            'Agent message:',
+            textDecoder.decode(agentMessage.payload),
+          );
 
-        ssm.sendACK(ws, agentMessage);
-        if (agentMessage.payloadType === 1) {
-          output += textDecoder.decode(agentMessage.payload);
-        } else if (agentMessage.payloadType === 17) {
-          console.log('Sending init message');
-          ssm.sendInitMessage(ws, { rows: 24, cols: 80 });
-        }
-      });
+          // console.log('Agent message messageType:', agentMessage.messageType);
 
-      ws.on('error', (err) => {
-        console.error('WebSocket error:', err);
-        reject(err);
-      });
+          ssm.sendACK(ws, agentMessage);
+          if (agentMessage.payloadType === 1) {
+            output += textDecoder.decode(agentMessage.payload);
+          } else if (agentMessage.payloadType === 17) {
+            console.log('Sending init message');
+            ssm.sendInitMessage(ws, { rows: 24, cols: 80 });
+          }
+        });
 
-      ws.on('close', () => {
-        console.log('WebSocket connection closed');
-        resolve(output);
-      });
+        ws.on('error', (err) => {
+          console.error('WebSocket error:', err);
+          // Don't reject here, let the close handler handle reconnection
+        });
+
+        ws.on('close', (code, reason, ...args) => {
+          console.log(`WebSocket connection closed: ${code} - ${reason} `);
+          console.log('Args:', args);
+
+          if (code === 1000 || reason?.toString().toLowerCase() === 'bye') {
+            resolve(output);
+            return;
+          }
+
+          if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            reconnectAttempts++;
+            console.log(
+              `Attempting to reconnect (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`,
+            );
+            setTimeout(() => {
+              setupWebSocket();
+            }, RECONNECT_DELAY);
+          } else {
+            console.log('Max reconnection attempts reached, giving up');
+            resolve(output); // Resolve with whatever output we have so far
+          }
+        });
+
+        // Method to close the connection intentionally
+        return {
+          close: () => {
+            if (ws.readyState === WebSocket.OPEN) {
+              ws.close();
+            }
+          },
+        };
+      };
+
+      // Setup the initial WebSocket connection
+      setupWebSocket();
     } catch (error) {
       console.error('Error executing command:', error);
       reject(error);

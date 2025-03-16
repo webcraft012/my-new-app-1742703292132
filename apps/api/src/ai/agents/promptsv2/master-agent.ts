@@ -34,11 +34,11 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "detailed requirement 2",
         "... and so on"
       ],
-      "implementAuthentication": true/false
+      "implement_authentication": true/false
     }
 
     *   Each functional requirement should be a concise but detailed string describing a specific functionality.
-    *   "implementAuthentication" should be a boolean value: true if authentication is required, false otherwise.
+    *   "implement_authentication" should be a boolean value: true if authentication is required, false otherwise.
     *   Ensure the JSON is valid and properly formatted.
     *   Do not include any extra text or explanations outside of the JSON structure.
 
@@ -59,7 +59,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "User can delete a to-do item by tapping a 'delete' icon (e.g., trash can) associated with each item. Deleting an item should remove it permanently from the list.",
         "User can edit a to-do item by tapping an 'edit' icon (e.g., pencil) next to it. This should open an edit mode where the user can modify the text and save the changes."
       ],
-      "implementAuthentication": false
+      "implement_authentication": false
     }
     
     *(Authentication is likely not required for a simple, local to-do list app. Data can be stored locally on the device.)*
@@ -88,7 +88,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "Admin user can manage car inventory (add new cars, update car details, remove cars).",
         "Admin user can manage bookings (view booking details, track rental status)."
       ],
-      "implementAuthentication": true
+      "implement_authentication": true
     }
     
     *(Authentication is required as users need accounts to manage bookings, payment information, and personalize their experience. Admins also need authentication to manage the system.)*
@@ -112,7 +112,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "User can set up recurring income and expense transactions (e.g., monthly salary, rent payment) to automate data entry.",
         "User must create an account and log in to use the app. This is to secure their financial data and allow access from multiple devices (optional)."
       ],
-      "implementAuthentication": true
+      "implement_authentication": true
     }
     
     *(Authentication is strongly recommended for a budget monitoring app to protect sensitive financial data and potentially sync data across devices.)*
@@ -135,7 +135,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "User can share recipes with friends via social media or email.",
         "User can optionally create an account to sync their saved recipes and collections across devices. If not logged in, saved recipes are stored locally."
       ],
-      "implementAuthentication": false
+      "implement_authentication": false
     }
     
     *(Authentication is optional for a recipe app. Core functionality of searching and viewing recipes doesn't require it. Saving favorites and collections could be enhanced with authentication for cross-device sync, but the basic app can function without it by storing data locally. We are setting it to false for the basic concept, but it could be argued to be true if 'saving recipes' is considered a core feature that should be persistent across sessions and devices.)*
@@ -161,7 +161,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "User can send event updates and announcements to guests.",
         "Basic event details and guest lists can be managed without user accounts, but creating and managing multiple events and tasks efficiently might be better with user accounts."
       ],
-      "implementAuthentication": false
+      "implement_authentication": false
     }
     
     *(Similar to the recipe app, basic event planning for small gatherings *could* function without mandatory authentication.  However, for more robust features and user experience, authentication would be beneficial. We are setting it to false for the basic concept.)*
@@ -184,7 +184,7 @@ You are an expert software requirements analyst. Your task is to analyze user pr
         "User can view a list of notes, sorted by date created, date modified, or alphabetically.",
         "Basic note-taking and organization can be done locally without accounts, but syncing notes across devices and backup would require authentication."
       ],
-      "implementAuthentication": false
+      "implement_authentication": false
     }
     
     *(Like the to-do list app, a basic note-taking app can function locally without authentication.  However, for cloud sync and backup, authentication would be necessary. We set it to false for the basic concept.)*
@@ -201,12 +201,12 @@ Analyze the following user prompt and generate the JSON output as described abov
 *   Focus on providing **detailed** functional requirements. Be specific about user actions and system responses.
 *   Be concise and to the point in your requirement descriptions, but ensure you capture the necessary details.
 *   Focus on the most important and core functional requirements.
-*   Ensure the JSON output is valid and strictly follows the specified format, including the "implementAuthentication" boolean value.
-*   When determining "implementAuthentication", consider if the core app functionality is inherently dependent on user accounts and persistent user-specific data.
+*   Ensure the JSON output is valid and strictly follows the specified format, including the "implement_authentication" boolean value.
+*   When determining "implement_authentication", consider if the core app functionality is inherently dependent on user accounts and persistent user-specific data.
 `;
 
 export const masterAgentSchema = z.object({
-  appName: z.string(),
-  implementAuthentication: z.boolean(),
-  functionalRequirements: z.array(z.string()),
+  app_name: z.string(),
+  implement_authentication: z.boolean(),
+  functional_requirements: z.array(z.string()),
 });

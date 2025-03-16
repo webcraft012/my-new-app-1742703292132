@@ -1,12 +1,10 @@
 import { exec, execSync, spawn } from 'child_process';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import OpenAI from 'openai';
 import os from 'os';
 import path from 'path';
-import { z } from 'zod';
 import { AiClient as AiClientInterface } from '../interfaces/AiClient';
-import { UIElementSchema } from '../ui-config';
-import dotenv from 'dotenv';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,9 +19,11 @@ export class AiClient implements AiClientInterface {
     });
   }
 
-  async generateContent(
-    uiConfig: z.infer<typeof UIElementSchema>,
-  ): Promise<any> {
+  async generateCode(codeBase: string, prompt: string): Promise<string> {
+    return 'test';
+  }
+
+  async generateContent(): Promise<any> {
     // const appConfig = await AgentFactory.createAgent(AgentType.Master)
     //   .setPrompt(
     //     'Please make an app that handle Budgeting and Expense Tracking',

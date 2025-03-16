@@ -8,7 +8,6 @@ import { UIElement } from '@webcraft/types';
  * From different components, and defined props the AI client will generate the content.
  */
 export interface AiClient {
-  generateContent: (
-    config: z.infer<typeof UIElementSchema>,
-  ) => Promise<UIElement>;
+  generateContent: () => Promise<UIElement>;
+  generateCode: (codeBase: string, prompt: string) => Promise<string>;
 }

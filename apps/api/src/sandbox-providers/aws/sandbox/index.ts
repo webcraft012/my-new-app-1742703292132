@@ -8,18 +8,17 @@ import { AwsFargateService } from '../service/service';
 export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
   private sandbox: AwsFargateService | null = null;
 
-  constructor() {}
+  constructor(
+    private readonly appName: string,
+    private readonly gitRepoUrl: string,
+  ) {}
 
   async createSandbox(activeSandboxId?: string): Promise<AwsFargateService> {
-    const appName = 'nextjs-app-' + Date.now().toString().slice(-6); // Generate a unique name
-    const gitRepoUrl =
-      'https://github.com/Clad012/preconfigured-nextjs-app.git';
-
     console.log('Deploying to AWS Fargate...');
-    console.log(`App Name: ${appName}`);
+    console.log(`App Name: ${this.appName}`);
 
     console.log('Running Fargate task...');
-    this.sandbox = new AwsFargateService(appName, gitRepoUrl);
+    this.sandbox = new AwsFargateService(this.appName, this.gitRepoUrl);
     await this.sandbox.initializeNewTask();
 
     console.log(`Fargate task started: ${this.sandbox.getTaskArn()}`);

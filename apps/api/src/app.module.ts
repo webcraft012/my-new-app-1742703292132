@@ -8,11 +8,15 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FileController } from './file/file.controller';
 import { AiModule } from './ai/ai.module';
+import { LogsModule } from './in-memory-logs/logs.module';
 
 import { FileService } from './file/file.service';
+import { ApplicationModule } from './application/application.module';
 @Module({
   imports: [
+    ApplicationModule,
     AiModule,
+    LogsModule,
     EditorModule,
     FileModule,
     ServeStaticModule.forRoot({

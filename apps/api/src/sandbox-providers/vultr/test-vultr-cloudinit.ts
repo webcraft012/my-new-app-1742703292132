@@ -1,5 +1,5 @@
 import { VultrSandBox } from './VultrSandBox';
-import { Command } from '../../interfaces/CodeSandBox';
+import { Command } from '../../ai/interfaces/CodeSandBox';
 import * as dotenv from 'dotenv';
 
 // Load environment variables

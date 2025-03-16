@@ -48,20 +48,27 @@ if [ $? -ne 0 ]; then
 fi
 
 # Check if dev script exists in package.json
-if grep -q "\"dev\"" package.json; then
-  echo "Starting Next.js development server..."
-  # Start the Next.js development server
-  pnpm dev
-else
-  echo "No 'dev' script found in package.json. Trying 'start'..."
-  # Try start script instead
-  if grep -q "\"start\"" package.json; then
-    echo "Starting with 'start' script..."
-    pnpm start
-  else
-    echo "Error: No 'dev' or 'start' script found in package.json."
-    echo "Package.json contents:"
-    cat package.json
-    exit 1
-  fi
-fi 
+# if grep -q "\"dev\"" package.json; then
+#   echo "Starting Next.js development server..."
+#   # Start the Next.js development server
+#   pnpm dev
+# else
+#   echo "No 'dev' script found in package.json. Trying 'start'..."
+#   # Try start script instead
+#   if grep -q "\"start\"" package.json; then
+#     echo "Starting with 'start' script..."
+#     pnpm start
+#   else
+#     echo "Error: No 'dev' or 'start' script found in package.json."
+#     echo "Package.json contents:"
+#     cat package.json
+#     exit 1
+#   fi
+# fi 
+
+# Create a pooling to pull from github each 30 seconds
+while true; do
+  echo "Pulling from GitHub..."
+  git pull
+  sleep 30
+done

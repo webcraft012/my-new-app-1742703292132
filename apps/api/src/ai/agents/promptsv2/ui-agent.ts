@@ -21,7 +21,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
 
 5.  **Structure Output in JSON (Restructured):** Format your output as a JSON object with the following **restructured** format:
 
-    \`\`\`json
     {
       "pages": [
         {
@@ -38,7 +37,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
       ],
       "navigation_flow": "Detailed description of navigation flow, e.g., Page 1 -> Page 2 -> Page 3 for [User Goal]"
     }
-    \`\`\`
 
     *   Ensure the JSON is valid and properly formatted.
     *   The \`"pages"\` array contains objects, each with \`"page_name"\`, \`"purpose"\`, and \`"layout"\` keys.
@@ -52,7 +50,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
 
 *   **Expected JSON Output (Revised for Detailed Purpose, Layout & Restructured JSON):**
 
-    \`\`\`json
     {
       "pages": [
         {
@@ -63,7 +60,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
       ],
       "navigation_flow": "To-Do List Dashboard - This is a single-page application, so all navigation and actions occur on this main dashboard page. There is no navigation to other distinct pages within the application itself."
     }
-    \`\`\`
 
 **Example 2: Car Rental Web App (Partial - focusing on Browse/Book flow - Revised for Detailed Purpose, Layout & Restructured JSON)**
 
@@ -71,7 +67,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
 
 *   **Expected JSON Output (Partial - Revised for Detailed Purpose, Layout & Restructured JSON):**
 
-    \`\`\`json
     {
       "pages": [
         {
@@ -97,7 +92,6 @@ export const uiAgentPrompt = dedent`You are a highly detail-oriented UI/UX desig
       ],
       "navigation_flow": "Typical Car Rental Flow: Home Page -> Car Listings Page -> Car Details Page -> Booking Page. This represents the primary flow for users to search, find, and book a rental car.  Users start on the Home Page to search, view results on the Car Listings Page, get more info on the Car Details Page, and complete the booking on the Booking Page."
     }
-    \`\`\`
 
 **Your Task:**
 
