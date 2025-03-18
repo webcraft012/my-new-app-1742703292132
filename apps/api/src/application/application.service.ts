@@ -22,7 +22,7 @@ export class ApplicationService {
   ) {}
 
   async generate(application: CreateApplicationDto) {
-    const devApp = await this.findOne('46c4702195640d24696828bbbb1f1da9');
+    const devApp = await this.findOne('efd9dd8d5e4bee4653648eb9431addd4');
 
     if (devApp) {
       const githubManager = new GitHubManager();
@@ -33,55 +33,64 @@ export class ApplicationService {
 
       const fileManager = new FileManager(tempPath);
 
-      await fileManager.testKnip();
+      const output = await fileManager.listAllFiles({
+        noFileSummary: true,
+        outputShowLineNumbers: true,
+        style: 'xml',
+      });
+      console.log({ output });
 
-      return 'test';
+      const code = await this.aiService.generateCode(
+        output,
+        'Make a new page called "rooms" that shows a list of rooms',
+      );
+      const operations = parseXmlTags(code);
 
-      // const output = await fileManager.listAllFiles({
-      //   noFileSummary: true,
-      //   outputShowLineNumbers: true,
-      //   style: 'xml',
-      // });
-      // console.log({ output });
+      console.log(JSON.stringify(operations, null, 2));
 
-      // const code = await this.aiService.generateCode(
-      //   output,
-      //   'Make a car rental landing page',
-      // );
-      // const operations = parseXmlTags(code);
+      for (const operation of operations.operations) {
+        switch (operation.type) {
+          case 'create-file':
+            await fileManager.createFile(operation.path, operation.content);
+            break;
+          case 'delete-file':
+            await fileManager.deleteFile(operation.path);
+            break;
+          case 'edit-file':
+            await fileManager.applyCodeEdit(operation.path, {
+              startLine: operation.startLine,
+              endLine: operation.endLine,
+              newContent: operation.content,
+            });
+            break;
+          case 'rename-file':
+            await fileManager.renameFile(operation.oldPath, operation.newPath);
+            break;
+          case 'move-file':
+            await fileManager.moveFile(operation.oldPath, operation.newPath);
+            break;
+          default:
+            console.log('Unknown operation', operation);
+            break;
+        }
+      }
 
-      // for (const operation of operations.operations) {
-      //   switch (operation.type) {
-      //     case 'create-file':
-      //       await fileManager.createFile(operation.path, operation.content);
-      //       break;
-      //     case 'delete-file':
-      //       await fileManager.deleteFile(operation.path);
-      //       break;
-      //     case 'edit-file':
-      //       await fileManager.applyCodeEdit(operation.path, {
-      //         startLine: operation.startLine,
-      //         endLine: operation.endLine,
-      //         newContent: operation.content,
-      //       });
-      //       break;
-      //     case 'rename-file':
-      //       await fileManager.renameFile(operation.oldPath, operation.newPath);
-      //       break;
-      //     case 'move-file':
-      //       await fileManager.moveFile(operation.oldPath, operation.newPath);
-      //       break;
-      //     default:
-      //       console.log('Unknown operation', operation);
-      //       break;
-      //   }
-      // }
-
-      await githubManager.commitAndPush('test commit', tempPath);
+      await githubManager.commitAndPush('AI Feature', tempPath);
 
       const devAppCodeSandbox = new CodeSandBox(devApp.repoUrl, devApp.name);
       await devAppCodeSandbox.createSandbox(devApp.sandboxId);
+
+      await devAppCodeSandbox.gitPull();
       await devAppCodeSandbox.stopDevServer();
+
+      const lintResult = await devAppCodeSandbox.runLint();
+
+      const formatResult = await fileManager.runFormat();
+
+      console.log({ formatResult, lintResult });
+
+      return { formatResult, lintResult };
+
       const observable = devAppCodeSandbox.startDevServerAndListen();
       observable.subscribe((output) => {
         this.logsDB.addLog(devApp.id, output);

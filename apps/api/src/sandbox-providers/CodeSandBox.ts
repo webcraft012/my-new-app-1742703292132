@@ -69,6 +69,14 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     );
   }
 
+  async runLint() {
+    return this.sandbox.shells.run('cd /project/workspace && pnpm lint');
+  }
+
+  async runFormat() {
+    return this.sandbox.shells.run('cd /project/workspace && pnpm format');
+  }
+
   startDevServerAndListen(): Observable<string> {
     return new Observable((subscriber) => {
       const devServer = this.sandbox.shells.run(
@@ -82,7 +90,19 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
 
   async gitPull() {
     this.ensureSandboxInitialized();
-    await this.sandbox.shells.run('cd /project/workspace && git pull');
+
+    // First check if there's an unfinished merge and abort it if necessary
+    const checkMerge = await this.sandbox.shells.run(
+      'cd /project/workspace && git merge --abort || true',
+    );
+    console.log('Checking for unfinished merge:', checkMerge);
+
+    // Now perform the pull with allow-unrelated-histories flag
+    const result = await this.sandbox.shells.run(
+      'cd /project/workspace && git pull --allow-unrelated-histories',
+    );
+    console.log('git pull', result);
+    return result;
   }
 
   /**

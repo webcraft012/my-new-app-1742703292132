@@ -1,9 +1,6 @@
 import path from 'path';
 import fs from 'fs';
 import { execSync } from 'child_process';
-import * as diff from 'diff';
-import os from 'os';
-import knip from 'knip-test';
 
 export class FileManager {
   constructor(private readonly projectPath: string) {
@@ -146,24 +143,21 @@ export class FileManager {
     await this.writeFile(filePath, newFileContent);
   }
 
-  async testKnip() {
-    // install knip globally if not installed
-    if (!this.isKnipInstalled()) {
-      execSync('npm install -g knip', { stdio: 'inherit' });
-    }
-
-    execSync('knip', {
-      cwd: this.projectPath,
-      stdio: 'inherit',
-    });
-  }
-
-  isKnipInstalled() {
+  async runFormat() {
     try {
-      execSync('knip --version', { stdio: 'inherit' });
+      const result = execSync('prettier --write .', {
+        cwd: this.projectPath,
+        stdio: 'pipe',
+      });
+      return {
+        output: result.toString(),
+        exitCode: 0,
+      };
     } catch (error) {
-      console.error('Knip is not installed');
-      return false;
+      return {
+        output: (error as Error).message,
+        exitCode: 1,
+      };
     }
   }
 }
