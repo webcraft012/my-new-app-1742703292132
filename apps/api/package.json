@@ -64,7 +64,6 @@
     "ssm-session": "1.0.6",
     "repomix": "0.2.40",
     "fast-xml-parser": "5.0.9",
-    "diff": "7.0.0",
     "knip": "5.46.0"
   },
   "devDependencies": {

@@ -150,6 +150,30 @@ export class GitHubManager {
   }
 
   /**
+   * Pulls the latest changes from the remote repository
+   * @param projectPath - The path to the local project
+   * @param repoUrl - The URL of the repository to pull from
+   */
+  async gitPull(repoUrl: string, projectPath: string): Promise<void> {
+    if (!this.hasToken()) return;
+
+    console.log('Pulling latest changes from repository...');
+
+    try {
+      execSync(`cd ${projectPath} && git pull ${repoUrl}`, {
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          GIT_TERMINAL_PROMPT: '0', // Disable prompts
+        },
+      });
+      console.log('Successfully pulled latest changes!');
+    } catch (error) {
+      console.error('Error pulling from repository:', error);
+    }
+  }
+
+  /**
    * Pushes the local repository to GitHub
    * @param projectPath - The path to the local project
    * @param force - Whether to force push

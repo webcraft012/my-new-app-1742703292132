@@ -24,7 +24,7 @@ export interface ICodeSandBox<T> {
   gitCommit(message: string): Promise<any>;
   gitPush(): Promise<void>;
   gitCommitAndPush(message: string): Promise<void>;
-  setGitRemote(remote: string): Promise<any>;
+  setGitRemote(useToken?: boolean): Promise<any>;
 }
 
 export enum Command {

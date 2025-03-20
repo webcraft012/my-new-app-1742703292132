@@ -7,7 +7,10 @@ import fs from 'fs';
 import path from 'path';
 import { Command, ICodeSandBox } from '../ai/interfaces/CodeSandBox';
 import { Observable } from 'rxjs';
+import dotenv from 'dotenv';
 
+// Load environment variables from .env file
+dotenv.config();
 // const TEMPLATE_ID = 'fxis37';
 
 export class CodeSandBox implements ICodeSandBox<Sandbox> {
@@ -56,6 +59,28 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
       'cd /project/workspace && pnpm install',
     );
     console.log(installDependencies);
+  }
+
+  async addUnlistedDependencies(
+    dependencies: {
+      name: string;
+      version: string;
+    }[],
+  ) {
+    // add unlisted dependencies using `npm pkg set dependencies.${name}="${version.toString().trim()}"`,
+    dependencies.forEach(async (dependency) => {
+      await this.sandbox.shells.run(
+        `npm pkg set dependencies.${dependency.name}="${dependency.version}"`,
+      );
+    });
+    console.log('added unlisted dependencies');
+  }
+
+  async installShadcnComponents(components: string[]) {
+    const installShadcnComponents = await this.sandbox.shells.run(
+      `pnpm dlx shadcn@latest add ${components.join(' ')} --yes --overwrite`,
+    );
+    console.log(installShadcnComponents);
   }
 
   private async startDevServer(): Promise<RunningCommand> {
@@ -340,7 +365,7 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     );
     await this.gitAdd();
     await this.gitCommit('Initial commit');
-    await this.setGitRemote(remote);
+    await this.setGitRemote();
     await this.gitPush();
   }
 
@@ -362,7 +387,10 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
   async gitCommitAndPush(message: string) {
     this.ensureSandboxInitialized();
     await this.gitCommit(message);
+    await this.setGitRemote(true);
     await this.gitPush();
+    // remove the remote with the token
+    await this.setGitRemote(false);
   }
 
   async gitCommit(message: string) {
@@ -377,42 +405,25 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     this.ensureSandboxInitialized();
     console.log('will git push');
 
-    // Create a new shell
-    const shell = await this.sandbox.shells.create('bash');
-
-    shell.write('git push --set-upstream origin main');
-
-    console.log('wrote command');
-
-    // Listen to shell output
-    shell.onOutput((output) => {
-      console.log('output', output);
-      if (output.includes('git push')) {
-        shell.write('\n');
-        // Handle authentication if needed
-        // shell.write(process.env.GITHUB_USERNAME || 'webcraft');
-      }
-      if (output.includes('Username for')) {
-        console.log('writing username');
-        shell.write(process.env.GITHUB_USERNAME || 'webcraft');
-        shell.write('\n');
-      }
-      // Press Enter
-    });
-
-    console.log('here');
-
-    // // Kill the shell when done
-    // await shell.kill();
-
-    // // Dispose the listener when done
-    // shellListenDisposer.dispose();
+    const shell = await this.sandbox.shells.run(
+      'git push --set-upstream origin master',
+    );
+    console.log('git push', shell);
   }
 
-  async setGitRemote(remote: string) {
+  async setGitRemote(useToken = false) {
     this.ensureSandboxInitialized();
+
+    const remote = this.repoUrl
+      .replace('https://github.com/', '')
+      .replace('.git', '');
+
+    const remoteUrl = useToken
+      ? `https://${process.env.GITHUB_TOKEN}@github.com/${remote}.git`
+      : this.repoUrl;
+
     const shell = await this.sandbox.shells.run(
-      `git remote set-url origin ${remote}`,
+      `git remote set-url origin ${remoteUrl}`,
     );
     console.log('git remote set-url origin', shell);
     return shell;

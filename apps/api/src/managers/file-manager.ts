@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import { execSync } from 'child_process';
-
+import { execSync, spawnSync } from 'child_process';
+import { main } from 'knip';
 export class FileManager {
   constructor(private readonly projectPath: string) {
     this.initRepomix();
@@ -160,6 +160,74 @@ export class FileManager {
       };
     }
   }
+
+  async checkDependencies() {
+    // install knip globally if not installed
+    if (!this.isKnipInstalled()) {
+      execSync('npm install -g knip', { stdio: 'inherit' });
+    }
+    // call knip with execSync
+    const { stdout } = spawnSync(
+      'knip',
+      ['--production', '--reporter', 'json'],
+      {
+        cwd: this.projectPath,
+        stdio: 'pipe',
+      },
+    );
+    const result: DependencyCheckResult = JSON.parse(stdout.toString());
+    const unresolved = result.issues.flatMap((issue) => issue.unresolved);
+    const unlisted = result.issues.flatMap((issue) => issue.unlisted);
+
+    const dependencies = this.installUnlistedDependencies(unlisted);
+    const components = this.addShadcnUiComponents(unresolved);
+    return { dependencies, components };
+  }
+
+  installUnlistedDependencies(unlisted: DependencyIssue[]) {
+    const names = unlisted.map((issue) => issue.name);
+    const dependencies: { name: string; version: string }[] = [];
+    names.forEach((name) => {
+      try {
+        const version = execSync(`npm view ${name} version`, {
+          stdio: 'pipe',
+        });
+        dependencies.push({ name, version: version.toString().trim() });
+      } catch (error) {
+        console.error(`${name} is not available on npm`);
+      }
+    });
+
+    return dependencies;
+  }
+
+  addShadcnUiComponents(unresolved: DependencyIssue[]) {
+    const names = unresolved.map((issue) => issue.name);
+    const components: string[] = [];
+
+    names.forEach((name) => {
+      // check-if shadcn component with regex @/components/ui/input
+      if (/@\/components\/ui\/(\w+)/.test(name)) {
+        const match = name.match(/@\/components\/ui\/(\w+)/);
+        if (match && match[1]) {
+          components.push(match[1]);
+        }
+      }
+    });
+
+    return components;
+  }
+
+  isKnipInstalled() {
+    try {
+      const version = execSync('knip --version', { stdio: 'inherit' });
+      console.log({ version });
+      return true;
+    } catch (error) {
+      console.error('Knip is not installed');
+      return false;
+    }
+  }
 }
 
 export interface ListAllFilesOptions {
@@ -182,4 +250,36 @@ export interface CodeEdit {
   startLine: number; // Inclusive starting line (1-indexed)
   endLine: number; // Inclusive ending line (1-indexed)
   newContent: string; // New content to replace the specified lines
+}
+export interface DependencyIssue {
+  name: string;
+  line?: number;
+  col?: number;
+  pos?: number;
+}
+
+export interface BinaryIssue {
+  name: string;
+}
+
+export interface EnumMembersIssue {
+  [key: string]: any;
+}
+
+export interface FileIssue {
+  file: string;
+  dependencies: DependencyIssue[];
+  optionalPeerDependencies: DependencyIssue[];
+  unlisted: DependencyIssue[];
+  binaries: BinaryIssue[];
+  unresolved: DependencyIssue[];
+  exports: DependencyIssue[];
+  types: DependencyIssue[];
+  enumMembers: EnumMembersIssue;
+  duplicates: DependencyIssue[];
+}
+
+export interface DependencyCheckResult {
+  files: string[];
+  issues: FileIssue[];
 }
