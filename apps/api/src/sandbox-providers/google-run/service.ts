@@ -72,7 +72,7 @@ async function createService(appName, gitRepoUrl) {
                 name: 'GIT_REPO_URL',
                 value:
                   gitRepoUrl ||
-                  'https://github.com/Clad012/preconfigured-nextjs-app.git',
+                  'https://github.com/webcraft012/preconfigured-nextjs-app.git',
               },
             ],
           },
@@ -177,7 +177,7 @@ async function deployRevision(serviceName, gitRepoUrl) {
                   name: 'GIT_REPO_URL',
                   value:
                     gitRepoUrl ||
-                    'https://github.com/Clad012/preconfigured-nextjs-app.git',
+                    'https://github.com/webcraft012/preconfigured-nextjs-app.git',
                 },
               ],
             },

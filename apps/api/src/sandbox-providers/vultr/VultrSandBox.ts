@@ -469,7 +469,7 @@ runcmd:
     await this.gitInit();
 
     // Set remote
-    await this.setGitRemote(remote);
+    await this.setGitRemote();
   }
 
   /**
@@ -518,11 +518,11 @@ runcmd:
   /**
    * Sets the Git remote URL
    */
-  async setGitRemote(remote: string): Promise<any> {
+  async setGitRemote(useToken?: boolean): Promise<any> {
     this.ensureInstanceInitialized();
 
     const { stdout, stderr } = await this.runSshCommand(
-      `git remote set-url origin ${remote} || git remote add origin ${remote}`,
+      `git remote set-url origin ${'remote'} || git remote add origin ${'remote'}`,
     );
     return { output: stdout + stderr };
   }

@@ -134,11 +134,11 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
     await this.sandbox.runCommand(command);
   }
 
-  async setupGit(remote: string): Promise<void> {
+  async setupGit(): Promise<void> {
     if (!this.sandbox) throw new Error('Sandbox not initialized');
     // Set up Git with remote
     await this.gitInit();
-    await this.setGitRemote(remote);
+    await this.setGitRemote();
   }
 
   async gitInit(): Promise<any> {
@@ -184,11 +184,22 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
     await this.gitPush();
   }
 
-  async setGitRemote(remote: string): Promise<any> {
+  async setGitRemote(useToken?: boolean): Promise<any> {
     if (!this.sandbox) throw new Error('Sandbox not initialized');
     // Set Git remote URL
+
+    const remote = this.gitRepoUrl
+      .replace('https://github.com/', '')
+      .replace('.git', '');
+
     return {
-      output: await this.sandbox.runCommand(`git remote add origin ${remote}`),
+      output: await this.sandbox.runCommand(
+        `git remote set-url origin ${
+          useToken
+            ? `https://${process.env.GITHUB_TOKEN}@github.com/${remote}`
+            : this.gitRepoUrl
+        }`,
+      ),
       exitCode: 0,
     };
   }
