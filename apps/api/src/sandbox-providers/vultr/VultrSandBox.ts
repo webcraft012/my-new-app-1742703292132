@@ -27,7 +27,8 @@ interface VultrInstance {
   // Add other properties as needed
 }
 
-export class VultrSandBox implements ICodeSandBox<VultrInstance> {
+// export class VultrSandBox implements ICodeSandBox<VultrInstance> {
+export class VultrSandBox {
   private readonly client: VultrClient;
   private instance: VultrInstance | null = null;
   private sshKeyId: string | null = null;

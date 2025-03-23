@@ -20,7 +20,11 @@ export class CodingPipeline {
     const result = await CodingAgentFactory.createAgent({
       type: CodingAgent.Orchestrator,
       requirements,
-      codeBase: await this.codeGenerationManager.listAllFiles(),
+      codeBase: await this.codeGenerationManager.fileManager.listAllFiles({
+        noFileSummary: true,
+        outputShowLineNumbers: true,
+        style: 'xml',
+      }),
       tools: {} as never,
     })
       .setPrompt(prompt)
@@ -40,14 +44,20 @@ export class CodingPipeline {
                 type: CodingAgent.CreateFile,
                 action: action.content,
                 codeBaseStructure:
-                  await this.codeGenerationManager.listAllFiles(),
+                  await this.codeGenerationManager.fileManager.listAllFiles({
+                    noFileSummary: true,
+                    compress: true,
+                    outputShowLineNumbers: true,
+                    style: 'xml',
+                  }),
                 tools: this.makeBaseTools(),
               }).run();
 
               const actions = parseXmlTags(result);
-              const createFileAction = actions.operations.filter(
-                (a) => a.type === 'create-file',
-              );
+              const createFileAction: CreateFileTag[] =
+                actions.operations.filter(
+                  (a) => a.type === 'create-file',
+                ) as CreateFileTag[];
 
               observer.next(
                 `Files ${createFileAction.map((a) => a.path)} created`,
@@ -59,14 +69,19 @@ export class CodingPipeline {
                 type: CodingAgent.EditFile,
                 action: action.content,
                 codeBaseStructure:
-                  await this.codeGenerationManager.listAllFiles(),
+                  await this.codeGenerationManager.fileManager.listAllFiles({
+                    noFileSummary: true,
+                    compress: true,
+                    outputShowLineNumbers: true,
+                    style: 'xml',
+                  }),
                 tools: this.makeBaseTools(),
               }).run();
 
               const actions = parseXmlTags(result);
-              const editFileAction = actions.operations.filter(
+              const editFileAction: EditFileTag[] = actions.operations.filter(
                 (a) => a.type === 'edit-file',
-              );
+              ) as EditFileTag[];
 
               observer.next(
                 `Files ${editFileAction.map((a) => a.path)} edited`,

@@ -23,7 +23,7 @@ export class ApplicationService {
   ) {}
 
   async generate(application: CreateApplicationDto) {
-    const devApp = await this.findOne('76b618222c8bd7b1d06da1c4f205e200');
+    const devApp = await this.findOne('e06c55424dfdfe6aa774ef6848beed73');
 
     const codeGenerationManager = new CodeGenerationManager(
       this.createAppName(application.name),
@@ -39,6 +39,27 @@ export class ApplicationService {
     const activeSandboxId = await codeGenerationManager.getActiveSandboxId();
     const previewUrl = await codeGenerationManager.getPreviewUrl();
 
+    console.log('repoUrl', repoUrl);
+    console.log('tempPath', tempPath);
+    console.log('activeSandboxId', activeSandboxId);
+    console.log('previewUrl', previewUrl);
+
+    (
+      await this.aiService.generateCode(
+        codeGenerationManager,
+        'Build a simple todo app with a list of todos and a form to add a new todo.',
+      )
+    ).subscribe({
+      next: (x) => {
+        console.log('got value ' + x);
+      },
+      error: (err) => {
+        console.error('something wrong occurred: ' + err);
+      },
+      complete: () => {
+        console.log('done');
+      },
+    });
     await this.create({
       ...application,
       repoUrl: codeGenerationManager.getRepoUrl(),

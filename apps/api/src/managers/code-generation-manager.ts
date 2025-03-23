@@ -12,6 +12,7 @@ export class CodeGenerationManager {
   private codeSandbox: ICodeSandBox;
   private activeSandboxId?: string;
   private githubManager: GitHubManager;
+
   constructor(
     private readonly appName: string,
     private readonly provider: 'aws' | 'codesandbox' = 'codesandbox',

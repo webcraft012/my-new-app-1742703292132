@@ -19,8 +19,8 @@ export class CodeSandBox implements ICodeSandBox {
   public sandbox: Sandbox;
 
   constructor(
-    private readonly repoUrl: string,
     private readonly appName: string,
+    private readonly repoUrl: string,
   ) {
     this.sdk = new CodeSandboxSDK(process.env.CODESANDBOX_API_KEY);
   }
