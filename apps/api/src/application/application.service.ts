@@ -11,6 +11,7 @@ import { CodeSandBox } from 'src/sandbox-providers/CodeSandBox';
 import { InMemoryLogsDB } from 'src/utils/in-memory-logs-db';
 import { FileManager } from 'src/managers/file-manager';
 import { parseXmlTags } from 'src/utils/tags-parser';
+import { CodeGenerationManager } from 'src/managers/code-generation-manager';
 
 @Injectable()
 export class ApplicationService {
@@ -24,147 +25,25 @@ export class ApplicationService {
   async generate(application: CreateApplicationDto) {
     const devApp = await this.findOne('76b618222c8bd7b1d06da1c4f205e200');
 
-    if (devApp) {
-      const githubManager = new GitHubManager();
-      const tempPath = await githubManager.cloneRepository(
-        this.createAppName(application.name),
-        devApp.repoUrl,
-      );
-
-      const fileManager = new FileManager(tempPath);
-
-      const codebase = await fileManager.listAllFiles({
-        noFileSummary: true,
-        outputShowLineNumbers: true,
-        style: 'xml',
-      });
-      // console.log({ output });
-      const content = await this.aiService.generateContent(
-        'Create a car rental app',
-      );
-
-      const code = await this.aiService.generateCode(
-        JSON.stringify(content[2]),
-        codebase,
-        'Implement the following page structure',
-      );
-
-      return code;
-      // const operations = parseXmlTags(code);
-
-      // console.log(JSON.stringify(operations, null, 2));
-
-      // for (const operation of operations.operations) {
-      //   switch (operation.type) {
-      //     case 'create-file':
-      //       await fileManager.createFile(operation.path, operation.content);
-      //       break;
-      //     case 'delete-file':
-      //       await fileManager.deleteFile(operation.path);
-      //       break;
-      //     case 'edit-file':
-      //       await fileManager.applyCodeEdit(operation.path, {
-      //         startLine: operation.startLine,
-      //         endLine: operation.endLine,
-      //         newContent: operation.content,
-      //       });
-      //       break;
-      //     case 'rename-file':
-      //       await fileManager.renameFile(operation.oldPath, operation.newPath);
-      //       break;
-      //     case 'move-file':
-      //       await fileManager.moveFile(operation.oldPath, operation.newPath);
-      //       break;
-      //     default:
-      //       console.log('Unknown operation', operation);
-      //       break;
-      //   }
-      // }
-
-      // await githubManager.commitAndPush('AI Feature', tempPath);
-
-      const devAppCodeSandbox = new CodeSandBox(devApp.repoUrl, devApp.name);
-      await devAppCodeSandbox.createSandbox(devApp.sandboxId);
-
-      await devAppCodeSandbox.stopDevServer();
-
-      const { dependencies, components } =
-        await fileManager.checkDependencies();
-
-      if (dependencies.length > 0) {
-        await devAppCodeSandbox.addUnlistedDependencies(dependencies);
-      }
-
-      if (components.length > 0) {
-        await devAppCodeSandbox.installShadcnComponents(components);
-      }
-
-      if (dependencies.length > 0 || components.length > 0) {
-        await devAppCodeSandbox.gitCommitAndPush(
-          'Installing missing dependencies',
-        );
-        await githubManager.gitPull(devApp.repoUrl, tempPath);
-      }
-
-      return dependencies;
-
-      const lintResult = await devAppCodeSandbox.runLint();
-
-      const formatResult = await fileManager.runFormat();
-
-      console.log({ formatResult, lintResult });
-
-      return { formatResult, lintResult };
-
-      const observable = devAppCodeSandbox.startDevServerAndListen();
-      observable.subscribe((output) => {
-        this.logsDB.addLog(devApp.id, output);
-      });
-      const devAppPreviewUrl = await devAppCodeSandbox.getPreviewUrl();
-
-      setTimeout(async () => {
-        await devAppCodeSandbox.gitPull();
-      }, 10000);
-
-      console.log({
-        devAppPreviewUrl,
-      });
-
-      return {
-        devAppPreviewUrl,
-      };
-    }
-
-    const githubManager = new GitHubManager();
-    const { repoUrl, tempPath } = await githubManager.importFromTemplateRepo(
-      process.env.NEXTJS_TEMPLATE_REPO,
+    const codeGenerationManager = new CodeGenerationManager(
       this.createAppName(application.name),
+      'codesandbox',
+      devApp?.repoUrl,
+      devApp?.sandboxId,
     );
 
-    console.log({
-      repoUrl,
-      tempPath,
-    });
+    await codeGenerationManager.init();
 
-    const codeSandbox = new CodeSandBox(
-      repoUrl,
-      this.createAppName(application.name),
-    );
-
-    await codeSandbox.createSandbox();
-
-    const previewUrl = await codeSandbox.getPreviewUrl();
-
-    console.log({
-      sandboxId: codeSandbox.sandbox.id,
-      previewUrl,
-    });
+    const repoUrl = codeGenerationManager.getRepoUrl();
+    const tempPath = codeGenerationManager.getProjectTmpPath();
+    const activeSandboxId = await codeGenerationManager.getActiveSandboxId();
+    const previewUrl = await codeGenerationManager.getPreviewUrl();
 
     await this.create({
       ...application,
-      repoUrl,
+      repoUrl: codeGenerationManager.getRepoUrl(),
       sandboxProvider: 'codesandbox',
-      sandboxId: codeSandbox.sandbox.id,
+      sandboxId: activeSandboxId,
       previewUrl: previewUrl,
       // metadata: JSON.stringify({
       //   taskArn: sandbox.getTaskArn(),

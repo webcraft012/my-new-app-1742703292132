@@ -42,9 +42,9 @@ ${codeBaseStructure}
 
 1. You **must output only the modified code section**, wrapped in a code block like:
 
-   \`\`\`tsx title=pages/dashboard.tsx
-   // Modified code section here
-   \`\`\`
+<edit-file path="hooks/useCreateHabit.ts" startLine="10" endLine="20">
+  The modified code section here
+</edit-file>
 
 2. **DO NOT explain** your reasoning. Just return the modified code.
 3. Preserve the existing code structure and formatting.

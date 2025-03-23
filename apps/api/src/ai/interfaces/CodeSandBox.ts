@@ -1,8 +1,12 @@
+import { CodeEdit } from 'src/managers/file-manager';
+
 /**
  * Interface defining the CodeSandBox functionality
  */
-export interface ICodeSandBox<T> {
-  createSandbox(activeSandboxId?: string): Promise<T>;
+export interface ICodeSandBox {
+  applyCodeEdit(filePath: string, codeEdit: CodeEdit): Promise<void>;
+  getId(): Promise<string>;
+  createSandbox(activeSandboxId?: string): Promise<this>;
   getPreviewUrl(): Promise<string>;
   copyFile(filePath: string, newFilePath: string): Promise<void>;
   writeFile(filePath: string, content: Uint8Array): Promise<void>;
@@ -24,7 +28,9 @@ export interface ICodeSandBox<T> {
   gitCommit(message: string): Promise<any>;
   gitPush(): Promise<void>;
   gitCommitAndPush(message: string): Promise<void>;
+  gitPull(): Promise<void>;
   setGitRemote(useToken?: boolean): Promise<any>;
+  listAllFiles(): Promise<string>;
 }
 
 export enum Command {

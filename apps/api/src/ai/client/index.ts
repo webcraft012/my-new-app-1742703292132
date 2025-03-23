@@ -6,6 +6,10 @@ import { AgentType } from '../agents/requirements-agents/AgentsConfig';
 import { AiClient as AiClientInterface } from '../interfaces/AiClient';
 import { pageStructureAgentSchema } from '../agents/requirements-agents/prompts';
 import { z } from 'zod';
+import { RequirementsPipeline } from '../pipelines/RequirementsPipeline';
+import { CodingPipeline } from '../pipelines/CodingPipeline';
+import { CodeGenerationManager } from 'src/managers';
+import { Observable } from 'rxjs';
 // Load environment variables
 dotenv.config();
 
@@ -13,18 +17,13 @@ export class AiClient implements AiClientInterface {
   constructor(apiKey: string) {}
 
   async generateCode(
-    requirements: string,
-    codeBase: string,
+    codeGenerationManager: CodeGenerationManager,
     prompt: string,
-  ): Promise<string> {
-    const result = await CodingAgentFactory.createAgent({
-      type: CodingAgent.Orchestrator,
-      requirements,
-      codeBase,
-    })
-      .setPrompt(prompt)
-      .run();
-    return result;
+  ): Promise<Observable<string>> {
+    const requirementsPipeline = new RequirementsPipeline();
+    const requirements = await requirementsPipeline.runAll(prompt);
+    const codingPipeline = new CodingPipeline(codeGenerationManager);
+    return codingPipeline.run(JSON.stringify(requirements), prompt);
   }
 
   async getAppRequirements(

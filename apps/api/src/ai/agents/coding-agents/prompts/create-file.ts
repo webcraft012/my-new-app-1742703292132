@@ -39,11 +39,11 @@ ${codeBaseStructure}
 ---
 ## 💡 Guidelines
 
-1. You **must output only the complete file content**, wrapped in a code block like:
+1. You **must output only the complete file content**, wrapped in a <create-file> tag:
 
-   \`\`\`tsx title=pages/dashboard.tsx
-   // File content here
-   \`\`\`
+  <create-file path="pages/dashboard.tsx">
+    // File content here
+  </create-file>
 
 2. **DO NOT explain** your reasoning. Just return code.
 3. Assume all imports work based on the structure above. You can use relative imports as needed.

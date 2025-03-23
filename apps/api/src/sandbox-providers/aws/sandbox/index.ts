@@ -4,8 +4,10 @@ import {
   ReaddirEntry,
 } from 'src/ai/interfaces/CodeSandBox';
 import { AwsFargateService } from '../service/service';
+import { CodeEdit, ListAllFilesOptions } from 'src/managers';
+import path from 'path';
 
-export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
+export class AwsSandbox implements ICodeSandBox {
   private sandbox: AwsFargateService | null = null;
 
   constructor(
@@ -13,7 +15,7 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
     private readonly gitRepoUrl: string,
   ) {}
 
-  async createSandbox(activeSandboxId?: string): Promise<AwsFargateService> {
+  async createSandbox(activeSandboxId?: string): Promise<this> {
     console.log('Deploying to AWS Fargate...');
     console.log(`App Name: ${this.appName}`);
 
@@ -23,7 +25,12 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
 
     console.log(`Fargate task started: ${this.sandbox.getTaskArn()}`);
 
-    return this.sandbox;
+    return this;
+  }
+
+  async getId(): Promise<string> {
+    if (!this.sandbox) throw new Error('Sandbox not initialized');
+    return this.sandbox.getTaskArn();
   }
 
   async getPreviewUrl(): Promise<string> {
@@ -176,12 +183,69 @@ export class AwsSandbox implements ICodeSandBox<AwsFargateService> {
     await this.sandbox.runCommand('git push');
   }
 
+  async gitPull(): Promise<void> {
+    if (!this.sandbox) throw new Error('Sandbox not initialized');
+
+    // First check if there's an unfinished merge and abort it if necessary
+    const checkMerge = await this.sandbox.runCommand(
+      'cd /project/workspace && git merge --abort || true',
+    );
+    console.log('Checking for unfinished merge:', checkMerge);
+
+    // Now perform the pull with allow-unrelated-histories flag
+    await this.sandbox.runCommand(
+      'cd /project/workspace && git pull --allow-unrelated-histories',
+    );
+  }
+
   async gitCommitAndPush(message: string): Promise<void> {
     if (!this.sandbox) throw new Error('Sandbox not initialized');
     // Combine git add, commit, and push
     await this.gitAdd();
     await this.gitCommit(message);
     await this.gitPush();
+  }
+
+  async listAllFiles(
+    options?: ListAllFilesOptions,
+    dirPath = '.',
+  ): Promise<string> {
+    const outputPath =
+      options?.output || path.join(dirPath, 'repomix/output.txt');
+
+    let command = `repomix ${dirPath} -o ${outputPath}`;
+
+    if (options?.style) command += ` --style ${options.style}`;
+    if (options?.parsableStyle) command += ' --parsable-style';
+    if (options?.compress) command += ' --compress';
+    if (options?.outputShowLineNumbers)
+      command += ' --output-show-line-numbers';
+    if (options?.copy) command += ' --copy';
+    if (options?.noFileSummary) command += ' --no-file-summary';
+    if (options?.noDirectoryStructure) command += ' --no-directory-structure';
+    if (options?.removeComments) command += ' --remove-comments';
+    if (options?.removeEmptyLines) command += ' --remove-empty-lines';
+    if (options?.headerText)
+      command += ` --header-text "${options.headerText}"`;
+    if (options?.instructionFilePath)
+      command += ` --instruction-file-path ${options.instructionFilePath}`;
+    if (options?.includeEmptyDirectories)
+      command += ' --include-empty-directories';
+
+    await this.sandbox.runCommand(command);
+
+    return this.readTextFile(outputPath);
+  }
+
+  async applyCodeEdit(filePath: string, codeEdit: CodeEdit) {
+    // replace the lines in the file with the new content
+    const fileContent = await this.readTextFile(filePath);
+    const lines = fileContent.split('\n');
+    const startIndex = codeEdit.startLine - 1;
+    const endIndex = codeEdit.endLine - 1;
+    lines.splice(startIndex, endIndex - startIndex + 1, codeEdit.newContent);
+    const newFileContent = lines.join('\n');
+    await this.writeTextFile(filePath, newFileContent);
   }
 
   async setGitRemote(useToken?: boolean): Promise<any> {

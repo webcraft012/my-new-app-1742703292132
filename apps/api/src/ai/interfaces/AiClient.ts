@@ -1,18 +1,13 @@
-import { z } from 'zod';
-import { pageStructureAgentSchema } from '../agents/requirements-agents/prompts';
-
+import { CodeGenerationManager } from 'src/managers';
+import { Observable } from 'rxjs';
 /**
  * This is the interface for the AI client.
  * It is used to generate web content.
  * From different components, and defined props the AI client will generate the content.
  */
 export interface AiClient {
-  generateContent: (
-    prompt: string,
-  ) => Promise<z.infer<typeof pageStructureAgentSchema>[]>;
   generateCode: (
-    requirements: string,
-    codeBase: string,
+    codeGenerationManager: CodeGenerationManager,
     prompt: string,
-  ) => Promise<string>;
+  ) => Promise<Observable<string>>;
 }

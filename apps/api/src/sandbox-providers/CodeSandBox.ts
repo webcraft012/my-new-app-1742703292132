@@ -8,12 +8,13 @@ import path from 'path';
 import { Command, ICodeSandBox } from '../ai/interfaces/CodeSandBox';
 import { Observable } from 'rxjs';
 import dotenv from 'dotenv';
+import { CodeEdit, ListAllFilesOptions } from 'src/managers';
 
 // Load environment variables from .env file
 dotenv.config();
 // const TEMPLATE_ID = 'fxis37';
 
-export class CodeSandBox implements ICodeSandBox<Sandbox> {
+export class CodeSandBox implements ICodeSandBox {
   private readonly sdk: CodeSandboxSDK;
   public sandbox: Sandbox;
 
@@ -48,7 +49,42 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
 
     this.startDevServer();
 
-    return this.sandbox;
+    return this;
+  }
+
+  async getId(): Promise<string> {
+    return this.sandbox.id;
+  }
+
+  async listAllFiles(
+    options?: ListAllFilesOptions,
+    dirPath = '.',
+  ): Promise<string> {
+    const outputPath =
+      options?.output || path.join(dirPath, 'repomix/output.txt');
+
+    let command = `repomix ${dirPath} -o ${outputPath}`;
+
+    if (options?.style) command += ` --style ${options.style}`;
+    if (options?.parsableStyle) command += ' --parsable-style';
+    if (options?.compress) command += ' --compress';
+    if (options?.outputShowLineNumbers)
+      command += ' --output-show-line-numbers';
+    if (options?.copy) command += ' --copy';
+    if (options?.noFileSummary) command += ' --no-file-summary';
+    if (options?.noDirectoryStructure) command += ' --no-directory-structure';
+    if (options?.removeComments) command += ' --remove-comments';
+    if (options?.removeEmptyLines) command += ' --remove-empty-lines';
+    if (options?.headerText)
+      command += ` --header-text "${options.headerText}"`;
+    if (options?.instructionFilePath)
+      command += ` --instruction-file-path ${options.instructionFilePath}`;
+    if (options?.includeEmptyDirectories)
+      command += ' --include-empty-directories';
+
+    await await this.sandbox.shells.run(command);
+
+    return this.readTextFile(outputPath);
   }
 
   private async installDependencies() {
@@ -123,11 +159,9 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     console.log('Checking for unfinished merge:', checkMerge);
 
     // Now perform the pull with allow-unrelated-histories flag
-    const result = await this.sandbox.shells.run(
+    await this.sandbox.shells.run(
       'cd /project/workspace && git pull --allow-unrelated-histories',
     );
-    console.log('git pull', result);
-    return result;
   }
 
   /**
@@ -342,6 +376,17 @@ export class CodeSandBox implements ICodeSandBox<Sandbox> {
     const shell = await this.sandbox.shells.run(command);
 
     return shell;
+  }
+
+  async applyCodeEdit(filePath: string, codeEdit: CodeEdit) {
+    // replace the lines in the file with the new content
+    const fileContent = await this.readTextFile(filePath);
+    const lines = fileContent.split('\n');
+    const startIndex = codeEdit.startLine - 1;
+    const endIndex = codeEdit.endLine - 1;
+    lines.splice(startIndex, endIndex - startIndex + 1, codeEdit.newContent);
+    const newFileContent = lines.join('\n');
+    await this.writeTextFile(filePath, newFileContent);
   }
 
   /**
