@@ -5,11 +5,11 @@ import { AiClient } from './interfaces/AiClient';
 export class AiService {
   constructor(@Inject('AiClient') private aiClient: AiClient) {}
 
-  async generateContent() {
-    return this.aiClient.generateContent();
+  async generateContent(prompt: string) {
+    return this.aiClient.generateContent(prompt);
   }
 
-  async generateCode(codeBase: string, prompt: string) {
-    return this.aiClient.generateCode(codeBase, prompt);
+  async generateCode(requirements: string, codeBase: string, prompt: string) {
+    return this.aiClient.generateCode(requirements, codeBase, prompt);
   }
 }

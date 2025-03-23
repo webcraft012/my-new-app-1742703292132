@@ -22,7 +22,7 @@ export class ApplicationService {
   ) {}
 
   async generate(application: CreateApplicationDto) {
-    const devApp = await this.findOne('9f51b85a1e017dc892451c4295e01826');
+    const devApp = await this.findOne('76b618222c8bd7b1d06da1c4f205e200');
 
     if (devApp) {
       const githubManager = new GitHubManager();
@@ -33,16 +33,23 @@ export class ApplicationService {
 
       const fileManager = new FileManager(tempPath);
 
-      // const output = await fileManager.listAllFiles({
-      //   noFileSummary: true,
-      //   outputShowLineNumbers: true,
-      //   style: 'xml',
-      // });
+      const codebase = await fileManager.listAllFiles({
+        noFileSummary: true,
+        outputShowLineNumbers: true,
+        style: 'xml',
+      });
       // console.log({ output });
-      // const code = await this.aiService.generateCode(
-      //   output,
-      //   'Make a new page called "rooms" that shows a list of rooms',
-      // );
+      const content = await this.aiService.generateContent(
+        'Create a car rental app',
+      );
+
+      const code = await this.aiService.generateCode(
+        JSON.stringify(content[2]),
+        codebase,
+        'Implement the following page structure',
+      );
+
+      return code;
       // const operations = parseXmlTags(code);
 
       // console.log(JSON.stringify(operations, null, 2));

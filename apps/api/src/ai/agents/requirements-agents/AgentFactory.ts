@@ -8,7 +8,8 @@ const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_AI_API_KEY,
 });
 
-const model = openrouter('google/gemini-2.0-pro-exp-02-05:free');
+// const model = openrouter('google/gemini-2.0-pro-exp-02-05:free');
+const model = openrouter('google/gemini-2.0-flash-lite-001');
 
 export class AgentFactory {
   static createAgent<K extends AgentType>(agentType: K) {

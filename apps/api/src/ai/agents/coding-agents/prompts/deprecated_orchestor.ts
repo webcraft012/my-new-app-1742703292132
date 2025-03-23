@@ -6,7 +6,7 @@ const fileOperationsPath = path.join(__dirname, 'file-operations.md');
 
 const fileOperationsContent = fs.readFileSync(fileOperationsPath, 'utf8');
 
-export const codePrompt = (codeBase: string) =>
+export const buildOrchestratorPrompt = (codeBase: string) =>
   dedent`
 You are an expert web developer. Your task is to create a new page in a web application that displays "Hello".
 

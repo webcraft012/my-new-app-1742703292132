@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { UIElementSchema } from '../ui-config';
-import { UIElement } from '@webcraft/types';
+import { pageStructureAgentSchema } from '../agents/requirements-agents/prompts';
 
 /**
  * This is the interface for the AI client.
@@ -8,6 +7,12 @@ import { UIElement } from '@webcraft/types';
  * From different components, and defined props the AI client will generate the content.
  */
 export interface AiClient {
-  generateContent: () => Promise<UIElement>;
-  generateCode: (codeBase: string, prompt: string) => Promise<string>;
+  generateContent: (
+    prompt: string,
+  ) => Promise<z.infer<typeof pageStructureAgentSchema>[]>;
+  generateCode: (
+    requirements: string,
+    codeBase: string,
+    prompt: string,
+  ) => Promise<string>;
 }

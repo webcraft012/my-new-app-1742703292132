@@ -39,21 +39,20 @@ export class EditorService {
   }
 
   async buildEditor() {
-    const generatedUIElements = await this.aiService.generateContent();
-    return generatedUIElements;
-    console.log(typeof generatedUIElements);
-    const editorBuilder = new EditorBuilder();
-    const editorState = editorBuilder.buildEditor(
-      generatedUIElements as unknown as UIElement,
-    );
-    console.log('HEREEE');
-    console.log(editorState);
-    const editor = await this.findOne('af9a001974655fc48685d003525a3584');
-
-    await this.update(editor.id, {
-      name: editor.name,
-      state: JSON.stringify(editorState),
-    });
-    return editorState;
+    // const generatedUIElements = await this.aiService.generateContent();
+    // return generatedUIElements;
+    // console.log(typeof generatedUIElements);
+    // const editorBuilder = new EditorBuilder();
+    // const editorState = editorBuilder.buildEditor(
+    //   generatedUIElements as unknown as UIElement,
+    // );
+    // console.log('HEREEE');
+    // console.log(editorState);
+    // const editor = await this.findOne('af9a001974655fc48685d003525a3584');
+    // await this.update(editor.id, {
+    //   name: editor.name,
+    //   state: JSON.stringify(editorState),
+    // });
+    // return editorState;
   }
 }

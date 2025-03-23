@@ -8,7 +8,7 @@ import {
   sectionAgentPrompt,
   uiAgentPrompt,
   uiAgentSchema,
-} from './promptsv2';
+} from './prompts';
 
 export enum AgentType {
   Master = 'Master',
