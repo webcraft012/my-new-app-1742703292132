@@ -17,24 +17,23 @@ export type CodingAgentsConfigType = {
     requirements: string;
     codeBase: string;
     tools: never;
+    toolRequired?: boolean;
     type: CodingAgent.Orchestrator;
   };
   [CodingAgent.CreateFile]: {
-    action: string;
     codeBaseStructure: string;
     tools: BaseTools;
     type: CodingAgent.CreateFile;
+    toolRequired?: boolean;
   };
   // [CodingAgent.DeleteFile]: {
   //   action: string;
   //   codeBaseStructure: string;
-  //   type: CodingAgent.DeleteFile;
-  // };
   [CodingAgent.EditFile]: {
-    action: string;
     codeBaseStructure: string;
     tools: BaseTools;
     type: CodingAgent.EditFile;
+    toolRequired?: boolean;
   };
   // [CodingAgent.RenameFile]: {
   //   action: string;

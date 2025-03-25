@@ -8,6 +8,7 @@ export class Agent implements IAgent {
     private readonly model: LanguageModel,
     private readonly tools: Record<string, Tool>,
     prompt?: string,
+    private readonly toolRequired?: boolean,
   ) {
     this.prompt = prompt;
   }
@@ -18,7 +19,11 @@ export class Agent implements IAgent {
       prompt: this.prompt,
       system: this.systemPrompt,
       tools: this.tools,
+      maxSteps: 10,
+      toolChoice: this.toolRequired ? 'required' : 'auto',
     });
+
+    // console.log(JSON.stringify(response, null, 2));
 
     return response.text;
   }

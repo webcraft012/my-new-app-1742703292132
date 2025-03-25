@@ -26,11 +26,11 @@ export class RequirementsPipeline {
     const uiRequirements = await this.runUiRequirements(
       JSON.stringify(appRequirements),
     );
-    const pageRequirements = await this.runPageRequirements(
-      JSON.stringify(uiRequirements),
-    );
+    // const pageRequirements = await this.runPageRequirements(
+    //   JSON.stringify(uiRequirements),
+    // );
 
-    return pageRequirements;
+    return uiRequirements;
   }
 
   async runPageRequirements(prompt: string) {

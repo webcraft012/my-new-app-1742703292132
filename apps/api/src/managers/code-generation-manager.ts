@@ -24,7 +24,7 @@ export class CodeGenerationManager {
   }
 
   async init() {
-    this.githubManager = new GitHubManager();
+    this.githubManager = new GitHubManager(this.repoUrl);
 
     if (this.repoUrl) {
       console.log('Cloning existing repository', this.repoUrl);
@@ -89,7 +89,11 @@ export class CodeGenerationManager {
   }
 
   async syncChangesInLocal(commitMessage: string) {
-    await this.githubManager.commitAndPush(commitMessage, this.projectTmpPath);
+    await this.githubManager.commitAndPush(
+      commitMessage,
+      this.projectTmpPath,
+      this.repoUrl,
+    );
     await this.codeSandbox.gitPull();
   }
 

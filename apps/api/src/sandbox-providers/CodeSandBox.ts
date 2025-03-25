@@ -160,7 +160,7 @@ export class CodeSandBox implements ICodeSandBox {
 
     // Now perform the pull with allow-unrelated-histories flag
     await this.sandbox.shells.run(
-      'cd /project/workspace && git pull --allow-unrelated-histories',
+      'cd /project/workspace && git pull --allow-unrelated-histories --rebase',
     );
   }
 
@@ -451,7 +451,7 @@ export class CodeSandBox implements ICodeSandBox {
     console.log('will git push');
 
     const shell = await this.sandbox.shells.run(
-      'git push --set-upstream origin master',
+      'git push --set-upstream origin main',
     );
     console.log('git push', shell);
   }

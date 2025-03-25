@@ -29,6 +29,11 @@ export class FileManager {
 
   async createFile(fileName: string, content: string) {
     const filePath = path.join(this.projectPath, fileName);
+    // Ensure directory exists before writing file
+    const dirPath = path.dirname(filePath);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
     fs.writeFileSync(filePath, content);
   }
 

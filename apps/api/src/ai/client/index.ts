@@ -23,7 +23,11 @@ export class AiClient implements AiClientInterface {
     const requirementsPipeline = new RequirementsPipeline();
     const requirements = await requirementsPipeline.runAll(prompt);
     const codingPipeline = new CodingPipeline(codeGenerationManager);
-    return codingPipeline.run(JSON.stringify(requirements), prompt);
+    console.log('Requirements', requirements);
+    return codingPipeline.run(
+      JSON.stringify(requirements),
+      `Following the requirements, please generate the code for the project of: "${prompt}"`,
+    );
   }
 
   async getAppRequirements(

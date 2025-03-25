@@ -34,8 +34,10 @@ Use the following tags to define actions:
 </create-file>
 
 <edit-file path="relative/path/to/existingFile.ts">
-  - What changes to make and where
-  - Any additions, deletions, or refactors
+  - Describe what changes to make and where in the file
+  - Identify functions, components, or sections to modify by name
+  - Explain what to add, update, or remove
+  - Do NOT specify line numbers in your description
   - Justify the changes (e.g., align with updated requirements)
 </edit-file>
 
@@ -53,6 +55,7 @@ Use the following tags to define actions:
 - Think modularly: if a new feature requires multiple files, create separate \`<create-file>\` actions.
 - Respect existing patterns in the codebase where possible.
 - Mention expected inputs/outputs for each file.
+- For edits, describe changes by referring to function names, component names, or section descriptions.
 - The ORDER OF THE ACTIONS IS IMPORTANT, IT MEANS If A certain file is required to be created before another, or 
   if it exports something that is required by another file, you should put it first and refer to it in the other files.
 
@@ -103,9 +106,11 @@ ${codeBase}
 </create-file>
 
 <edit-file path="frontend/pages/login.tsx">
-  Add a form to capture email and password.
-  Add an async function that sends a POST request to /api/login.
-  Show an error message on failure and redirect to dashboard on success.
+  Modify the Login component to:
+  - Add a form to capture email and password
+  - Add an async function that sends a POST request to /api/login
+  - Show an error message on failure and redirect to dashboard on success
+  - Update any necessary imports or props
 </edit-file>
 
 <delete-file path="frontend/pages/legacyLogin.tsx">
@@ -115,5 +120,5 @@ ${codeBase}
 
 - The ORDER OF THE ACTIONS IS IMPORTANT, IT MEANS If A certain file is required to be created before another, or 
   if it exports something that is required by another file, you should put it first and refer to it in the other files.
-
+- Do not provide actual code in your response, only the actions to be taken.
 `;

@@ -10,7 +10,6 @@ export class GitHubManager {
   private githubUsername: string;
   private token: string | null;
 
-  private repoUrl: string | null;
   private tempPath: string | null;
 
   /**
@@ -18,11 +17,26 @@ export class GitHubManager {
    * @param options - Additional options
    */
   constructor(
+    private readonly repoUrl?: string,
     options: {
       githubUsername?: string;
       token?: string;
     } = {},
   ) {
+    if (this.repoUrl) {
+      const remote = this.repoUrl
+        .replace('https://github.com/', '')
+        .replace('.git', '');
+
+      const remoteUrl = true
+        ? `https://${process.env.GITHUB_TOKEN}@github.com/${remote}.git`
+        : this.repoUrl;
+
+      execSync(`git remote set-url origin ${remoteUrl}`, {
+        stdio: 'inherit',
+      });
+    }
+
     this.githubUsername =
       options.githubUsername || process.env.GITHUB_USERNAME || 'clad012';
     this.token = options.token || process.env.GITHUB_TOKEN || null;
@@ -137,10 +151,10 @@ export class GitHubManager {
     console.log('Configuring git remote...');
 
     // Add remote
-    execSync(
-      `cd ${projectPath} && git remote add origin https://github.com/${this.githubUsername}/${repoName}.git`,
-      { stdio: 'inherit' },
-    );
+    // execSync(
+    //   `cd ${projectPath} && git remote set-url origin https://github.com/${this.githubUsername}/${repoName}.git`,
+    //   { stdio: 'inherit' },
+    // );
 
     // Configure git credentials
     const remoteUrl = `https://${this.githubUsername}:${this.token}@github.com/${this.githubUsername}/${repoName}.git`;
@@ -185,8 +199,12 @@ export class GitHubManager {
 
     const forceFlag = force ? '--force' : '';
 
+    execSync(`cd ${projectPath} && git checkout main`, {
+      stdio: 'inherit',
+    });
+
     execSync(
-      `cd ${projectPath} && git push -u origin master ${forceFlag} || git push -u origin main ${forceFlag}`,
+      `cd ${projectPath} && git push -u origin main ${forceFlag} || git push -u origin main ${forceFlag}`,
       {
         stdio: 'inherit',
         env: {
@@ -199,10 +217,22 @@ export class GitHubManager {
     console.log('Successfully pushed to GitHub!');
   }
 
-  async commitAndPush(commitMessage: string, projectPath = this.tempPath) {
+  async commitAndPush(
+    commitMessage: string,
+    projectPath = this.tempPath,
+    repoUrl = this.repoUrl,
+  ) {
     if (!this.hasToken()) return;
 
     console.log(`Committing and pushing to GitHub repository...`);
+
+    // get repo name from repoUrl
+    const remote = this.repoUrl
+      .replace('https://github.com/', '')
+      .replace('.git', '');
+    const repoName = remote.split('/').pop();
+
+    await this.configureRemote(projectPath, repoName);
 
     execSync(
       `cd ${projectPath} && git add . && git commit -m "${commitMessage}"`,
@@ -348,27 +378,27 @@ export class GitHubManager {
   }
 }
 
-/**
- * Convenience function to push a project to GitHub
- * @param projectPath - The path to the local project
- * @param repoName - The name of the GitHub repository
- * @param options - Additional options
- * @returns The repository URL or null if the operation failed
- */
-export async function pushToGitHub(
-  projectPath: string,
-  repoName: string = 'preconfigured-nextjs-app',
-  options: {
-    githubUsername?: string;
-    token?: string;
-    private?: boolean;
-    description?: string;
-    force?: boolean;
-  } = {},
-): Promise<string | null> {
-  const manager = new GitHubManager(options);
-  return manager.createAndPush(projectPath, repoName, options);
-}
+// /**
+//  * Convenience function to push a project to GitHub
+//  * @param projectPath - The path to the local project
+//  * @param repoName - The name of the GitHub repository
+//  * @param options - Additional options
+//  * @returns The repository URL or null if the operation failed
+//  */
+// export async function pushToGitHub(
+//   projectPath: string,
+//   repoName: string = 'preconfigured-nextjs-app',
+//   options: {
+//     githubUsername?: string;
+//     token?: string;
+//     private?: boolean;
+//     description?: string;
+//     force?: boolean;
+//   } = {},
+// ): Promise<string | null> {
+//   const manager = new GitHubManager(options);
+//   return manager.createAndPush(projectPath, repoName, options);
+// }
 
 export async function commitAndPush(
   projectPath: string,
@@ -378,25 +408,25 @@ export async function commitAndPush(
   manager.commitAndPush(commitMessage, projectPath);
 }
 
-/**
- * Convenience function to create a new repository from an existing template
- * @param templateRepoUrl - The URL of the template repository to clone
- * @param newRepoName - The name for the new repository
- * @param options - Additional options
- * @returns An object containing the new repository URL and the temporary path
- * @throws Error if any operation fails
- */
-export async function importFromTemplate(
-  templateRepoUrl: string,
-  newRepoName: string,
-  options: {
-    githubUsername?: string;
-    token?: string;
-    private?: boolean;
-    description?: string;
-    force?: boolean;
-  } = {},
-): Promise<{ repoUrl: string; tempPath: string }> {
-  const manager = new GitHubManager(options);
-  return manager.importFromTemplateRepo(templateRepoUrl, newRepoName, options);
-}
+// /**
+//  * Convenience function to create a new repository from an existing template
+//  * @param templateRepoUrl - The URL of the template repository to clone
+//  * @param newRepoName - The name for the new repository
+//  * @param options - Additional options
+//  * @returns An object containing the new repository URL and the temporary path
+//  * @throws Error if any operation fails
+//  */
+// export async function importFromTemplate(
+//   templateRepoUrl: string,
+//   newRepoName: string,
+//   options: {
+//     githubUsername?: string;
+//     token?: string;
+//     private?: boolean;
+//     description?: string;
+//     force?: boolean;
+//   } = {},
+// ): Promise<{ repoUrl: string; tempPath: string }> {
+//   const manager = new GitHubManager(options);
+//   return manager.importFromTemplateRepo(templateRepoUrl, newRepoName, options);
+// }
