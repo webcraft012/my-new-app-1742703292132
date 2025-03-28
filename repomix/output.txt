@@ -1,0 +1,389 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where line numbers have been added.
+
+<directory_structure>
+components/Layout.tsx
+components/ui/button.tsx
+lib/utils.ts
+pages/_app.tsx
+pages/_document.tsx
+pages/api/hello.ts
+pages/index.tsx
+public/file.svg
+public/globe.svg
+public/next.svg
+public/vercel.svg
+public/window.svg
+styles/globals.css
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="components/Layout.tsx">
+ 1: import React from "react";
+ 2: 
+ 3: /**
+ 4:  * Props for the Layout component
+ 5:  *
+ 6:  * @interface LayoutProps
+ 7:  * @property {React.ReactNode} children - The content to render inside the layout
+ 8:  * @property {string} [title] - The page title
+ 9:  * @property {string} [description] - The page meta description
+10:  */
+11: interface LayoutProps {
+12:   children: React.ReactNode;
+13:   title?: string;
+14:   description?: string;
+15: }
+16: 
+17: /**
+18:  * Layout component that wraps all pages
+19:  *
+20:  * Provides consistent page structure with head metadata
+21:  *
+22:  * @param {LayoutProps} props - Component props
+23:  * @returns {JSX.Element} The layout component
+24:  */
+25: export function Layout({ children }: LayoutProps): JSX.Element {
+26:   return <div className="min-h-screen font-sans">{children}</div>;
+27: }
+</file>
+
+<file path="components/ui/button.tsx">
+ 1: import * as React from "react";
+ 2: import { cn } from "@/lib/utils";
+ 3: 
+ 4: /**
+ 5:  * Button component props
+ 6:  *
+ 7:  * @interface ButtonProps
+ 8:  * @extends {React.ButtonHTMLAttributes<HTMLButtonElement>}
+ 9:  */
+10: export interface ButtonProps
+11:   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+12:   /**
+13:    * The variant style of the button
+14:    */
+15:   variant?: "default" | "outline" | "ghost";
+16: }
+17: 
+18: /**
+19:  * Button component
+20:  *
+21:  * A reusable button component with different style variants
+22:  *
+23:  * @param {ButtonProps} props - Component properties
+24:  * @returns {JSX.Element} The button component
+25:  */
+26: const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+27:   ({ className, variant = "default", ...props }, ref) => {
+28:     // Different styling based on variant
+29:     const variantStyles = {
+30:       default: "bg-primary text-primary-foreground hover:bg-primary/90",
+31:       outline:
+32:         "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+33:       ghost: "hover:bg-accent hover:text-accent-foreground",
+34:     };
+35: 
+36:     return (
+37:       <button
+38:         className={cn(
+39:           "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+40:           variantStyles[variant],
+41:           className
+42:         )}
+43:         ref={ref}
+44:         {...props}
+45:       />
+46:     );
+47:   }
+48: );
+49: 
+50: Button.displayName = "Button";
+51: 
+52: export { Button };
+</file>
+
+<file path="lib/utils.ts">
+1: import { clsx, type ClassValue } from "clsx"
+2: import { twMerge } from "tailwind-merge"
+3: 
+4: export function cn(...inputs: ClassValue[]) {
+5:   return twMerge(clsx(inputs))
+6: }
+</file>
+
+<file path="pages/_app.tsx">
+ 1: import type { AppProps } from "next/app";
+ 2: import { Inter, JetBrains_Mono } from "next/font/google";
+ 3: import "../styles/globals.css";
+ 4: 
+ 5: const inter = Inter({
+ 6:   subsets: ["latin"],
+ 7:   variable: "--font-sans",
+ 8:   display: "swap",
+ 9: });
+10: 
+11: const jetbrainsMono = JetBrains_Mono({
+12:   subsets: ["latin"],
+13:   variable: "--font-mono",
+14:   display: "swap",
+15: });
+16: 
+17: export default function App({ Component, pageProps }: AppProps) {
+18:   return (
+19:     <div className={`${inter.variable} ${jetbrainsMono.variable}`}>
+20:       <style jsx global>{`
+21:         :root {
+22:           --font-sans: ${inter.style.fontFamily};
+23:           --font-mono: ${jetbrainsMono.style.fontFamily};
+24:         }
+25:       `}</style>
+26:       <Component {...pageProps} />
+27:     </div>
+28:   );
+29: }
+</file>
+
+<file path="pages/_document.tsx">
+ 1: import { Html, Head, Main, NextScript } from "next/document";
+ 2: 
+ 3: export default function Document() {
+ 4:   return (
+ 5:     <Html lang="en">
+ 6:       <Head />
+ 7:       <body className="min-h-screen bg-background text-foreground antialiased">
+ 8:         <Main />
+ 9:         <NextScript />
+10:       </body>
+11:     </Html>
+12:   );
+13: }
+</file>
+
+<file path="pages/api/hello.ts">
+ 1: import type { NextApiRequest, NextApiResponse } from "next";
+ 2: 
+ 3: /**
+ 4:  * Data structure returned by the API
+ 5:  */
+ 6: export type HelloResponse = {
+ 7:   message: string;
+ 8:   timestamp: string;
+ 9: };
+10: 
+11: /**
+12:  * API handler function for the /api/hello endpoint
+13:  *
+14:  * This is a simple example of a Next.js API route that returns
+15:  * a JSON response with a message and the current timestamp.
+16:  *
+17:  * @param {NextApiRequest} req - The HTTP request object
+18:  * @param {NextApiResponse<HelloResponse>} res - The HTTP response object
+19:  * @returns {void}
+20:  */
+21: export default function handler(
+22:   req: NextApiRequest,
+23:   res: NextApiResponse<HelloResponse>
+24: ): void {
+25:   // Return a simple response with the current time
+26:   res.status(200).json({
+27:     message: "Hello from Next.js API!",
+28:     timestamp: new Date().toISOString(),
+29:   });
+30: }
+</file>
+
+<file path="pages/index.tsx">
+ 1: import { useState } from "react";
+ 2: import { Layout } from "@/components/Layout";
+ 3: import { Button } from "@/components/ui/button";
+ 4: 
+ 5: /**
+ 6:  * Home component - Main landing page of the application
+ 7:  *
+ 8:  * This is a simple example of a Next.js page with client-side interaction.
+ 9:  * It shows a text and a button that triggers an API call.
+10:  *
+11:  * @returns {JSX.Element} The rendered page
+12:  */
+13: export default function Home(): JSX.Element {
+14:   const [message, setMessage] = useState<string | null>(null);
+15: 
+16:   /**
+17:    * Fetches data from the API endpoint when the button is clicked
+18:    * Displays the result from the API call
+19:    */
+20:   const fetchData = async (): Promise<void> => {
+21:     try {
+22:       const response = await fetch("/api/hello");
+23:       const data = await response.json();
+24:       setMessage(JSON.stringify(data, null, 2));
+25:     } catch (error) {
+26:       console.error("Error fetching data:", error);
+27:       setMessage("Error fetching data");
+28:     }
+29:   };
+30: 
+31:   return (
+32:     <Layout
+33:       title="Next.js Example"
+34:       description="A minimal Next.js example with pages router"
+35:     >
+36:       <div className="min-h-screen flex flex-col items-center justify-center p-4">
+37:         <h1 className="text-2xl font-bold mb-6 text-center">
+38:           Next.js 14 with Pages Router
+39:         </h1>
+40: 
+41:         <p className="mb-6 text-center">
+42:           This is a minimal example demonstrating a simple page with a button
+43:           that calls an API endpoint.
+44:         </p>
+45: 
+46:         <div className="flex flex-col gap-4">
+47:           <Button onClick={fetchData} className="w-full">
+48:             Call API
+49:           </Button>
+50: 
+51:           {message && (
+52:             <div className="p-4 rounded bg-muted overflow-auto max-h-40">
+53:               <pre className="text-sm font-mono whitespace-pre-wrap">
+54:                 {message}
+55:               </pre>
+56:             </div>
+57:           )}
+58:         </div>
+59:       </div>
+60:     </Layout>
+61:   );
+62: }
+</file>
+
+<file path="public/file.svg">
+1: <svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+1: <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+1: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/vercel.svg">
+1: <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+1: <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="styles/globals.css">
+  1: @tailwind base;
+  2: @tailwind components;
+  3: @tailwind utilities;
+  4: 
+  5: @layer base {
+  6:   :root {
+  7:     --background: 0 0% 100%;
+  8:     --foreground: 0 0% 3.9%;
+  9: 
+ 10:     --card: 0 0% 100%;
+ 11:     --card-foreground: 0 0% 3.9%;
+ 12: 
+ 13:     --popover: 0 0% 100%;
+ 14:     --popover-foreground: 0 0% 3.9%;
+ 15: 
+ 16:     --primary: 0 0% 9%;
+ 17:     --primary-foreground: 0 0% 98%;
+ 18: 
+ 19:     --secondary: 0 0% 96.1%;
+ 20:     --secondary-foreground: 0 0% 9%;
+ 21: 
+ 22:     --muted: 0 0% 96.1%;
+ 23:     --muted-foreground: 0 0% 45.1%;
+ 24: 
+ 25:     --accent: 0 0% 96.1%;
+ 26:     --accent-foreground: 0 0% 9%;
+ 27: 
+ 28:     --destructive: 0 84.2% 60.2%;
+ 29:     --destructive-foreground: 0 0% 98%;
+ 30: 
+ 31:     --border: 0 0% 89.8%;
+ 32:     --input: 0 0% 89.8%;
+ 33:     --ring: 0 0% 3.9%;
+ 34: 
+ 35:     --radius: 0.5rem;
+ 36: 
+ 37:     --chart-1: 12 76% 61%;
+ 38: 
+ 39:     --chart-2: 173 58% 39%;
+ 40: 
+ 41:     --chart-3: 197 37% 24%;
+ 42: 
+ 43:     --chart-4: 43 74% 66%;
+ 44: 
+ 45:     --chart-5: 27 87% 67%;
+ 46:   }
+ 47: 
+ 48:   .dark {
+ 49:     --background: 0 0% 3.9%;
+ 50:     --foreground: 0 0% 98%;
+ 51: 
+ 52:     --card: 0 0% 3.9%;
+ 53:     --card-foreground: 0 0% 98%;
+ 54: 
+ 55:     --popover: 0 0% 3.9%;
+ 56:     --popover-foreground: 0 0% 98%;
+ 57: 
+ 58:     --primary: 0 0% 98%;
+ 59:     --primary-foreground: 0 0% 9%;
+ 60: 
+ 61:     --secondary: 0 0% 14.9%;
+ 62:     --secondary-foreground: 0 0% 98%;
+ 63: 
+ 64:     --muted: 0 0% 14.9%;
+ 65:     --muted-foreground: 0 0% 63.9%;
+ 66: 
+ 67:     --accent: 0 0% 14.9%;
+ 68:     --accent-foreground: 0 0% 98%;
+ 69: 
+ 70:     --destructive: 0 62.8% 30.6%;
+ 71:     --destructive-foreground: 0 0% 98%;
+ 72: 
+ 73:     --border: 0 0% 14.9%;
+ 74:     --input: 0 0% 14.9%;
+ 75:     --ring: 0 0% 83.1%;
+ 76:     --chart-1: 220 70% 50%;
+ 77:     --chart-2: 160 60% 45%;
+ 78:     --chart-3: 30 80% 55%;
+ 79:     --chart-4: 280 65% 60%;
+ 80:     --chart-5: 340 75% 55%;
+ 81:   }
+ 82: }
+ 83: 
+ 84: @layer base {
+ 85:   * {
+ 86:     @apply border-border;
+ 87:   }
+ 88: 
+ 89:   html {
+ 90:     font-family: var(--font-sans), system-ui, sans-serif;
+ 91:   }
+ 92: 
+ 93:   body {
+ 94:     @apply bg-background text-foreground;
+ 95:     font-feature-settings: "rlig" 1, "calt" 1;
+ 96:   }
+ 97: 
+ 98:   code,
+ 99:   pre,
+100:   kbd {
+101:     font-family: var(--font-mono), monospace;
+102:   }
+103: }
+</file>
+
+</files>
