@@ -1,6 +1,7 @@
-import React from "react";
 
-/**
+import React from "react";
+import Head from "next/head";
+
  * Props for the Layout component
  *
  * @interface LayoutProps
