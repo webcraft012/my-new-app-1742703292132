@@ -22,8 +22,18 @@ interface LayoutProps {
  * Provides consistent page structure with head metadata
  *
  * @param {LayoutProps} props - Component props
- * @returns {JSX.Element} The layout component
- */
-export function Layout({ children }: LayoutProps): JSX.Element {
-  return <div className="min-h-screen font-sans">{children}</div>;
+
+export function Layout({ children, title, description }: LayoutProps): JSX.Element {
+  return (
+    <div className="min-h-screen font-sans">
+      <Head>
+        <title>{title ? title : "To Do App"}</title>
+        {description && <meta name="description" content={description} />}
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      {children}
+    </div>
+  );
+}
+
 }
