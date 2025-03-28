@@ -14,8 +14,6 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap",
-});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -26,6 +24,13 @@ export default function App({ Component, pageProps }: AppProps) {
           --font-mono: ${jetbrainsMono.style.fontFamily};
         }
       `}</style>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </div>
+  );
+}
+
       <Component {...pageProps} />
     </div>
   );
