@@ -8,12 +8,13 @@ import Head from "next/head";
  * @property {React.ReactNode} children - The content to render inside the layout
  * @property {string} [title] - The page title
  * @property {string} [description] - The page meta description
- */
+
 interface LayoutProps {
   children: React.ReactNode;
   title?: string;
   description?: string;
 }
+
 
 /**
  * Layout component that wraps all pages
